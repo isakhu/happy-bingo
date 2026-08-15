@@ -14,18 +14,18 @@
     "dist": "npm run build && electron-builder"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "@vitejs/plugin-react": "5.0.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "electron": "latest",
-    "electron-builder": "latest",
-    "electron-vite": "latest",
-    "typescript": "latest",
-    "vite": "latest"
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "electron": "37.3.1",
+    "electron-builder": "26.0.12",
+    "electron-vite": "5.0.0",
+    "typescript": "5.9.2",
+    "vite": "7.1.2"
   },
   "build": {
     "appId": "com.happybingo.desktop",
