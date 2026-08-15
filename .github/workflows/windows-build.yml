@@ -24,6 +24,6 @@ jobs:
         with:
           name: Happy-Bingo-Windows
           path: |
-            release/*.exe
-            release/*.zip
+            dist/*.exe
+            dist/*.zip
           if-no-files-found: error
