@@ -68,12 +68,21 @@ const ALLOWED_VOICES = new Set([
   ...Array.from({ length: 15 }, (_, i) => `o${i + 61}.mp3`),
 ])
 
+async function readVoiceFile(file: string) {
+  const locations = [
+    join(app.getAppPath(), 'audio', 'voices', file),
+    join(process.resourcesPath, 'audio', 'voices', file),
+  ]
+  let lastError: unknown
+  for (const location of locations) {
+    try { return await readFile(location) } catch (error) { lastError = error }
+  }
+  throw lastError instanceof Error ? lastError : new Error(`Voice file not found: ${file}`)
+}
+
 ipcMain.handle('play-voice', async (_event, file: string) => {
   if (!ALLOWED_VOICES.has(file)) throw new Error('Voice file is not allowed')
-  const voiceDir = app.isPackaged
-    ? join(process.resourcesPath, 'audio', 'voices')
-    : join(app.getAppPath(), 'audio', 'voices')
-  const bytes = await readFile(join(voiceDir, file))
+  const bytes = await readVoiceFile(file)
   return `data:audio/mpeg;base64,${bytes.toString('base64')}`
 })
 
