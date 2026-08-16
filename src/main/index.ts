@@ -1,6 +1,8 @@
-import { app, BrowserWindow, screen, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
 import { join } from 'node:path'
 import { mkdir, writeFile } from 'node:fs/promises'
+
+type Card = { id: number; values: number[] }
 
 function load(win: BrowserWindow, player = false) {
   const url = process.env.ELECTRON_RENDERER_URL
@@ -8,14 +10,18 @@ function load(win: BrowserWindow, player = false) {
   else win.loadFile(join(__dirname, '../renderer/index.html'), player ? { search: '?player=1' } : undefined)
 }
 
-function generateCards() {
-  const cards: { id: number; values: number[] }[] = []
+function generateCards(seedBase = 2026): Card[] {
+  const cards: Card[] = []
   for (let id = 1; id <= 100; id++) {
     const columns: number[][] = []
     for (let col = 0; col < 5; col++) {
       const nums = Array.from({ length: 15 }, (_, i) => col * 15 + i + 1)
-      let seed = id * 31 + col * 17
-      for (let i = nums.length - 1; i > 0; i--) { seed = (seed * 1103515245 + 12345) >>> 0; const j = seed % (i + 1); [nums[i], nums[j]] = [nums[j], nums[i]] }
+      let seed = (seedBase + id * 31 + col * 17) >>> 0
+      for (let i = nums.length - 1; i > 0; i--) {
+        seed = (seed * 1103515245 + 12345) >>> 0
+        const j = seed % (i + 1)
+        ;[nums[i], nums[j]] = [nums[j], nums[i]]
+      }
       columns.push(nums.slice(0, 5))
     }
     const values = Array.from({ length: 25 }, (_, i) => i === 12 ? 0 : columns[i % 5][Math.floor(i / 5)])
@@ -24,15 +30,19 @@ function generateCards() {
   return cards
 }
 
-function cardHtml(card: { id: number; values: number[] }) {
+function cardHtml(card: Card) {
+  const colors = ['#ffb300', '#29a9ff', '#7ee52d', '#ff4b19', '#f52ea4']
   const cells = card.values.map((n, i) => `<div class="cell ${i === 12 ? 'free' : ''}">${i === 12 ? 'FREE' : n}</div>`).join('')
-  return `<section class="card"><div class="title">HAPPY BINGO</div><div class="sub">BINGO CARD · #${String(card.id).padStart(3, '0')}</div><div class="head"><b>B</b><b>I</b><b>N</b><b>G</b><b>O</b></div><div class="grid">${cells}</div><div class="footer">Good luck!</div></section>`
+  const heads = ['B', 'I', 'N', 'G', 'O'].map((letter, i) => `<b style="background:${colors[i]}">${letter}</b>`).join('')
+  return `<section class="card"><div class="spark">✦</div><div class="title"><span>HAPPY</span> BINGO</div><div class="sub">CARTELLA · #${String(card.id).padStart(3, '0')}</div><div class="head">${heads}</div><div class="grid">${cells}</div><div class="footer">GOOD LUCK! · HAPPY BINGO</div></section>`
 }
 
-async function generateCardsPdf() {
+async function generateCardsPdf(seedBase = 2026) {
   const pdfWindow = new BrowserWindow({ show: false, width: 1200, height: 900, webPreferences: { sandbox: true } })
-  const cards = generateCards()
-  const html = `<!doctype html><html><head><meta charset="UTF-8"><style>@page{size:A4;margin:7mm}*{box-sizing:border-box}body{margin:0;background:white;font-family:Arial,sans-serif;color:#0b2148}.page{width:100%;height:281mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8mm;page-break-after:always}.page:last-child{page-break-after:auto}.card{border:2px solid #1769d1;border-radius:8px;padding:7mm;display:flex;flex-direction:column;justify-content:center}.title{text-align:center;font-size:20px;font-weight:900;letter-spacing:2px;color:#0b55b7}.sub{text-align:center;font-size:10px;margin:3mm 0;color:#58708f}.head,.grid{display:grid;grid-template-columns:repeat(5,1fr)}.head b{background:#0b55b7;color:white;text-align:center;padding:5px;font-size:16px}.cell{height:25mm;border:1px solid #9db9dc;display:grid;place-items:center;font-size:17px;font-weight:800}.cell.free{background:#eaf3ff;color:#1769d1;font-size:12px}.footer{text-align:center;margin-top:3mm;font-size:9px;color:#6a7f99;text-transform:uppercase;letter-spacing:1px}</style></head><body>${Array.from({length:25},(_,page)=>`<div class="page">${cards.slice(page*4,page*4+4).map(cardHtml).join('')}</div>`).join('')}</body></html>`
+  const cards = generateCards(seedBase)
+  const html = `<!doctype html><html><head><meta charset="UTF-8"><style>
+@page{size:A4;margin:6mm}*{box-sizing:border-box}body{margin:0;background:#170743;font-family:Arial,sans-serif;color:#fff}.page{width:100%;height:282mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;page-break-after:always}.page:last-child{page-break-after:auto}.card{position:relative;overflow:hidden;border:2px solid #8d5cff;border-radius:14px;padding:6mm;background:radial-gradient(circle at 50% 5%,#6d2fd0,#28105e 45%,#12052f 100%);box-shadow:inset 0 0 35px #8b43ff55}.card:before{content:'';position:absolute;inset:-30%;background:conic-gradient(from 20deg,#ff4fc3,#6f5cff,#27cfff,#8cff3e,#ffd23f,#ff4fc3);opacity:.08;filter:blur(25px)}.spark{position:absolute;right:8mm;top:4mm;color:#ffd95a;font-size:20px}.title{position:relative;text-align:center;font-size:22px;font-weight:1000;letter-spacing:2px;text-shadow:0 2px 0 #12052f}.title span{color:#ffd13b}.sub{position:relative;text-align:center;font-size:9px;margin:2mm 0 4mm;color:#d8c8ff;font-weight:800;letter-spacing:1.4px}.head,.grid{position:relative;display:grid;grid-template-columns:repeat(5,1fr)}.head{gap:2px}.head b{color:white;text-align:center;padding:5px 0;font-size:15px;border-radius:4px;text-shadow:0 1px 2px #0008}.grid{gap:2px;margin-top:2px}.cell{height:22mm;border:1px solid #bba8e5;background:#fffaf5;color:#1c1640;display:grid;place-items:center;font-size:16px;font-weight:900}.cell.free{background:linear-gradient(135deg,#ffd63f,#ff9d21);color:#fff;font-size:10px;text-shadow:0 1px 2px #8b3c00}.footer{position:relative;text-align:center;margin-top:3mm;font-size:8px;color:#e9dfff;letter-spacing:1.5px;font-weight:900}
+</style></head><body>${Array.from({ length: 25 }, (_, page) => `<div class="page">${cards.slice(page * 4, page * 4 + 4).map(cardHtml).join('')}</div>`).join('')}</body></html>`
   try {
     await pdfWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
     const pdf = await pdfWindow.webContents.printToPDF({ printBackground: true, pageSize: 'A4' })
@@ -41,8 +51,13 @@ async function generateCardsPdf() {
     const path = join(dir, 'Happy-Bingo-100-Cards.pdf')
     await writeFile(path, pdf)
     await shell.openPath(path)
-  } finally { if (!pdfWindow.isDestroyed()) pdfWindow.close() }
+    return { cards, path }
+  } finally {
+    if (!pdfWindow.isDestroyed()) pdfWindow.close()
+  }
 }
+
+ipcMain.handle('generate-cards-pdf', async () => generateCardsPdf(Date.now() >>> 0))
 
 function createWindow() {
   const displays = screen.getAllDisplays(), primary = screen.getPrimaryDisplay()
@@ -55,5 +70,9 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(async () => { createWindow(); await generateCardsPdf(); app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() }) })
+app.whenReady().then(async () => {
+  createWindow()
+  await generateCardsPdf(2026)
+  app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() })
+})
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit() })
