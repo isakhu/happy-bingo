@@ -16,8 +16,14 @@
 .game-screen .board-letter,.game-screen .number-cell{height:auto!important;min-height:0!important;aspect-ratio:1.55!important;border-radius:7px!important}
 .game-screen .board-letter{font-size:clamp(12px,1.2vw,20px)!important}
 .game-screen .number-cell{font-size:clamp(13px,1.35vw,24px)!important;font-weight:1000!important;box-shadow:inset 0 -2px 0 rgba(0,0,0,.06)!important}
-.game-screen .number-cell.called{box-shadow:0 0 18px #ffd52fbb, inset 0 -3px 0 #d49e00!important}
-.game-screen .number-cell.latest{transform:scale(1.12)!important;box-shadow:0 0 24px #19a9ff,0 0 38px #ffd52f!important}
+/* Called numbers become unmistakable colored round balls. */
+.game-screen .number-cell.called{aspect-ratio:1!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#18242e!important;color:#fff!important;border:3px solid currentColor!important;box-shadow:0 0 14px currentColor, inset 0 0 10px rgba(255,255,255,.12)!important;transform:scale(.92)!important;z-index:2!important}
+.game-screen .number-cell.called.b{color:#ff3b3b!important;background:radial-gradient(circle at 35% 30%,#ff6969,#b71919 72%)!important}
+.game-screen .number-cell.called.i{color:#36d9ff!important;background:radial-gradient(circle at 35% 30%,#8ff2ff,#087da8 72%)!important}
+.game-screen .number-cell.called.n{color:#ffd52f!important;background:radial-gradient(circle at 35% 30%,#ffe98a,#b97900 72%)!important}
+.game-screen .number-cell.called.g{color:#d86cff!important;background:radial-gradient(circle at 35% 30%,#ef9bff,#7020a8 72%)!important}
+.game-screen .number-cell.called.o{color:#52f27c!important;background:radial-gradient(circle at 35% 30%,#9dffae,#16833a 72%)!important}
+.game-screen .number-cell.called.latest{transform:scale(1.16)!important;border-width:4px!important;box-shadow:0 0 24px currentColor,0 0 42px rgba(255,255,255,.25),inset 0 0 14px rgba(255,255,255,.2)!important}
 .game-screen .right-column{grid-template-rows:1fr 1fr 1fr!important;gap:8px!important}
 .game-screen .history-panel,.game-screen .players-panel,.game-screen .verify-panel{padding:8px!important}
 .game-screen .panel-heading{margin-bottom:6px!important}
