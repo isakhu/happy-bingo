@@ -1,19 +1,19 @@
 import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
 import { join } from 'node:path'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 type Card = { id: number; values: number[] }
 
-function load(win: BrowserWindow, player = false) {
+function load(win: BrowserWindow) {
   const url = process.env.ELECTRON_RENDERER_URL
-  if (url) win.loadURL(`${url}${player ? '?player=1' : ''}`)
-  else win.loadFile(join(__dirname, '../renderer/index.html'), player ? { search: '?player=1' } : undefined)
+  if (url) win.loadURL(url)
+  else win.loadFile(join(__dirname, '../renderer/index.html'))
 }
 
 function generateCards(seedBase = 2026): Card[] {
   const cards: Card[] = []
   for (let id = 1; id <= 100; id++) {
-    const columns: number[][] = []   
+    const columns: number[][] = []
     for (let col = 0; col < 5; col++) {
       const nums = Array.from({ length: 15 }, (_, i) => col * 15 + i + 1)
       let seed = (seedBase + id * 31 + col * 17) >>> 0
@@ -59,15 +59,26 @@ async function generateCardsPdf(seedBase = 2026) {
 
 ipcMain.handle('generate-cards-pdf', async () => generateCardsPdf(Date.now() >>> 0))
 
+const ALLOWED_VOICES = new Set([
+  'Goodbingo.mp3', 'cartellawu.mp3', 'chewatawu.mp3',
+  ...Array.from({ length: 15 }, (_, i) => `b${i + 1}.mp3`),
+  ...Array.from({ length: 15 }, (_, i) => `i${i + 16}.mp3`),
+  ...Array.from({ length: 15 }, (_, i) => `n${i + 31}.mp3`),
+  ...Array.from({ length: 15 }, (_, i) => `g${i + 46}.mp3`),
+  ...Array.from({ length: 15 }, (_, i) => `o${i + 61}.mp3`),
+])
+
+ipcMain.handle('play-voice', async (_event, file: string) => {
+  if (!ALLOWED_VOICES.has(file)) throw new Error('Voice file is not allowed')
+  const bytes = await readFile(join(app.getAppPath(), 'audio', 'voices', file))
+  return `data:audio/mpeg;base64,${bytes.toString('base64')}`
+})
+
 function createWindow() {
-  const displays = screen.getAllDisplays(), primary = screen.getPrimaryDisplay()
+  const primary = screen.getPrimaryDisplay()
   const win = new BrowserWindow({ x: primary.workArea.x, y: primary.workArea.y, width: primary.workAreaSize.width, height: primary.workAreaSize.height, minWidth: 1100, minHeight: 700, title: 'Happy Bingo — Manager', backgroundColor: '#071a3a', webPreferences: { preload: join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false } })
-  win.maximize(); load(win)
-  if (displays.length > 1) {
-    const target = displays.find(d => d.id !== primary.id) ?? displays[1]
-    const player = new BrowserWindow({ x: target.bounds.x, y: target.bounds.y, width: target.bounds.width, height: target.bounds.height, title: 'Happy Bingo — Player Screen', backgroundColor: '#061a42', fullscreen: true, webPreferences: { preload: join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false } })
-    load(player, true)
-  }
+  win.maximize()
+  load(win)
 }
 
 app.whenReady().then(async () => {
