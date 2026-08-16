@@ -30,7 +30,7 @@
   "build": {
     "appId": "com.happybingo.desktop",
     "productName": "Happy Bingo",
-    "files": ["out/**/*", "package.json"],
+    "files": ["out/**/*", "audio/**/*", "package.json"],
     "win": { "target": "nsis", "artifactName": "Happy-Bingo-Setup-${version}.${ext}" },
     "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
   }
