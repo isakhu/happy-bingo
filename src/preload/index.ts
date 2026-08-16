@@ -4,4 +4,5 @@ contextBridge.exposeInMainWorld('happyBingo', {
   appName: 'Happy Bingo',
   version: '0.1.0',
   generateCardsPdf: () => ipcRenderer.invoke('generate-cards-pdf'),
+  playVoice: (file: string) => ipcRenderer.invoke('play-voice', file),
 })
