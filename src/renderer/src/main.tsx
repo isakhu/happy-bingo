@@ -68,8 +68,12 @@ function App() {
   const [checkOpen, setCheckOpen] = useState(false)
   const [verifyInput, setVerifyInput] = useState('')
   const [winner, setWinner] = useState<number | null>(null)
-  const [betAmount, setBetAmount] = useState('')
-  const [cutPercent, setCutPercent] = useState('')
+  const [betAmount, setBetAmount] = useState(() => localStorage.getItem('happy-bingo-bet') || '')
+  const [cutPercent, setCutPercent] = useState(() => localStorage.getItem('happy-bingo-cut') || '')
+  const [totalMoneyMade, setTotalMoneyMade] = useState(() => {
+    const stored = Number(localStorage.getItem('happy-bingo-total-money-made') || '0')
+    return Number.isFinite(stored) && stored >= 0 ? stored : 0
+  })
 
   const current = called[0] || null
   const calledSet = useMemo(() => new Set(called.map(item => item.number)), [called])
@@ -126,8 +130,19 @@ function App() {
     return () => window.clearTimeout(timer)
   }, [started, paused, voicePlaying, remaining.length, called.length])
 
+  function recordCompletedGame() {
+    const amount = currentAmount
+    if (amount === null || !Number.isFinite(amount) || amount <= 0) return
+    setTotalMoneyMade(prev => {
+      const next = prev + amount
+      localStorage.setItem('happy-bingo-total-money-made', String(next))
+      return next
+    })
+  }
+
   function newGame() {
     if (!window.confirm('End this game and return to cartella selection?')) return
+    recordCompletedGame()
     setStarted(false)
     setPaused(false)
     setCalled([])
@@ -177,7 +192,7 @@ function App() {
   function saveBet(value: string) { setBetAmount(value); value === '' ? localStorage.removeItem('happy-bingo-bet') : localStorage.setItem('happy-bingo-bet', value) }
   function saveCut(value: string) { setCutPercent(value); value === '' ? localStorage.removeItem('happy-bingo-cut') : localStorage.setItem('happy-bingo-cut', value) }
 
-  const settings = <SettingsModal cardSource={cardSource} setCardSource={value => { setCardSource(value); localStorage.setItem('happy-bingo-card-source', value) }} voiceEnabled={voiceEnabled} setVoiceEnabled={value => { setVoiceEnabled(value); localStorage.setItem('happy-bingo-voice', value ? 'on' : 'off') }} betAmount={betAmount} setBetAmount={saveBet} cutPercent={cutPercent} setCutPercent={saveCut} generatingPdf={generatingPdf} createPdf={createPdf} onClose={() => setSettingsOpen(false)} />
+  const settings = <SettingsModal cardSource={cardSource} setCardSource={value => { setCardSource(value); localStorage.setItem('happy-bingo-card-source', value) }} voiceEnabled={voiceEnabled} setVoiceEnabled={value => { setVoiceEnabled(value); localStorage.setItem('happy-bingo-voice', value ? 'on' : 'off') }} betAmount={betAmount} setBetAmount={saveBet} cutPercent={cutPercent} setCutPercent={saveCut} totalMoneyMade={totalMoneyMade} generatingPdf={generatingPdf} createPdf={createPdf} onClose={() => setSettingsOpen(false)} />
 
   if (!started) return <div className="app-shell selection-mode">
     <header className="topbar"><div className="brand">HAPPY <span>BINGO</span></div><div className="top-actions"><span className="ready-pill">● READY</span><button className="top-button" onClick={() => setSettingsOpen(true)}>SETTING</button></div></header>
@@ -200,12 +215,11 @@ function App() {
   </div>
 }
 
-function SettingsModal(props: { cardSource: 'printed' | 'pdf'; setCardSource: (value: 'printed' | 'pdf') => void; voiceEnabled: boolean; setVoiceEnabled: (value: boolean) => void; betAmount: string; setBetAmount: (value: string) => void; cutPercent: string; setCutPercent: (value: string) => void; generatingPdf: boolean; createPdf: () => Promise<void>; onClose: () => void }) {
+function SettingsModal(props: { cardSource: 'printed' | 'pdf'; setCardSource: (value: 'printed' | 'pdf') => void; voiceEnabled: boolean; setVoiceEnabled: (value: boolean) => void; betAmount: string; setBetAmount: (value: string) => void; cutPercent: string; setCutPercent: (value: string) => void; totalMoneyMade: number; generatingPdf: boolean; createPdf: () => Promise<void>; onClose: () => void }) {
   return <div className="modal-backdrop"><div className="settings-modal"><div className="modal-head"><div><small>MANAGER SETTINGS</small><h2>Settings</h2></div><button className="close-button" onClick={props.onClose}>×</button></div><div className="settings-grid">
     <section><h3>CARTELLA</h3><button className={`setting-choice ${props.cardSource === 'printed' ? 'active' : ''}`} onClick={() => props.setCardSource('printed')}>Existing printed 001–100</button><button className={`setting-choice ${props.cardSource === 'pdf' ? 'active' : ''}`} onClick={() => props.setCardSource('pdf')}>Generated PDF set</button><button className="pdf-action" onClick={props.createPdf} disabled={props.generatingPdf}>{props.generatingPdf ? 'CREATING…' : 'GENERATE 100 CARTELLA PDF'}</button></section>
     <section><h3>VOICE</h3><div className="setting-row"><span>Recorded Bingo voices</span><button className="toggle" onClick={() => props.setVoiceEnabled(!props.voiceEnabled)}>{props.voiceEnabled ? 'ON' : 'OFF'}</button></div></section>
-    <section><h3>BET AMOUNT</h3><input className="money-input" type="number" min="0" placeholder="" value={props.betAmount} onChange={e => props.setBetAmount(e.target.value)} /></section>
-    <section><h3>CUT PERCENT</h3><input className="money-input" type="number" min="0" max="100" placeholder="" value={props.cutPercent} onChange={e => props.setCutPercent(e.target.value)} /></section>
+    <section><h3>ACCOUNT</h3><div className="money-setting"><label>BET AMOUNT</label><input type="number" min="0" placeholder="" value={props.betAmount} onChange={e => props.setBetAmount(e.target.value)} /></div><div className="money-setting"><label>CUT PERCENTAGE</label><input type="number" min="0" max="100" placeholder="" value={props.cutPercent} onChange={e => props.setCutPercent(e.target.value)} /></div><div className="money-setting total-money"><label>TOTAL MONEY MADE</label><strong>{Math.round(props.totalMoneyMade).toLocaleString()} ETB</strong></div></section>
   </div></div></div>
 }
 
