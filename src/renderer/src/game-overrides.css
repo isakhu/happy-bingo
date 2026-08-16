@@ -1,0 +1,40 @@
+/* Final venue/game-screen presentation */
+.game-screen{padding:10px 14px!important}
+.game-screen .dashboard-grid{height:calc(100% - 108px)!important;grid-template-columns:150px minmax(0,1fr) 170px!important;gap:8px!important}
+.game-screen .call-panel{padding:8px!important}
+.game-screen .call-ball{width:min(110px,8vw)!important;height:min(110px,8vw)!important;min-width:82px!important;min-height:82px!important;border-width:5px!important}
+.game-screen .call-ball strong{font-size:42px!important}
+.game-screen .call-ball span{font-size:15px!important}
+.game-screen .current-number{font-size:22px!important}
+.game-screen .voice-status{font-size:7px!important}
+.game-screen .board-panel{padding:8px!important;display:flex!important;flex-direction:column!important;min-height:0!important}
+.game-screen .board-heading{height:25px!important;margin-bottom:4px!important}
+.game-screen .board-heading h2{font-size:10px!important}
+.game-screen .board-heading p{display:none!important}
+.game-screen .bingo-board{height:auto!important;flex:1!important;gap:5px!important;min-height:0!important}
+.game-screen .board-row{grid-template-columns:30px repeat(15,minmax(0,1fr))!important;gap:4px!important;min-height:0!important}
+.game-screen .board-letter,.game-screen .number-cell{height:auto!important;min-height:0!important;aspect-ratio:1.55!important;border-radius:7px!important}
+.game-screen .board-letter{font-size:clamp(12px,1.2vw,20px)!important}
+.game-screen .number-cell{font-size:clamp(13px,1.35vw,24px)!important;font-weight:1000!important;box-shadow:inset 0 -2px 0 rgba(0,0,0,.06)!important}
+.game-screen .number-cell.called{box-shadow:0 0 18px #ffd52fbb, inset 0 -3px 0 #d49e00!important}
+.game-screen .number-cell.latest{transform:scale(1.12)!important;box-shadow:0 0 24px #19a9ff,0 0 38px #ffd52f!important}
+.game-screen .right-column{grid-template-rows:1fr 1fr 1fr!important;gap:8px!important}
+.game-screen .history-panel,.game-screen .players-panel,.game-screen .verify-panel{padding:8px!important}
+.game-screen .panel-heading{margin-bottom:6px!important}
+.game-screen .panel-heading h2{font-size:9px!important}
+.game-screen .panel-heading p{font-size:7px!important}
+.game-screen .history-item{grid-template-columns:26px 1fr!important}
+.game-screen .history-item b{height:23px!important;font-size:8px!important}
+.game-screen .history-item strong{font-size:11px!important}
+.game-screen .active-list span{font-size:7px!important;padding:4px 5px!important}
+.game-screen .verify-row input{padding:6px!important;font-size:9px!important}
+.game-screen .verify-row button{font-size:7px!important}
+.live-money-strip{height:40px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:5px 0!important}
+.live-money-strip>div{display:flex;align-items:center;justify-content:center;gap:7px;padding:5px 9px;border-radius:9px;background:rgba(255,255,255,.9);border:1px solid #c8e1ef;box-shadow:0 4px 14px rgba(16,82,125,.08)}
+.live-money-strip span{font-size:7px;color:#68829e;font-weight:1000;letter-spacing:.8px}
+.live-money-strip strong{font-size:13px;color:#106fba;font-weight:1000}
+.dark .live-money-strip>div{background:#102d49;border-color:#2c526f}.dark .live-money-strip span{color:#9ab2c8}.dark .live-money-strip strong{color:#63d5ff}
+.winner-money{margin:10px 0;padding:9px;border-radius:10px;background:#fff5c9;color:#7d5d00;font-size:10px;font-weight:900}.winner-money strong{display:block;font-size:18px;color:#159ee8;margin-top:3px}
+.money-setting{display:grid;gap:5px;margin-bottom:10px;font-size:9px;font-weight:900;color:#486783}.money-setting input{padding:9px;border:1px solid #c9deec;border-radius:9px;background:#fff;color:#183b5d;font-weight:900}.dark .money-setting{color:#b5cada}.dark .money-setting input{background:#0d253f;color:#fff;border-color:#315570}
+@media (max-width:1250px){.game-screen .dashboard-grid{grid-template-columns:125px minmax(0,1fr) 145px!important}.game-screen .number-cell{font-size:clamp(10px,1.1vw,18px)!important}.game-screen .board-row{grid-template-columns:25px repeat(15,minmax(0,1fr))!important;gap:3px!important}.game-screen .number-cell,.game-screen .board-letter{aspect-ratio:1.4!important}.live-money-strip strong{font-size:11px}}
+@media (max-height:700px){.game-screen .dashboard-grid{height:calc(100% - 100px)!important}.game-screen .call-ball{width:75px!important;height:75px!important;min-width:75px!important;min-height:75px!important}.game-screen .call-ball strong{font-size:30px!important}.game-screen .right-column .panel{padding:5px!important}.live-money-strip{height:34px}.game-screen .game-controls{height:46px!important}}
