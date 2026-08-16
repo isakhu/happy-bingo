@@ -133,6 +133,11 @@ function createWindow() {
   load(win)
 }
 
+// Electron blocks programmatic HTML5 audio in some packaged Windows builds unless
+// autoplay is explicitly allowed. Bingo is an offline kiosk-style app, so allow
+// the recorded caller audio to start automatically after the game begins.
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+
 app.whenReady().then(async () => {
   createWindow()
   await generateCardsPdf(2026)
