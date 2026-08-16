@@ -70,14 +70,57 @@ const ALLOWED_VOICES = new Set([
 
 ipcMain.handle('play-voice', async (_event, file: string) => {
   if (!ALLOWED_VOICES.has(file)) throw new Error('Voice file is not allowed')
-  const bytes = await readFile(join(app.getAppPath(), 'audio', 'voices', file))
+  const voiceDir = app.isPackaged
+    ? join(process.resourcesPath, 'audio', 'voices')
+    : join(app.getAppPath(), 'audio', 'voices')
+  const bytes = await readFile(join(voiceDir, file))
   return `data:audio/mpeg;base64,${bytes.toString('base64')}`
 })
 
+function enableAutomaticCaller(win: BrowserWindow) {
+  const script = `(() => {
+    if (window.__happyBingoAutoCaller) return;
+    window.__happyBingoAutoCaller = true;
+    let lastClick = 0;
+    const tick = () => {
+      try {
+        const live = document.querySelector('.status-pill.live');
+        const call = document.querySelector('.call-button');
+        if (live && call) {
+          const text = call.textContent || '';
+          const disabled = call.hasAttribute('disabled') || call.getAttribute('aria-disabled') === 'true';
+          const now = Date.now();
+          if (!disabled && !text.includes('PLAYING') && now - lastClick >= 1000) {
+            lastClick = now;
+            call.click();
+          }
+        }
+      } catch {}
+    };
+    setInterval(tick, 500);
+  })()`
+  win.webContents.executeJavaScript(script).catch(() => {})
+}
+
 function createWindow() {
   const primary = screen.getPrimaryDisplay()
-  const win = new BrowserWindow({ x: primary.workArea.x, y: primary.workArea.y, width: primary.workAreaSize.width, height: primary.workAreaSize.height, minWidth: 1100, minHeight: 700, title: 'Happy Bingo — Manager', backgroundColor: '#071a3a', webPreferences: { preload: join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false } })
+  const win = new BrowserWindow({
+    x: primary.workArea.x,
+    y: primary.workArea.y,
+    width: primary.workAreaSize.width,
+    height: primary.workAreaSize.height,
+    minWidth: 1100,
+    minHeight: 700,
+    title: 'Happy Bingo — Manager',
+    backgroundColor: '#071a3a',
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  })
   win.maximize()
+  win.webContents.on('did-finish-load', () => enableAutomaticCaller(win))
   load(win)
 }
 
