@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
 import { join } from 'node:path'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises'
+import { pathToFileURL } from 'node:url'
 
 type Card = { id: number; values: number[] }
 
@@ -68,48 +69,33 @@ const ALLOWED_VOICES = new Set([
   ...Array.from({ length: 15 }, (_, i) => `o${i + 61}.mp3`),
 ])
 
-async function readVoiceFile(file: string) {
-  const locations = [
-    join(app.getAppPath(), 'audio', 'voices', file),
-    join(process.resourcesPath, 'audio', 'voices', file),
+async function ensureVoices() {
+  const sourceDirs = [
+    join(process.resourcesPath, 'audio', 'voices'),
+    join(app.getAppPath(), 'audio', 'voices'),
   ]
-  let lastError: unknown
-  for (const location of locations) {
-    try { return await readFile(location) } catch (error) { lastError = error }
+  const targetDir = join(app.getPath('userData'), 'voices')
+  await mkdir(targetDir, { recursive: true })
+  for (const file of ALLOWED_VOICES) {
+    const target = join(targetDir, file)
+    let copied = false
+    for (const sourceDir of sourceDirs) {
+      try { await copyFile(join(sourceDir, file), target); copied = true; break } catch {}
+    }
+    if (!copied) {
+      try { await readFile(target) } catch { console.error(`Missing voice: ${file}`) }
+    }
   }
-  throw lastError instanceof Error ? lastError : new Error(`Voice file not found: ${file}`)
+  return targetDir
 }
 
 ipcMain.handle('play-voice', async (_event, file: string) => {
   if (!ALLOWED_VOICES.has(file)) throw new Error('Voice file is not allowed')
-  const bytes = await readVoiceFile(file)
-  return `data:audio/mpeg;base64,${bytes.toString('base64')}`
+  const targetDir = await ensureVoices()
+  const target = join(targetDir, file)
+  await readFile(target)
+  return pathToFileURL(target).href
 })
-
-function enableAutomaticCaller(win: BrowserWindow) {
-  const script = `(() => {
-    if (window.__happyBingoAutoCaller) return;
-    window.__happyBingoAutoCaller = true;
-    let lastClick = 0;
-    const tick = () => {
-      try {
-        const live = document.querySelector('.status-pill.live');
-        const call = document.querySelector('.call-button');
-        if (live && call) {
-          const text = call.textContent || '';
-          const disabled = call.hasAttribute('disabled') || call.getAttribute('aria-disabled') === 'true';
-          const now = Date.now();
-          if (!disabled && !text.includes('PLAYING') && now - lastClick >= 1000) {
-            lastClick = now;
-            call.click();
-          }
-        }
-      } catch {}
-    };
-    setInterval(tick, 500);
-  })()`
-  win.webContents.executeJavaScript(script).catch(() => {})
-}
 
 function createWindow() {
   const primary = screen.getPrimaryDisplay()
@@ -129,16 +115,13 @@ function createWindow() {
     },
   })
   win.maximize()
-  win.webContents.on('did-finish-load', () => enableAutomaticCaller(win))
   load(win)
 }
 
-// Electron blocks programmatic HTML5 audio in some packaged Windows builds unless
-// autoplay is explicitly allowed. Bingo is an offline kiosk-style app, so allow
-// the recorded caller audio to start automatically after the game begins.
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
 app.whenReady().then(async () => {
+  await ensureVoices()
   createWindow()
   await generateCardsPdf(2026)
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() })
