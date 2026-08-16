@@ -13,7 +13,7 @@ function load(win: BrowserWindow, player = false) {
 function generateCards(seedBase = 2026): Card[] {
   const cards: Card[] = []
   for (let id = 1; id <= 100; id++) {
-    const columns: number[][] = []
+    const columns: number[][] = []   
     for (let col = 0; col < 5; col++) {
       const nums = Array.from({ length: 15 }, (_, i) => col * 15 + i + 1)
       let seed = (seedBase + id * 31 + col * 17) >>> 0
