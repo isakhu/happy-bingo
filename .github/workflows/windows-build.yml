@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  build-windows:
+  build-customer-app:
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -15,11 +15,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
+      - name: Install customer app dependencies
         run: npm install
-      - name: Build renderer, main and preload
+      - name: Build customer app renderer, main and preload
         run: npm run build
-      - name: Verify packaged inputs before installer
+      - name: Verify customer app inputs
         shell: pwsh
         run: |
           if (-not (Test-Path "out/main/index.js")) { throw "Missing out/main/index.js" }
@@ -28,20 +28,55 @@ jobs:
           if (-not (Test-Path "audio/voices")) { throw "Missing audio/voices directory" }
           $voices = Get-ChildItem "audio/voices" -Filter *.mp3 -File
           if ($voices.Count -lt 78) { throw "Expected at least 78 MP3 voices, found $($voices.Count)" }
-          Write-Host "Verified Electron preload and $($voices.Count) MP3 voice files before packaging."
-      - name: Build and package Windows installer
+          Write-Host "Verified customer app and $($voices.Count) MP3 voice files."
+      - name: Build customer Windows installer
         run: npx electron-builder --win --publish never
-      - name: Verify installer
+      - name: Verify customer installer
         shell: pwsh
         run: |
           $exe = Get-ChildItem "dist/*.exe" -File
-          if (-not $exe) { throw "Windows installer was not produced" }
-          Write-Host "Installer: $($exe.FullName)"
-      - name: Upload installer
+          if (-not $exe) { throw "Customer Windows installer was not produced" }
+      - name: Upload customer app
         uses: actions/upload-artifact@v4
         with:
           name: Happy-Bingo-Windows
           path: |
             dist/*.exe
             dist/*.zip
+          if-no-files-found: error
+
+  build-card-setup:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: card-setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install private setup dependencies
+        run: npm install
+      - name: Verify setup app files
+        shell: pwsh
+        run: |
+          foreach ($f in @('main.cjs','preload.cjs','index.html','renderer.js','styles.css','package.json')) {
+            if (-not (Test-Path $f)) { throw "Missing setup file: $f" }
+          }
+      - name: Build private Card Setup installer
+        run: npx electron-builder --win --publish never
+      - name: Verify Card Setup installer
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem "dist/*.exe" -File
+          if (-not $exe) { throw "Card Setup Windows installer was not produced" }
+      - name: Upload private Card Setup app
+        uses: actions/upload-artifact@v4
+        with:
+          name: Happy-Bingo-Card-Setup-Windows
+          path: |
+            card-setup/dist/*.exe
+            card-setup/dist/*.zip
           if-no-files-found: error
