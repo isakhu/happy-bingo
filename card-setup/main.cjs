@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('node:path')
 const fs = require('node:fs/promises')
 
@@ -25,14 +25,25 @@ function createWindow() {
   const win = new BrowserWindow({ width: 1200, height: 820, minWidth: 1000, minHeight: 700, backgroundColor:'#07131f', title:'Happy Bingo Card Setup', webPreferences:{preload:path.join(__dirname,'preload.cjs'), contextIsolation:true, nodeIntegration:false} })
   win.loadFile(path.join(__dirname,'index.html'))
 }
+function makeDocument(payload) { return { format:'HAPPY_BINGO_CARTELLA_SET_V1', setId:payload.setId || 'HB-001', createdAt:new Date().toISOString(), cards:payload.cards } }
 
 ipcMain.handle('save-hbc', async (_, payload) => {
   if (!payload || !validSet(payload.cards)) throw new Error('All 100 Cartellas must be valid before export.')
   const result = await dialog.showSaveDialog({ title:'Export Happy Bingo Cartella Set', defaultPath:`Happy-Bingo-${payload.setId || 'HB-001'}.hbc`, filters:[{name:'Happy Bingo Set',extensions:['hbc']},{name:'All Files',extensions:['*']}] })
   if (result.canceled || !result.filePath) return {canceled:true}
-  const doc = { format:'HAPPY_BINGO_CARTELLA_SET_V1', setId:payload.setId || 'HB-001', createdAt:new Date().toISOString(), cards:payload.cards }
+  const doc = makeDocument(payload)
   await fs.writeFile(result.filePath, JSON.stringify(doc,null,2), 'utf8')
   return {canceled:false,path:result.filePath,setId:doc.setId}
+})
+
+ipcMain.handle('install-hbc', async (_, payload) => {
+  if (!payload || !validSet(payload.cards)) throw new Error('All 100 Cartellas must be valid before installation.')
+  const doc = makeDocument(payload)
+  const dir = path.join(app.getPath('appData'), 'Happy Bingo', 'cartella-sets')
+  await fs.mkdir(dir, { recursive:true })
+  const target = path.join(dir, `${doc.setId}.hbc`)
+  await fs.writeFile(target, JSON.stringify(doc,null,2), 'utf8')
+  return { path:target, setId:doc.setId }
 })
 
 ipcMain.handle('open-hbc', async () => {
@@ -42,8 +53,6 @@ ipcMain.handle('open-hbc', async () => {
   if (raw.format !== 'HAPPY_BINGO_CARTELLA_SET_V1' || !validSet(raw.cards)) throw new Error('Invalid Cartella Set file.')
   return {canceled:false,setId:raw.setId || 'HB-001',cards:raw.cards}
 })
-
-ipcMain.handle('open-folder', async (_, filePath) => { if (filePath) await shell.openPath(filePath) })
 
 app.whenReady().then(() => { createWindow(); app.on('activate',()=>{ if(BrowserWindow.getAllWindows().length===0) createWindow() }) })
 app.on('window-all-closed',()=>{ if(process.platform!=='darwin') app.quit() })
