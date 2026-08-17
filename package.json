@@ -15,7 +15,9 @@
     "license:generate": "node tools/generate-license.cjs"
   },
   "dependencies": {
+    "@pdfsmaller/pdf-encrypt": "^1.0.0",
     "@vitejs/plugin-react": "5.0.4",
+    "pdf-lib": "^1.17.1",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },
