@@ -1,0 +1,186 @@
+/* Final Happy Bingo presentation overrides */
+.game-topbar .live-pill,
+.game-topbar .pause-status { display: none !important; }
+
+.settings-modal {
+  width: 75vw !important;
+  height: 75vh !important;
+  max-width: 1200px !important;
+  max-height: 850px !important;
+  background: radial-gradient(circle at 15% 10%, #173c66, #0a1220 52%, #110b24) !important;
+  color: #fff !important;
+  border: 2px solid #318fe2 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 35px 100px #000d, 0 0 55px #218ce933 !important;
+  padding: 26px !important;
+  overflow: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+  gap: 14px !important;
+  position: relative !important;
+}
+.settings-modal > h2 {
+  grid-column: 1 / -1;
+  margin: 0 !important;
+  padding: 14px 18px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(100deg,#123f71,#4f1c8e,#123f71) !important;
+  border: 1px solid #55b9ff !important;
+  color: #fff !important;
+  letter-spacing: 2px !important;
+}
+.settings-modal > label,
+.settings-modal > .manager-cut,
+.settings-modal > button {
+  background: linear-gradient(145deg,#15283b,#101923) !important;
+  border: 1px solid #36556e !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  color: #eaf6ff !important;
+  font-weight: 900 !important;
+  font-size: 11px !important;
+}
+.settings-modal > label { display:flex !important; flex-direction:column !important; gap:8px !important; }
+.settings-modal select,
+.settings-modal input {
+  background:#08111c !important;
+  color:#fff !important;
+  border:1px solid #4a718f !important;
+  border-radius:9px !important;
+  padding:10px !important;
+}
+.settings-modal > button {
+  cursor:pointer !important;
+  border:0 !important;
+}
+.settings-modal > button:nth-last-child(2) {
+  background: linear-gradient(90deg,#e33e3e,#a31f86) !important;
+  border-color:#ff7187 !important;
+}
+.settings-modal > button:last-child {
+  background: linear-gradient(90deg,#168ce5,#6b3ff1) !important;
+}
+.manager-cut {
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  min-height:70px !important;
+  background: linear-gradient(145deg,#123d25,#0b1e14) !important;
+  border:1px solid #35d56d !important;
+  color:#91ffb1 !important;
+}
+.manager-cut strong { color:#fff !important; font-size:23px !important; margin-top:5px !important; }
+
+.hb-money-card {
+  grid-column:1 / -1;
+  padding:16px 18px;
+  border-radius:16px;
+  background:linear-gradient(145deg,#102b49,#09141f);
+  border:2px solid #ffd23c;
+  box-shadow:0 0 24px #ffd23c22, inset 0 0 24px #0005;
+}
+.hb-money-card span { display:block; color:#ffd23c; font-size:10px; font-weight:1000; letter-spacing:2px; }
+.hb-money-card strong { display:block; color:#fff; font-size:26px; margin-top:4px; }
+.hb-money-card small { display:block; color:#92a9ba; font-size:9px; margin-top:4px; }
+
+.card-inspector {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  margin: 0 !important;
+  z-index: 500 !important;
+  background: #000 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 30px !important;
+  box-shadow: none !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.inspector-title {
+  color:#fff !important;
+  font-size:30px !important;
+  font-weight:1000 !important;
+  letter-spacing:3px !important;
+  margin-bottom:22px !important;
+}
+.inspector-grid {
+  width:min(620px,82vw) !important;
+  display:grid !important;
+  grid-template-columns:repeat(5,1fr) !important;
+  gap:10px !important;
+  padding:14px !important;
+  background:#050505 !important;
+  border:3px solid #13452b !important;
+  box-shadow:0 0 60px #00d85a22 !important;
+}
+.inspector-cell {
+  aspect-ratio:1 !important;
+  border-radius:12px !important;
+  background:#111 !important;
+  color:#666 !important;
+  border:2px solid #252525 !important;
+  font-size:clamp(22px,3vw,38px) !important;
+  font-weight:1000 !important;
+}
+.inspector-cell.marked {
+  background:#064d2c !important;
+  color:#fff !important;
+  border-color:#0aa04d !important;
+  box-shadow:0 0 18px #00b95744 !important;
+}
+.inspector-cell.winning {
+  background:#00a94f !important;
+  color:#fff !important;
+  border:4px solid #47ff9a !important;
+  box-shadow:0 0 28px #00ff7a99, inset 0 0 16px #d0ffe055 !important;
+  transform:scale(1.04) !important;
+}
+.inspector-close {
+  margin-top:22px !important;
+  border:0 !important;
+  border-radius:11px !important;
+  background:#1a8ce4 !important;
+  color:#fff !important;
+  padding:12px 30px !important;
+  font-weight:1000 !important;
+}
+
+.hb-password-backdrop {
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:grid;
+  place-items:center;
+  background:#02060de8;
+  backdrop-filter:blur(8px);
+}
+.hb-password-card {
+  width:min(430px,90vw);
+  padding:30px;
+  border-radius:22px;
+  background:linear-gradient(145deg,#102e4f,#22103a);
+  border:2px solid #51b6ff;
+  box-shadow:0 30px 90px #000,0 0 45px #168be955;
+  color:#fff;
+  text-align:center;
+}
+.hb-password-icon { font-size:38px; }
+.hb-password-kicker { margin-top:6px; color:#ffd23c; font-size:9px; font-weight:1000; letter-spacing:2px; }
+.hb-password-card h2 { margin:6px 0; font-size:27px; }
+.hb-password-card p { margin:0 0 18px; color:#b8cddd; font-size:11px; line-height:1.5; }
+.hb-password-card input { width:100%; box-sizing:border-box; padding:13px; border-radius:10px; background:#08111b; border:1px solid #4b7090; color:#fff; text-align:center; font-size:20px; letter-spacing:5px; outline:none; }
+.hb-password-error { color:#ff7f87; font-size:10px; font-weight:1000; margin-top:7px; }
+.hb-password-actions { display:flex; gap:10px; margin-top:15px; }
+.hb-password-actions button { flex:1; border:0; border-radius:10px; padding:12px; font-weight:1000; background:#334a5d; color:#fff; }
+.hb-password-actions .confirm { background:linear-gradient(90deg,#168ce4,#693cf0); }
+
+@media(max-width:800px){
+  .settings-modal{width:90vw !important;height:84vh !important;grid-template-columns:1fr !important;padding:16px !important;}
+  .inspector-grid{width:min(560px,92vw) !important;gap:6px !important;padding:9px !important;}
+  .inspector-title{font-size:21px !important;}
+}
