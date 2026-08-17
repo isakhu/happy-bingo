@@ -1,7 +1,6 @@
 import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
 import { join } from 'node:path'
 import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises'
-import { pathToFileURL } from 'node:url'
 
 type Card = { id: number; values: number[] }
 
@@ -41,9 +40,7 @@ function cardHtml(card: Card) {
 async function generateCardsPdf(seedBase = 2026) {
   const pdfWindow = new BrowserWindow({ show: false, width: 1200, height: 900, webPreferences: { sandbox: true } })
   const cards = generateCards(seedBase)
-  const html = `<!doctype html><html><head><meta charset="UTF-8"><style>
-@page{size:A4;margin:6mm}*{box-sizing:border-box}body{margin:0;background:#170743;font-family:Arial,sans-serif;color:#fff}.page{width:100%;height:282mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;page-break-after:always}.page:last-child{page-break-after:auto}.card{position:relative;overflow:hidden;border:2px solid #8d5cff;border-radius:14px;padding:6mm;background:radial-gradient(circle at 50% 5%,#6d2fd0,#28105e 45%,#12052f 100%);box-shadow:inset 0 0 35px #8b43ff55}.card:before{content:'';position:absolute;inset:-30%;background:conic-gradient(from 20deg,#ff4fc3,#6f5cff,#27cfff,#8cff3e,#ffd23f,#ff4fc3);opacity:.08;filter:blur(25px)}.spark{position:absolute;right:8mm;top:4mm;color:#ffd95a;font-size:20px}.title{position:relative;text-align:center;font-size:22px;font-weight:1000;letter-spacing:2px;text-shadow:0 2px 0 #12052f}.title span{color:#ffd13b}.sub{position:relative;text-align:center;font-size:9px;margin:2mm 0 4mm;color:#d8c8ff;font-weight:800;letter-spacing:1.4px}.head,.grid{position:relative;display:grid;grid-template-columns:repeat(5,1fr)}.head{gap:2px}.head b{color:white;text-align:center;padding:5px 0;font-size:15px;border-radius:4px;text-shadow:0 1px 2px #0008}.grid{gap:2px;margin-top:2px}.cell{height:22mm;border:1px solid #bba8e5;background:#fffaf5;color:#1c1640;display:grid;place-items:center;font-size:16px;font-weight:900}.cell.free{background:linear-gradient(135deg,#ffd63f,#ff9d21);color:#fff;font-size:10px;text-shadow:0 1px 2px #8b3c00}.footer{position:relative;text-align:center;margin-top:3mm;font-size:8px;color:#e9dfff;letter-spacing:1.5px;font-weight:900}
-</style></head><body>${Array.from({ length: 25 }, (_, page) => `<div class="page">${cards.slice(page * 4, page * 4 + 4).map(cardHtml).join('')}</div>`).join('')}</body></html>`
+  const html = `<!doctype html><html><head><meta charset="UTF-8"><style>@page{size:A4;margin:6mm}*{box-sizing:border-box}body{margin:0;background:#170743;font-family:Arial,sans-serif;color:#fff}.page{width:100%;height:282mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;page-break-after:always}.page:last-child{page-break-after:auto}.card{position:relative;overflow:hidden;border:2px solid #8d5cff;border-radius:14px;padding:6mm;background:radial-gradient(circle at 50% 5%,#6d2fd0,#28105e 45%,#12052f 100%)}.title{text-align:center;font-size:22px;font-weight:1000}.title span{color:#ffd13b}.sub{text-align:center;font-size:9px;margin:2mm 0 4mm;color:#d8c8ff;font-weight:800}.head,.grid{display:grid;grid-template-columns:repeat(5,1fr)}.head{gap:2px}.head b{color:white;text-align:center;padding:5px 0;font-size:15px;border-radius:4px}.grid{gap:2px;margin-top:2px}.cell{height:22mm;border:1px solid #bba8e5;background:#fffaf5;color:#1c1640;display:grid;place-items:center;font-size:16px;font-weight:900}.cell.free{background:linear-gradient(135deg,#ffd63f,#ff9d21);color:#fff;font-size:10px}.footer{text-align:center;margin-top:3mm;font-size:8px;color:#e9dfff;letter-spacing:1.5px;font-weight:900}</style></head><body>${Array.from({ length: 25 }, (_, page) => `<div class="page">${cards.slice(page * 4, page * 4 + 4).map(cardHtml).join('')}</div>`).join('')}</body></html>`
   try {
     await pdfWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
     const pdf = await pdfWindow.webContents.printToPDF({ printBackground: true, pageSize: 'A4' })
@@ -53,9 +50,7 @@ async function generateCardsPdf(seedBase = 2026) {
     await writeFile(path, pdf)
     await shell.openPath(path)
     return { cards, path }
-  } finally {
-    if (!pdfWindow.isDestroyed()) pdfWindow.close()
-  }
+  } finally { if (!pdfWindow.isDestroyed()) pdfWindow.close() }
 }
 
 ipcMain.handle('generate-cards-pdf', async () => generateCardsPdf(Date.now() >>> 0))
@@ -70,10 +65,7 @@ const ALLOWED_VOICES = new Set([
 ])
 
 async function ensureVoices() {
-  const sourceDirs = [
-    join(process.resourcesPath, 'audio', 'voices'),
-    join(app.getAppPath(), 'audio', 'voices'),
-  ]
+  const sourceDirs = [join(app.getAppPath(), 'audio', 'voices'), join(process.resourcesPath, 'audio', 'voices')]
   const targetDir = join(app.getPath('userData'), 'voices')
   await mkdir(targetDir, { recursive: true })
   for (const file of ALLOWED_VOICES) {
@@ -82,9 +74,7 @@ async function ensureVoices() {
     for (const sourceDir of sourceDirs) {
       try { await copyFile(join(sourceDir, file), target); copied = true; break } catch {}
     }
-    if (!copied) {
-      try { await readFile(target) } catch { console.error(`Missing voice: ${file}`) }
-    }
+    if (!copied) { try { await readFile(target) } catch { console.error(`Missing voice: ${file}`) } }
   }
   return targetDir
 }
@@ -93,27 +83,14 @@ ipcMain.handle('play-voice', async (_event, file: string) => {
   if (!ALLOWED_VOICES.has(file)) throw new Error('Voice file is not allowed')
   const targetDir = await ensureVoices()
   const target = join(targetDir, file)
-  await readFile(target)
-  return pathToFileURL(target).href
+  const audioData = await readFile(target)
+  if (!audioData.length) throw new Error(`Voice file is empty: ${file}`)
+  return `data:audio/mpeg;base64,${audioData.toString('base64')}`
 })
 
 function createWindow() {
   const primary = screen.getPrimaryDisplay()
-  const win = new BrowserWindow({
-    x: primary.workArea.x,
-    y: primary.workArea.y,
-    width: primary.workAreaSize.width,
-    height: primary.workAreaSize.height,
-    minWidth: 1100,
-    minHeight: 700,
-    title: 'Happy Bingo — Manager',
-    backgroundColor: '#071a3a',
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  })
+  const win = new BrowserWindow({ x: primary.workArea.x, y: primary.workArea.y, width: primary.workAreaSize.width, height: primary.workAreaSize.height, minWidth: 1100, minHeight: 700, title: 'Happy Bingo — Manager', backgroundColor: '#071a3a', webPreferences: { preload: join(__dirname, '../preload/index.js'), contextIsolation: true, nodeIntegration: false } })
   win.maximize()
   load(win)
 }
@@ -123,7 +100,6 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 app.whenReady().then(async () => {
   await ensureVoices()
   createWindow()
-  await generateCardsPdf(2026)
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() })
 })
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit() })
