@@ -6,6 +6,7 @@ import './game-overrides.css'
 const LETTERS = ['B', 'I', 'N', 'G', 'O'] as const
 const CARD_COUNT = 100
 const RANGES: Record<string, [number, number]> = { B: [1, 15], I: [16, 30], N: [31, 45], G: [46, 60], O: [61, 75] }
+const MANAGER_PASSWORD = '20260817'
 
 type Card = { id: number; values: number[] }
 type Called = { letter: string; number: number }
@@ -49,12 +50,13 @@ function loadCards(): Card[] {
   return cards
 }
 
-function playAudio(fileUrl: string): Promise<void> {
+function playAudio(fileUrl: string, rate: number): Promise<void> {
   return new Promise(resolve => {
     const audio = new Audio()
     let settled = false
     const finish = () => { if (!settled) { settled = true; audio.onended = null; audio.onerror = null; resolve() } }
     audio.preload = 'auto'
+    audio.playbackRate = rate
     audio.onended = finish
     audio.onerror = finish
     audio.src = fileUrl
@@ -63,14 +65,8 @@ function playAudio(fileUrl: string): Promise<void> {
   })
 }
 
-function makeEmptyCard(id: number): Card {
-  return { id, values: Array.from({ length: 25 }, (_, i) => i === 12 ? 0 : 0) }
-}
-
-function cardComplete(card: Card) {
-  return card.values.every((n, i) => i === 12 || Number.isInteger(n) && n > 0)
-}
-
+function makeEmptyCard(id: number): Card { return { id, values: Array.from({ length: 25 }, (_, i) => i === 12 ? 0 : 0) } }
+function cardComplete(card: Card) { return card.values.every((n, i) => i === 12 || Number.isInteger(n) && n > 0) }
 function cardValid(card: Card) {
   if (!cardComplete(card)) return false
   for (let row = 0; row < 5; row++) {
@@ -96,6 +92,8 @@ function App() {
   const [locked, setLocked] = useState<Set<number>>(new Set())
   const [voicePlaying, setVoicePlaying] = useState(false)
   const [voiceEnabled, setVoiceEnabled] = useState(() => localStorage.getItem('happy-bingo-voice') !== 'off')
+  const [voiceSpeed, setVoiceSpeed] = useState(() => Number(localStorage.getItem('happy-bingo-voice-speed') || '1'))
+  const [callGap, setCallGap] = useState(() => Number(localStorage.getItem('happy-bingo-call-gap') || '3'))
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [cardSource, setCardSource] = useState<'printed' | 'pdf'>(() => (localStorage.getItem('happy-bingo-card-source') as 'printed' | 'pdf') || 'printed')
   const [generatingPdf, setGeneratingPdf] = useState(false)
@@ -103,6 +101,8 @@ function App() {
   const [checkOpen, setCheckOpen] = useState(false)
   const [verifyInput, setVerifyInput] = useState('')
   const [winner, setWinner] = useState<number | null>(null)
+  const [inspectionCard, setInspectionCard] = useState<number | null>(null)
+  const [winningIndexes, setWinningIndexes] = useState<number[]>([])
   const [betAmount, setBetAmount] = useState(() => localStorage.getItem('happy-bingo-bet') || '')
   const [cutPercent, setCutPercent] = useState(() => localStorage.getItem('happy-bingo-cut') || '')
   const [totalMoneyMade, setTotalMoneyMade] = useState(() => Math.max(0, Number(localStorage.getItem('happy-bingo-total-money-made') || '0')))
@@ -121,7 +121,7 @@ function App() {
     setVoicePlaying(true)
     try {
       const fileUrl = await window.happyBingo.playVoice(file)
-      await playAudio(fileUrl)
+      await playAudio(fileUrl, voiceSpeed)
     } catch (error) {
       console.error(`Happy Bingo voice failed: ${file}`, error)
       setMessage(`VOICE ERROR: ${file}`)
@@ -136,7 +136,7 @@ function App() {
   async function startGame() {
     if (!selected.size) return setMessage('Select at least one cartella.')
     if (manualSetup && cards.some(card => selected.has(card.id) && !cardValid(card))) return setMessage('Finish all selected cartellas before starting the game.')
-    setCalled([]); setRemaining(makePool()); setLocked(new Set()); setPaused(false); setWinner(null); setVerifyInput(''); setCheckOpen(false); setMessage(''); setStarted(true)
+    setCalled([]); setRemaining(makePool()); setLocked(new Set()); setPaused(false); setWinner(null); setInspectionCard(null); setWinningIndexes([]); setVerifyInput(''); setCheckOpen(false); setMessage(''); setStarted(true)
     await playVoice('chewatawu.mp3')
   }
 
@@ -151,23 +151,27 @@ function App() {
 
   useEffect(() => {
     if (!started || paused || voicePlaying || !remaining.length) return
-    const timer = window.setTimeout(() => { void callNext() }, called.length === 0 ? 900 : 3000)
+    const timer = window.setTimeout(() => { void callNext() }, called.length === 0 ? 900 : Math.max(0.5, callGap) * 1000)
     return () => window.clearTimeout(timer)
-  }, [started, paused, voicePlaying, remaining.length, called.length])
+  }, [started, paused, voicePlaying, remaining.length, called.length, callGap])
 
   function recordCompletedGame() {
     const amount = currentAmount
     if (amount === null || !Number.isFinite(amount) || amount <= 0) return
-    setTotalMoneyMade(prev => {
-      const next = prev + amount
-      localStorage.setItem('happy-bingo-total-money-made', String(next))
-      return next
-    })
+    setTotalMoneyMade(prev => { const next = prev + amount; localStorage.setItem('happy-bingo-total-money-made', String(next)); return next })
   }
 
   function newGame() {
     if (!window.confirm('End this game and return to cartella selection?')) return
-    recordCompletedGame(); setStarted(false); setPaused(false); setCalled([]); setRemaining(makePool()); setLocked(new Set()); setWinner(null); setVerifyInput(''); setCheckOpen(false); setMessage('')
+    recordCompletedGame(); setStarted(false); setPaused(false); setCalled([]); setRemaining(makePool()); setLocked(new Set()); setWinner(null); setInspectionCard(null); setWinningIndexes([]); setVerifyInput(''); setCheckOpen(false); setMessage('')
+  }
+
+  function getWinningLines(card: Card) {
+    const marked = card.values.map((n, i) => i === 12 || calledSet.has(n))
+    const rows = Array.from({ length: 5 }, (_, r) => Array.from({ length: 5 }, (_, c) => r * 5 + c))
+    const cols = Array.from({ length: 5 }, (_, c) => Array.from({ length: 5 }, (_, r) => r * 5 + c))
+    const diagonals = [[0, 6, 12, 18, 24], [4, 8, 12, 16, 20]]
+    return [...rows, ...cols, ...diagonals].filter(line => line.every(index => marked[index]))
   }
 
   async function checkWinner() {
@@ -176,14 +180,12 @@ function App() {
     if (!Number.isInteger(id) || id < 1 || id > 100 || !card) return setMessage('Enter a valid cartella number from 001 to 100.')
     if (!selected.has(id)) return setMessage(`Cartella ${String(id).padStart(3, '0')} is not active.`)
     if (!cardValid(card)) return setMessage(`Cartella ${String(id).padStart(3, '0')} is not configured correctly.`)
+    setInspectionCard(id)
     if (locked.has(id)) { await playVoice('cartellawu.mp3'); setCheckOpen(false); return setMessage(`CARTELLA ${String(id).padStart(3, '0')} IS LOCKED.`) }
-
-    const marked = card.values.map((n, i) => i === 12 || calledSet.has(n))
-    const rows = Array.from({ length: 5 }, (_, r) => Array.from({ length: 5 }, (_, c) => r * 5 + c))
-    const cols = Array.from({ length: 5 }, (_, c) => Array.from({ length: 5 }, (_, r) => r * 5 + c))
-    const valid = [...rows, ...cols, [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]].some(line => line.every(index => marked[index]))
+    const lines = getWinningLines(card)
+    setWinningIndexes(lines.flat())
     setCheckOpen(false)
-    if (!valid) { setLocked(prev => new Set(prev).add(id)); await playVoice('cartellawu.mp3'); return setMessage(`CARTELLA ${String(id).padStart(3, '0')} LOCKED — INVALID BINGO.`) }
+    if (!lines.length) { setLocked(prev => new Set(prev).add(id)); await playVoice('cartellawu.mp3'); return setMessage(`CARTELLA ${String(id).padStart(3, '0')} LOCKED — INVALID BINGO.`) }
     await playVoice('Goodbingo.mp3'); setWinner(id)
   }
 
@@ -197,8 +199,12 @@ function App() {
   function saveCards(next: Card[]) { setCards(next); localStorage.setItem('happy-bingo-cards', JSON.stringify(next)) }
   function saveBet(value: string) { setBetAmount(value); value === '' ? localStorage.removeItem('happy-bingo-bet') : localStorage.setItem('happy-bingo-bet', value) }
   function saveCut(value: string) { setCutPercent(value); value === '' ? localStorage.removeItem('happy-bingo-cut') : localStorage.setItem('happy-bingo-cut', value) }
+  function saveVoiceSpeed(value: number) { setVoiceSpeed(value); localStorage.setItem('happy-bingo-voice-speed', String(value)) }
+  function saveCallGap(value: number) { setCallGap(value); localStorage.setItem('happy-bingo-call-gap', String(value)) }
 
   function openManualSetup() {
+    const password = window.prompt('MANAGER PASSWORD\nEnter the numeric password to open Cartella Building:')
+    if (password !== MANAGER_PASSWORD) { setMessage('Incorrect manager password.'); return }
     setManualSetup(true); localStorage.setItem('happy-bingo-manual-setup', 'on'); setSetupIndex(0); setDraftCard(cards[0] || makeEmptyCard(1)); setSettingsOpen(false)
   }
 
@@ -216,7 +222,7 @@ function App() {
     setDraftCard(prev => ({ ...prev, values: prev.values.map((v, i) => i === index ? n : v) }))
   }
 
-  const settings = <SettingsModal cardSource={cardSource} setCardSource={value => { setCardSource(value); localStorage.setItem('happy-bingo-card-source', value) }} voiceEnabled={voiceEnabled} setVoiceEnabled={value => { setVoiceEnabled(value); localStorage.setItem('happy-bingo-voice', value ? 'on' : 'off') }} betAmount={betAmount} setBetAmount={saveBet} cutPercent={cutPercent} setCutPercent={saveCut} totalMoneyMade={totalMoneyMade} generatingPdf={generatingPdf} createPdf={createPdf} manualSetup={manualSetup} openManualSetup={openManualSetup} onClose={() => setSettingsOpen(false)} />
+  const settings = <SettingsModal cardSource={cardSource} setCardSource={value => { setCardSource(value); localStorage.setItem('happy-bingo-card-source', value) }} voiceEnabled={voiceEnabled} setVoiceEnabled={value => { setVoiceEnabled(value); localStorage.setItem('happy-bingo-voice', value ? 'on' : 'off') }} voiceSpeed={voiceSpeed} setVoiceSpeed={saveVoiceSpeed} callGap={callGap} setCallGap={saveCallGap} betAmount={betAmount} setBetAmount={saveBet} cutPercent={cutPercent} setCutPercent={saveCut} totalMoneyMade={totalMoneyMade} generatingPdf={generatingPdf} createPdf={createPdf} manualSetup={manualSetup} openManualSetup={openManualSetup} onClose={() => setSettingsOpen(false)} />
 
   if (!started) return <div className="app-shell selection-mode">
     <header className="topbar"><div className="brand">HAPPY <span>BINGO</span></div><div className="top-actions"><span className="ready-pill">● READY</span><button className="top-button" onClick={() => setSettingsOpen(true)}>SETTING</button></div></header>
@@ -235,18 +241,28 @@ function App() {
       <section className="prize-banner">PRIZE {prize === null ? '—' : Math.round(prize).toLocaleString()}</section>
       <section className="board-shell"><div className="board-grid">{LETTERS.map((letter, row) => <div className="board-row" key={letter}><div className={`letter-badge ${letter.toLowerCase()}`}>{letter}</div>{Array.from({ length: 15 }, (_, i) => i + 1 + row * 15).map(n => { const calledNow = calledSet.has(n); return <div key={n} className={`number-cell ${calledNow ? `called ${getLetter(n).toLowerCase()}` : ''} ${current?.number === n ? 'latest' : ''}`}><span>{n}</span></div> })}</div>)}</div></section>
       <section className="bottom-bar"><div className="game-id">Game ID <strong>100029-YAXT</strong></div><div className="bottom-actions"><button className="action setting" onClick={() => setSettingsOpen(true)}>SETTING</button><button className="action end" onClick={newGame}>END</button><button className="action check" onClick={() => { setVerifyInput(''); setCheckOpen(true) }}>CHECK</button><button className="action pause" onClick={() => setPaused(prev => !prev)}>{paused ? 'RESUME' : 'PAUSE'}</button></div></section>
-      {checkOpen && <div className="check-backdrop"><div className="check-modal"><div className="check-head"><strong>CHECK</strong><button onClick={() => setCheckOpen(false)}>×</button></div><div className="check-body"><label>Card Number</label><input autoFocus inputMode="numeric" value={verifyInput} onChange={e => setVerifyInput(e.target.value.replace(/\D/g, ''))} placeholder="001" onKeyDown={e => e.key === 'Enter' && void checkWinner()} /><button onClick={() => void checkWinner()}>Check Win</button></div></div></div>}
+      {checkOpen && <div className="check-backdrop"><div className="check-modal"><div className="check-head"><strong>CHECK</strong><button onClick={() => setCheckOpen(false)}>×</button></div><div className="check-body"><label>Card Number</label><input autoFocus inputMode="numeric" value={verifyInput} onChange={e => { const value = e.target.value.replace(/\D/g, ''); setVerifyInput(value); const id = Number(value); if (id >= 1 && id <= 100) setInspectionCard(id) }} placeholder="001" onKeyDown={e => e.key === 'Enter' && void checkWinner()} /><button onClick={() => void checkWinner()}>Check Win</button></div></div></div>}
+      {inspectionCard !== null && paused && cards.find(card => card.id === inspectionCard) && <CardInspector card={cards.find(card => card.id === inspectionCard)!} calledSet={calledSet} winningIndexes={winningIndexes} onClose={() => { setInspectionCard(null); setWinningIndexes([]) }} />}
       {winner !== null && <div className="winner-overlay"><div className="winner-card"><div className="winner-star">★</div><h2>BINGO!</h2><p>Card {String(winner).padStart(3, '0')} is a valid winner.</p><button onClick={() => setWinner(null)}>CONFIRM WINNER</button></div></div>}
       {message && <div className="toast">{message}</div>}
     </main>{settingsOpen && settings}
   </div>
 }
 
-function SettingsModal(props: { cardSource: 'printed' | 'pdf'; setCardSource: (value: 'printed' | 'pdf') => void; voiceEnabled: boolean; setVoiceEnabled: (value: boolean) => void; betAmount: string; setBetAmount: (value: string) => void; cutPercent: string; setCutPercent: (value: string) => void; totalMoneyMade: number; generatingPdf: boolean; createPdf: () => Promise<void>; manualSetup: boolean; openManualSetup: () => void; onClose: () => void }) {
+function CardInspector({ card, calledSet, winningIndexes, onClose }: { card: Card; calledSet: Set<number>; winningIndexes: number[]; onClose: () => void }) {
+  const lines = [0, 1, 2, 3, 4].map(r => `ROW ${r + 1}`).concat([0, 1, 2, 3, 4].map(c => `COLUMN ${LETTERS[c]}`), 'DIAGONAL ↘', 'DIAGONAL ↙')
+  const winningLine = winningIndexes.length ? lines.find((_, i) => {
+    const candidate = i < 5 ? [0,1,2,3,4].map(c => i * 5 + c) : i < 10 ? [0,1,2,3,4].map(r => r * 5 + (i - 5)) : i === 10 ? [0,6,12,18,24] : [4,8,12,16,20]
+    return candidate.every(index => winningIndexes.includes(index))
+  }) : null
+  return <div className="card-inspector"><div className="inspector-head"><div><small>PAUSED • CARTELLA CHECK</small><h2>CARTELLA {String(card.id).padStart(3, '0')}</h2></div><button onClick={onClose}>×</button></div><div className="inspector-grid">{card.values.map((n, i) => { const marked = i === 12 || calledSet.has(n); const winning = winningIndexes.includes(i); return <div key={i} className={`inspector-cell ${marked ? 'marked' : ''} ${winning ? 'winning' : ''}`}>{i === 12 ? 'FREE' : n}</div> })}</div>{winningLine && <div className="winning-line-label">🏆 {winningLine} • BINGO</div>}</div>
+}
+
+function SettingsModal(props: { cardSource: 'printed' | 'pdf'; setCardSource: (value: 'printed' | 'pdf') => void; voiceEnabled: boolean; setVoiceEnabled: (value: boolean) => void; voiceSpeed: number; setVoiceSpeed: (value: number) => void; callGap: number; setCallGap: (value: number) => void; betAmount: string; setBetAmount: (value: string) => void; cutPercent: string; setCutPercent: (value: string) => void; totalMoneyMade: number; generatingPdf: boolean; createPdf: () => Promise<void>; manualSetup: boolean; openManualSetup: () => void; onClose: () => void }) {
   return <div className="modal-backdrop"><div className="settings-modal"><div className="modal-head"><div><small>MANAGER SETTINGS</small><h2>Settings</h2></div><button className="close-button" onClick={props.onClose}>×</button></div><div className="settings-grid">
     <section><h3>CARTELLA</h3><button className={`setting-choice ${props.cardSource === 'printed' ? 'active' : ''}`} onClick={() => props.setCardSource('printed')}>Existing printed 001–100</button><button className={`setting-choice ${props.cardSource === 'pdf' ? 'active' : ''}`} onClick={() => props.setCardSource('pdf')}>Generated PDF set</button><button className="setting-choice" onClick={props.openManualSetup}>{props.manualSetup ? 'CONTINUE FILLING CARTELLA' : 'FILL CARTELLA SETTING'}</button><button className="pdf-action" onClick={props.createPdf} disabled={props.generatingPdf}>{props.generatingPdf ? 'CREATING…' : 'GENERATE 100 CARTELLA PDF'}</button></section>
-    <section><h3>VOICE</h3><div className="setting-row"><span>Recorded Bingo voices</span><button className="toggle" onClick={() => props.setVoiceEnabled(!props.voiceEnabled)}>{props.voiceEnabled ? 'ON' : 'OFF'}</button></div></section>
-    <section><h3>ACCOUNT</h3><div className="money-setting"><label>BET AMOUNT</label><input type="number" min="0" value={props.betAmount} onChange={e => props.setBetAmount(e.target.value)} /></div><div className="money-setting"><label>CUT PERCENTAGE</label><input type="number" min="0" max="100" value={props.cutPercent} onChange={e => props.setCutPercent(e.target.value)} /></div><div className="money-setting total-money"><label>TOTAL MONEY MADE</label><strong>{Math.round(props.totalMoneyMade).toLocaleString()} ETB</strong></div></section>
+    <section><h3>VOICE & CALLING</h3><div className="setting-row"><span>Recorded Bingo voices</span><button className="toggle" onClick={() => props.setVoiceEnabled(!props.voiceEnabled)}>{props.voiceEnabled ? 'ON' : 'OFF'}</button></div><label className="range-label">VOICE SPEED <strong>{props.voiceSpeed.toFixed(2)}×</strong></label><input className="range-input" type="range" min="0.75" max="1.5" step="0.05" value={props.voiceSpeed} onChange={e => props.setVoiceSpeed(Number(e.target.value))} /><div className="range-scale"><span>0.75×</span><span>1.00×</span><span>1.25×</span><span>1.50×</span></div><label className="range-label">CALLING GAP <strong>{props.callGap.toFixed(1)} sec</strong></label><input className="range-input" type="range" min="0.5" max="10" step="0.5" value={props.callGap} onChange={e => props.setCallGap(Number(e.target.value))} /><div className="range-scale"><span>0.5s</span><span>3s</span><span>6s</span><span>10s</span></div><p className="setting-help">The gap starts after the recorded voice finishes.</p></section>
+    <section><h3>ACCOUNT</h3><div className="money-setting"><label>BET AMOUNT</label><input type="number" min="0" value={props.betAmount} onChange={e => props.setBetAmount(e.target.value)} placeholder="" /></div><div className="money-setting"><label>CUT PERCENTAGE</label><input type="number" min="0" max="100" value={props.cutPercent} onChange={e => props.setCutPercent(e.target.value)} placeholder="" /></div><div className="money-setting total-money"><label>BINGO MADE</label><strong>{Math.round(props.totalMoneyMade).toLocaleString()} ETB</strong><small>Automatically increases after each completed game.</small></div></section>
   </div></div></div>
 }
 
