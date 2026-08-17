@@ -11,8 +11,7 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "start": "electron .",
-    "dist": "npm run build && electron-builder",
-    "license:generate": "node tools/generate-license.cjs"
+    "dist": "npm run build && electron-builder"
   },
   "dependencies": {
     "@pdfsmaller/pdf-encrypt": "^1.0.0",
