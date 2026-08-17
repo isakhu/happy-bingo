@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@pdfsmaller/pdf-encrypt": "^1.0.0",
-    "@vitejs/plugin-react": "5.0.4",
     "pdf-lib": "^1.17.1",
     "react": "19.1.1",
     "react-dom": "19.1.1"
@@ -34,6 +33,12 @@
     "productName": "Happy Bingo",
     "files": ["out/**/*", "audio/**/*", "package.json"],
     "win": { "target": "nsis", "artifactName": "Happy-Bingo-Setup-${version}.${ext}" },
-    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "include": "build/installer-password.nsh"
+    }
   }
 }
