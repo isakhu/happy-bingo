@@ -1,8 +1,7 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'node:path'
 import { mkdir, writeFile } from 'node:fs/promises'
-// @ts-ignore PDFKit is a CommonJS package; electron-vite handles the runtime interop.
-import PDFEncrypt from '@pdfsmaller/pdf-encrypt'
+import { encryptPDF } from '@pdfsmaller/pdf-encrypt'
 
 const PDF_PASSWORD = '20260817'
 type Card = { id: number; values: number[] }
@@ -26,7 +25,7 @@ async function generateProtectedCardsPdf(savedCards: unknown, setId = 'HB-001') 
   try {
     await w.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
     const rawPdf = await w.webContents.printToPDF({ printBackground: true, pageSize: 'A4' })
-    const encrypted = await PDFEncrypt.encryptPDF(new Uint8Array(rawPdf), PDF_PASSWORD, {
+    const encrypted = await encryptPDF(new Uint8Array(rawPdf), PDF_PASSWORD, {
       ownerPassword: `${PDF_PASSWORD}-OWNER`,
       allowPrinting: true,
       allowHighQualityPrint: true,
