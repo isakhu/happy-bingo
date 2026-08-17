@@ -17,8 +17,26 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Build renderer, main and preload
+        run: npm run build
+      - name: Verify packaged inputs before installer
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "out/main/index.js")) { throw "Missing out/main/index.js" }
+          if (-not (Test-Path "out/preload/index.mjs")) { throw "Missing out/preload/index.mjs" }
+          if (-not (Test-Path "out/renderer/index.html")) { throw "Missing out/renderer/index.html" }
+          if (-not (Test-Path "audio/voices")) { throw "Missing audio/voices directory" }
+          $voices = Get-ChildItem "audio/voices" -Filter *.mp3 -File
+          if ($voices.Count -lt 78) { throw "Expected at least 78 MP3 voices, found $($voices.Count)" }
+          Write-Host "Verified Electron preload and $($voices.Count) MP3 voice files before packaging."
       - name: Build and package Windows installer
-        run: npm run dist -- --publish never
+        run: npx electron-builder --win --publish never
+      - name: Verify installer
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem "dist/*.exe" -File
+          if (-not $exe) { throw "Windows installer was not produced" }
+          Write-Host "Installer: $($exe.FullName)"
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
