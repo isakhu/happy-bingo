@@ -4,7 +4,6 @@
   "description": "Happy Bingo - offline Bingo caller and management system",
   "main": "out/main/index.js",
   "author": "Yishak Tule",
-  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "electron-vite dev",
