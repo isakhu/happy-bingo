@@ -1,17 +1,44 @@
-import { app, BrowserWindow, ipcMain, screen, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, screen, shell, protocol, net } from 'electron'
 import { join } from 'node:path'
 import { mkdir, readFile, copyFile } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 
 type Card={id:number;values:number[]}
+const AUDIO_SCHEME='hb-audio'
+
+protocol.registerSchemesAsPrivileged([{scheme:AUDIO_SCHEME,privileges:{standard:true,secure:true,supportsFetchAPI:true,stream:true,corsEnabled:true}}])
+
 function load(win:BrowserWindow){const url=process.env.ELECTRON_RENDERER_URL;if(url)win.loadURL(url);else win.loadFile(join(__dirname,'../renderer/index.html'))}
 function generateCards(seedBase=2026):Card[]{const cards:Card[]=[];for(let id=1;id<=100;id++){const cols:number[][]=[];for(let col=0;col<5;col++){const nums=Array.from({length:15},(_,i)=>col*15+i+1);let seed=(seedBase+id*31+col*17)>>>0;for(let i=nums.length-1;i>0;i--){seed=(seed*1103515245+12345)>>>0;const j=seed%(i+1);[nums[i],nums[j]]=[nums[j],nums[i]]}cols.push(nums.slice(0,5))}cards.push({id,values:Array.from({length:25},(_,i)=>i===12?0:cols[i%5][Math.floor(i/5)])})}return cards}
 function cardHtml(card:Card){const colors=['#ffb300','#29a9ff','#7ee52d','#ff4b19','#f52ea4'];const cells=card.values.map((n,i)=>`<div class="cell ${i===12?'free':''}">${i===12?'FREE':n}</div>`).join('');const heads=['B','I','N','G','O'].map((l,i)=>`<b style="background:${colors[i]}">${l}</b>`).join('');return `<section class="card"><div class="title"><span>HAPPY</span> BINGO</div><div class="sub">CARTELLA · #${String(card.id).padStart(3,'0')}</div><div class="head">${heads}</div><div class="grid">${cells}</div><div class="footer">GOOD LUCK! · HAPPY BINGO</div></section>`}
 async function generateCardsPdf(seedBase=2026){const w=new BrowserWindow({show:false,width:1200,height:900,webPreferences:{sandbox:true}});const cards=generateCards(seedBase);const html=`<!doctype html><html><head><meta charset="UTF-8"><style>@page{size:A4;margin:6mm}*{box-sizing:border-box}body{margin:0;background:#170743;font-family:Arial;color:#fff}.page{width:100%;height:282mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6mm;page-break-after:always}.page:last-child{page-break-after:auto}.card{border:2px solid #8d5cff;border-radius:14px;padding:6mm;background:#28105e}.title{text-align:center;font-size:22px;font-weight:1000}.title span{color:#ffd13b}.sub{text-align:center;font-size:9px;margin:2mm 0 4mm;color:#d8c8ff;font-weight:800}.head,.grid{display:grid;grid-template-columns:repeat(5,1fr)}.head{gap:2px}.head b{text-align:center;padding:5px 0;border-radius:4px}.grid{gap:2px;margin-top:2px}.cell{height:22mm;border:1px solid #bba8e5;background:#fffaf5;color:#1c1640;display:grid;place-items:center;font-size:16px;font-weight:900}.cell.free{background:#ffb52a;color:#fff}.footer{text-align:center;margin-top:3mm;font-size:8px;color:#e9dfff;font-weight:900}</style></head><body>${Array.from({length:25},(_,p)=>`<div class="page">${cards.slice(p*4,p*4+4).map(cardHtml).join('')}</div>`).join('')}</body></html>`;try{await w.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);const pdf=await w.webContents.printToPDF({printBackground:true,pageSize:'A4'});const dir=join(app.getPath('documents'),'Happy Bingo');await mkdir(dir,{recursive:true});const path=join(dir,'Happy-Bingo-100-Cards.pdf');await import('node:fs/promises').then(fs=>fs.writeFile(path,pdf));await shell.openPath(path);return{cards,path}}finally{if(!w.isDestroyed())w.close()}}
 ipcMain.handle('generate-cards-pdf',async()=>generateCardsPdf(Date.now()>>>0))
 const ALLOWED_VOICES=new Set(['Goodbingo.mp3','cartellawu.mp3','chewatawu.mp3',...Array.from({length:15},(_,i)=>`b${i+1}.mp3`),...Array.from({length:15},(_,i)=>`i${i+16}.mp3`),...Array.from({length:15},(_,i)=>`n${i+31}.mp3`),...Array.from({length:15},(_,i)=>`g${i+46}.mp3`),...Array.from({length:15},(_,i)=>`o${i+61}.mp3`)])
+const VOICE_BY_KEY=new Map(Array.from(ALLOWED_VOICES,filename=>[filename.toLowerCase(),filename]))
 async function ensureVoices(){const sourceDirs=[join(app.getAppPath(),'audio','voices'),join(process.resourcesPath,'audio','voices'),join(process.cwd(),'audio','voices')];const targetDir=join(app.getPath('userData'),'voices');await mkdir(targetDir,{recursive:true});for(const file of ALLOWED_VOICES){const target=join(targetDir,file);let copied=false;for(const sourceDir of sourceDirs){try{await copyFile(join(sourceDir,file),target);copied=true;break}catch{}}if(!copied){try{await readFile(target)}catch{console.error(`Missing voice: ${file}`)}}}return targetDir}
-ipcMain.handle('play-voice',async(_event,file:string)=>{if(!ALLOWED_VOICES.has(file))throw new Error('Voice file is not allowed');const dir=await ensureVoices();const target=join(dir,file);const bytes=await readFile(target);if(!bytes.length)throw new Error(`Voice file is empty: ${file}`);return pathToFileURL(target).href})
+
+app.whenReady().then(async()=>{
+  await ensureVoices()
+  protocol.handle(AUDIO_SCHEME,async(request)=>{
+    const pathname=decodeURIComponent(new URL(request.url).pathname).replace(/^\/+/, '')
+    const canonical=VOICE_BY_KEY.get(pathname.toLowerCase())
+    if(!canonical)return new Response('Not found',{status:404})
+    const dir=await ensureVoices()
+    const target=join(dir,canonical)
+    try{await readFile(target)}catch{return new Response('Not found',{status:404})}
+    return net.fetch(pathToFileURL(target).href)
+  })
+  createWindow()
+  app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0)createWindow()})
+})
+
+ipcMain.handle('play-voice',async(_event,file:string)=>{
+  const canonical=VOICE_BY_KEY.get(String(file).toLowerCase())
+  if(!canonical)throw new Error('Voice file is not allowed')
+  await ensureVoices()
+  return `${AUDIO_SCHEME}://localhost/${encodeURIComponent(canonical)}`
+})
+
 function createWindow(){const primary=screen.getPrimaryDisplay();const win=new BrowserWindow({x:primary.workArea.x,y:primary.workArea.y,width:primary.workAreaSize.width,height:primary.workAreaSize.height,minWidth:1100,minHeight:700,title:'Happy Bingo — Manager',backgroundColor:'#071a3a',webPreferences:{preload:join(__dirname,'../preload/index.mjs'),contextIsolation:false,nodeIntegration:true,sandbox:false}});win.maximize();load(win)}
 app.commandLine.appendSwitch('autoplay-policy','no-user-gesture-required')
-app.whenReady().then(async()=>{await ensureVoices();createWindow();app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0)createWindow()})});app.on('window-all-closed',()=>{if(process.platform!=='darwin')app.quit()})
+app.on('window-all-closed',()=>{if(process.platform!=='darwin')app.quit()})
