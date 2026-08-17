@@ -37,8 +37,7 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "include": "build/installer-password.nsh"
+      "createDesktopShortcut": true
     }
   }
 }
