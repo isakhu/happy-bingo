@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Bingo</title>
+    <script>
+      // Never reopen Cartella Builder merely because a previous session was closed
+      // while filling. Every new opening must go through the manager password gate.
+      try { localStorage.removeItem('happy-bingo-manual-setup') } catch {}
+    </script>
+    <link rel="stylesheet" href="/src/manual.css" />
   </head>
   <body>
     <div id="root"></div>
