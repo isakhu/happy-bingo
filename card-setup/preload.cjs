@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('cardSetup', {
-  saveHbc: (payload) => ipcRenderer.invoke('save-hbc', payload),
-  openHbc: () => ipcRenderer.invoke('open-hbc'),
-  openFolder: (filePath) => ipcRenderer.invoke('open-folder', filePath)
+  saveHbc: payload => ipcRenderer.invoke('save-hbc', payload),
+  installHbc: payload => ipcRenderer.invoke('install-hbc', payload),
+  openHbc: () => ipcRenderer.invoke('open-hbc')
 })
