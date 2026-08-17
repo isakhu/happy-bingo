@@ -1,0 +1,70 @@
+/* Final selection + manager builder accessibility pass */
+.cartella-grid {
+  display: grid !important;
+  grid-template-columns: repeat(10, minmax(72px, 1fr)) !important;
+  grid-template-rows: repeat(10, minmax(72px, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+.cartella-grid .cartella {
+  min-width: 0 !important;
+  min-height: 72px !important;
+  height: 72px !important;
+  border-radius: 14px !important;
+  border: 3px solid rgba(255,255,255,.18) !important;
+  background: #14213d !important;
+  color: #fff !important;
+  font-size: 21px !important;
+  font-weight: 900 !important;
+  letter-spacing: .5px !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 14px rgba(0,0,0,.22) !important;
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease !important;
+}
+.cartella-grid .cartella:hover {
+  transform: scale(1.06) !important;
+  background: #263f70 !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.3) !important;
+}
+.cartella-grid .cartella.selected {
+  background: #e31b23 !important;
+  border-color: #ff6970 !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 4px rgba(227,27,35,.25), 0 10px 24px rgba(227,27,35,.5) !important;
+  transform: scale(1.08) !important;
+}
+
+/* Builder overlay injected outside React so the manager button always has a working path. */
+.hb-builder-overlay { position: fixed; inset: 0; z-index: 999999; background: rgba(5,8,18,.88); display:flex; align-items:center; justify-content:center; padding:24px; font-family: Arial, sans-serif; }
+.hb-builder-panel { width:min(1120px,96vw); max-height:94vh; overflow:auto; background:#101827; color:#fff; border:2px solid #33415c; border-radius:24px; box-shadow:0 25px 80px rgba(0,0,0,.65); padding:24px; }
+.hb-builder-top { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:18px; }
+.hb-builder-top h2 { margin:0; font-size:30px; }
+.hb-builder-top small { color:#9fb0cc; font-weight:800; letter-spacing:1px; }
+.hb-builder-close { border:0; background:#263248; color:#fff; width:46px; height:46px; border-radius:12px; font-size:28px; cursor:pointer; }
+.hb-builder-rules { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+.hb-builder-rules span { padding:8px 12px; border-radius:10px; background:#1b2740; font-weight:800; font-size:13px; }
+.hb-builder-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+.hb-builder-grid input { width:100%; box-sizing:border-box; height:72px; border-radius:14px; border:2px solid #3c4c68; background:#19243a; color:#fff; text-align:center; font-size:25px; font-weight:900; outline:none; }
+.hb-builder-grid input:focus { border-color:#5ca9ff; box-shadow:0 0 0 3px rgba(92,169,255,.2); }
+.hb-builder-grid input.hb-free { background:#263248; color:#ffd166; }
+.hb-builder-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:20px; flex-wrap:wrap; }
+.hb-builder-controls button { border:0; border-radius:12px; padding:13px 20px; font-size:15px; font-weight:900; cursor:pointer; }
+.hb-builder-prev,.hb-builder-next { background:#263248; color:#fff; }
+.hb-builder-save { background:#e31b23; color:#fff; min-width:180px; }
+.hb-builder-status { color:#9fb0cc; font-weight:800; }
+.hb-password-overlay { position:fixed; inset:0; z-index:1000000; background:rgba(0,0,0,.82); display:flex; align-items:center; justify-content:center; }
+.hb-password-panel { width:min(420px,90vw); background:#111a2b; color:#fff; border-radius:20px; padding:28px; text-align:center; box-shadow:0 25px 80px rgba(0,0,0,.7); }
+.hb-password-panel h3 { margin:0 0 8px; font-size:26px; }
+.hb-password-panel p { color:#aab8ce; margin:0 0 18px; }
+.hb-password-panel input { width:100%; box-sizing:border-box; height:52px; border-radius:10px; border:2px solid #3c4c68; background:#18243a; color:#fff; text-align:center; font-size:22px; letter-spacing:5px; }
+.hb-password-actions { display:flex; gap:10px; margin-top:16px; }
+.hb-password-actions button { flex:1; height:48px; border:0; border-radius:10px; font-weight:900; cursor:pointer; }
+.hb-password-cancel { background:#29364d; color:#fff; }
+.hb-password-unlock { background:#e31b23; color:#fff; }
+.hb-password-error { min-height:22px; margin-top:8px; color:#ff7378; font-weight:800; }
+@media (max-width: 900px) {
+  .cartella-grid { grid-template-columns:repeat(10,minmax(48px,1fr)) !important; gap:5px !important; }
+  .cartella-grid .cartella { height:52px !important; min-height:52px !important; font-size:14px !important; border-radius:9px !important; }
+}
