@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('happyBingo', {
   getLicenseInfo: () => ipcRenderer.invoke('license-info'),
   activateLicense: (key: string) => ipcRenderer.invoke('activate-license', key),
   managerPassword: (password: string) => ipcRenderer.invoke('manager-password', password),
-  generateCardsPdf: (cards?: unknown[], setId?: string) => ipcRenderer.invoke('generate-cards-pdf', cards, setId),
+  generateCardsPdf: (cards?: unknown[], setId?: string) => ipcRenderer.invoke('generate-protected-cards-pdf', cards, setId),
   playVoice: (file: string) => ipcRenderer.invoke('play-voice', file),
   voiceHealth: () => ipcRenderer.invoke('voice-health'),
 })
