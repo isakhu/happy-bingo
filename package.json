@@ -11,7 +11,8 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "start": "electron .",
-    "dist": "npm run build && electron-builder"
+    "dist": "npm run build && electron-builder",
+    "license:generate": "node tools/generate-license.cjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "5.0.4",
