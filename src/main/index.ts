@@ -1,4 +1,3 @@
-import './protected-pdf-handler.js'
 import { app, BrowserWindow, ipcMain, screen, shell, protocol } from 'electron'
 import { join } from 'node:path'
 import { readFile, copyFile, writeFile, mkdir } from 'node:fs/promises'
