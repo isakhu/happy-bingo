@@ -4,7 +4,9 @@
   "description":"Private Happy Bingo customer Cartella setup tool",
   "main":"main.cjs",
   "private":true,
-  "dependencies":{"electron":"37.3.1","electron-builder":"26.0.12"},
+  "author":"Yishak Tule",
+  "dependencies":{},
+  "devDependencies":{"electron":"37.3.1","electron-builder":"26.0.12"},
   "scripts":{"start":"electron .","dist":"electron-builder"},
   "build":{"appId":"com.happybingo.cardsetup","productName":"Happy Bingo Card Setup","files":["main.cjs","preload.cjs","index.html","renderer.js","styles.css"],"win":{"target":"nsis","artifactName":"Happy-Bingo-Card-Setup-${version}.${ext}"},"nsis":{"oneClick":false,"perMachine":false,"allowToChangeInstallationDirectory":true,"createDesktopShortcut":true}}
 }
