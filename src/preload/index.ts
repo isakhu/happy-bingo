@@ -5,4 +5,5 @@ contextBridge.exposeInMainWorld('happyBingo', {
   version: '0.1.0',
   playVoice: (file: string) => ipcRenderer.invoke('play-voice', file),
   voiceHealth: () => ipcRenderer.invoke('voice-health'),
+  getInstalledSet: () => ipcRenderer.invoke('get-installed-set'),
 })
