@@ -1,24 +1,30 @@
 !include LogicLib.nsh
 
-Var HB_INSTALL_PASSWORD
+Var HBPasswordCtl
+Var HBPassword
 
-Function .onGUIInit
-  StrCpy $HB_INSTALL_PASSWORD ""
+Page custom HBPasswordPage HBPasswordLeave
+
+Function HBPasswordPage
   nsDialogs::Create 1018
   Pop $0
   ${If} $0 == error
     Abort
   ${EndIf}
-  nsDialogs::CreateControl EDIT ${__NSD_Text} ${__NSD_Text_Style} 0u 0u 100% 13u ""
+  ${NSD_CreateLabel} 0 0 100% 13u "Happy Bingo installer password:"
   Pop $1
-  ${NSD_SetText} $1 ""
-  nsDialogs::CreateControl LABEL ${__NSD_Text} 0 0u 15u 100% 12u "Installer password:"
+  ${NSD_CreateText} 0 18u 100% 13u ""
+  Pop $HBPasswordCtl
+  ${NSD_AddStyle} $HBPasswordCtl ${ES_PASSWORD}
+  ${NSD_CreateLabel} 0 38u 100% 28u "Enter the password supplied by the seller to install Happy Bingo."
   Pop $2
   nsDialogs::Show
 FunctionEnd
 
-Function .onNextPage
-  ${If} $mui.next == ${MUI_PAGE_WELCOME}
+Function HBPasswordLeave
+  ${NSD_GetText} $HBPasswordCtl $HBPassword
+  ${If} $HBPassword != "0987654321"
+    MessageBox MB_ICONSTOP "Incorrect installer password. Installation cannot continue."
     Abort
   ${EndIf}
 FunctionEnd
