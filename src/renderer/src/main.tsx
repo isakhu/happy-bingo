@@ -171,7 +171,8 @@ function App() {
     const rows = Array.from({ length: 5 }, (_, r) => Array.from({ length: 5 }, (_, c) => r * 5 + c))
     const cols = Array.from({ length: 5 }, (_, c) => Array.from({ length: 5 }, (_, r) => r * 5 + c))
     const diagonals = [[0, 6, 12, 18, 24], [4, 8, 12, 16, 20]]
-    return [...rows, ...cols, ...diagonals].filter(line => line.every(index => marked[index]))
+    const fourCorners = [0, 4, 20, 24]
+    return [...rows, ...cols, ...diagonals, fourCorners].filter(line => line.every(index => marked[index]))
   }
 
   async function checkWinner() {
@@ -250,9 +251,9 @@ function App() {
 }
 
 function CardInspector({ card, calledSet, winningIndexes, onClose }: { card: Card; calledSet: Set<number>; winningIndexes: number[]; onClose: () => void }) {
-  const lines = [0, 1, 2, 3, 4].map(r => `ROW ${r + 1}`).concat([0, 1, 2, 3, 4].map(c => `COLUMN ${LETTERS[c]}`), 'DIAGONAL ↘', 'DIAGONAL ↙')
+  const lines = [0, 1, 2, 3, 4].map(r => `ROW ${r + 1}`).concat([0, 1, 2, 3, 4].map(c => `COLUMN ${LETTERS[c]}`), 'DIAGONAL ↘', 'DIAGONAL ↙', 'FOUR CORNERS')
   const winningLine = winningIndexes.length ? lines.find((_, i) => {
-    const candidate = i < 5 ? [0,1,2,3,4].map(c => i * 5 + c) : i < 10 ? [0,1,2,3,4].map(r => r * 5 + (i - 5)) : i === 10 ? [0,6,12,18,24] : [4,8,12,16,20]
+    const candidate = i < 5 ? [0,1,2,3,4].map(c => i * 5 + c) : i < 10 ? [0,1,2,3,4].map(r => r * 5 + (i - 5)) : i === 10 ? [0,6,12,18,24] : i === 11 ? [4,8,12,16,20] : [0,4,20,24]
     return candidate.every(index => winningIndexes.includes(index))
   }) : null
   return <div className="card-inspector"><div className="inspector-head"><div><small>PAUSED • CARTELLA CHECK</small><h2>CARTELLA {String(card.id).padStart(3, '0')}</h2></div><button onClick={onClose}>×</button></div><div className="inspector-grid">{card.values.map((n, i) => { const marked = i === 12 || calledSet.has(n); const winning = winningIndexes.includes(i); return <div key={i} className={`inspector-cell ${marked ? 'marked' : ''} ${winning ? 'winning' : ''}`}>{i === 12 ? 'FREE' : n}</div> })}</div>{winningLine && <div className="winning-line-label">🏆 {winningLine} • BINGO</div>}</div>
