@@ -106,7 +106,6 @@ async function startAuth() {
         document.documentElement.style.visibility = 'visible'
         document.body.style.visibility = 'visible'
         window.dispatchEvent(new Event('happy-bingo-auth-unlocked'))
-        window.setTimeout(() => window.location.reload(), 50)
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
         console.error(e)
