@@ -1,0 +1,1 @@
+This branch contains the exact 100 customer Cartellas and customer-set fallback wiring. Existing resume-voice.js is loaded by the renderer entry point.

@@ -1,0 +1,1 @@
+Implemented the customer Cartella set and game voice flow on this branch. The 100 customer cards are in src/main/customer-cards.ts. The Electron main process uses those exact cards when no customer .hbc set is installed. Start/Resume uses chewatawu.mp3, Pause uses pause.mp3, and number calls continue after resume.
