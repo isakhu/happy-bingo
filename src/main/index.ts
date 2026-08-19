@@ -1,6 +1,7 @@
-import { app, BrowserWindow, ipcMain, screen, protocol } from 'electron'
+import { app, BrowserWindow, ipcMain, screen, protocol, safeStorage } from 'electron'
 import { join } from 'node:path'
 import { readFile, copyFile, mkdir, readdir } from 'node:fs/promises'
+import { getStoredLicense, storeLicense } from './license'
 
 type Card={id:number;values:number[]}
 const AUDIO_SCHEME='hb-audio'
@@ -11,10 +12,31 @@ const VOICE_BY_KEY=new Map(Array.from(ALLOWED_VOICES,f=>[f.toLowerCase(),f]))
 protocol.registerSchemesAsPrivileged([{scheme:AUDIO_SCHEME,privileges:{standard:true,secure:true,supportsFetchAPI:true,stream:true,corsEnabled:true}}])
 function load(win:BrowserWindow){const url=process.env.ELECTRON_RENDERER_URL;if(url)win.loadURL(url);else win.loadFile(join(__dirname,'../renderer/index.html'))}
 function createWindow(){const d=screen.getPrimaryDisplay();const win=new BrowserWindow({x:d.workArea.x,y:d.workArea.y,width:d.workAreaSize.width,height:d.workAreaSize.height,minWidth:1100,minHeight:700,title:'Happy Bingo',backgroundColor:'#071a3a',webPreferences:{preload:join(__dirname,'../preload/index.mjs'),contextIsolation:true,nodeIntegration:false,sandbox:false}});win.maximize();load(win)}
+function createActivationWindow(){const win=new BrowserWindow({width:560,height:500,resizable:false,title:'Happy Bingo Activation',backgroundColor:'#eef5ff',webPreferences:{preload:join(__dirname,'../preload/index.mjs'),contextIsolation:true,nodeIntegration:false,sandbox:false}});win.loadFile(join(__dirname,'../renderer/src/activation.html'));return win}
 async function ensureVoices(){const sourceDirs=[join(app.getAppPath(),'audio','voices'),join(process.resourcesPath,'audio','voices'),join(process.cwd(),'audio','voices')];const targetDir=join(app.getPath('userData'),'voices');await mkdir(targetDir,{recursive:true});for(const file of ALLOWED_VOICES){const target=join(targetDir,file);let ok=false;for(const source of sourceDirs){try{await copyFile(join(source,file),target);ok=true;break}catch{}}if(!ok){try{await readFile(target)}catch{console.error(`Missing voice: ${file}`)}}}return targetDir}
 async function getVoiceData(file:string){const canonical=VOICE_BY_KEY.get(String(file).toLowerCase());if(!canonical)throw new Error(`Voice file not allowed: ${file}`);const dir=await ensureVoices();const data=await readFile(join(dir,canonical));return `data:audio/mpeg;base64,${data.toString('base64')}`}
-async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return null;for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}}catch{}}
-return null}
-app.whenReady().then(async()=>{await ensureVoices();ipcMain.handle('play-voice',async(_,file:string)=>getVoiceData(file));ipcMain.handle('voice-health',async()=>{const dir=await ensureVoices();const files:string[]=[];for(const f of ALLOWED_VOICES){try{await readFile(join(dir,f));files.push(f)}catch{}}return{available:files.length,total:ALLOWED_VOICES.size,files}});ipcMain.handle('get-installed-set',async()=>getInstalledSet());protocol.handle(AUDIO_SCHEME,async(req)=>{const name=decodeURIComponent(new URL(req.url).pathname).replace(/^\/+/, '');const canonical=VOICE_BY_KEY.get(name.toLowerCase());if(!canonical)return new Response('Not found',{status:404});const dir=await ensureVoices();try{const data=await readFile(join(dir,canonical));return new Response(data,{status:200,headers:{'Content-Type':'audio/mpeg','Cache-Control':'no-store','Accept-Ranges':'bytes'}})}catch{return new Response('Not found',{status:404})}});createWindow();app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0)createWindow()})})
+async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return null;for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}}catch{}}return null}
+app.whenReady().then(async()=>{
+  if(!safeStorage.isEncryptionAvailable()){
+    const win=createActivationWindow();
+    win.webContents.once('did-finish-load',()=>win.webContents.executeJavaScript("document.getElementById('status').textContent='Secure Windows storage is unavailable. Happy Bingo cannot be activated on this system.'"));
+    return
+  }
+  await ensureVoices()
+  ipcMain.handle('submit-license',async(_,key:string)=>{
+    const payload=storeLicense(String(key||''))
+    if(!payload)return{ok:false,error:'Invalid or expired Happy Bingo license key.'}
+    const win=BrowserWindow.fromWebContents(_)
+    if(win&&!win.isDestroyed())win.close()
+    createWindow()
+    return{ok:true,customerId:payload.customerId,expiry:payload.expiry}
+  })
+  ipcMain.handle('play-voice',async(_,file:string)=>getVoiceData(file))
+  ipcMain.handle('voice-health',async()=>{const dir=await ensureVoices();const files:string[]=[];for(const f of ALLOWED_VOICES){try{await readFile(join(dir,f));files.push(f)}catch{}}return{available:files.length,total:ALLOWED_VOICES.size,files}})
+  ipcMain.handle('get-installed-set',async()=>getInstalledSet())
+  protocol.handle(AUDIO_SCHEME,async(req)=>{const name=decodeURIComponent(new URL(req.url).pathname).replace(/^\/+/, '');const canonical=VOICE_BY_KEY.get(name.toLowerCase());if(!canonical)return new Response('Not found',{status:404});const dir=await ensureVoices();try{const data=await readFile(join(dir,canonical));return new Response(data,{status:200,headers:{'Content-Type':'audio/mpeg','Cache-Control':'no-store','Accept-Ranges':'bytes'}})}catch{return new Response('Not found',{status:404})}})
+  if(getStoredLicense())createWindow();else createActivationWindow()
+  app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0){if(getStoredLicense())createWindow();else createActivationWindow()}})
+})
 app.commandLine.appendSwitch('autoplay-policy','no-user-gesture-required')
 app.on('window-all-closed',()=>{if(process.platform!=='darwin')app.quit()})
