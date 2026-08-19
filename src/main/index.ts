@@ -17,20 +17,16 @@ async function ensureVoices(){const sourceDirs=[join(app.getAppPath(),'audio','v
 async function getVoiceData(file:string){const canonical=VOICE_BY_KEY.get(String(file).toLowerCase());if(!canonical)throw new Error(`Voice file not allowed: ${file}`);const dir=await ensureVoices();const data=await readFile(join(dir,canonical));return `data:audio/mpeg;base64,${data.toString('base64')}`}
 async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return null;for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}}catch{}}return null}
 app.whenReady().then(async()=>{
-  if(!safeStorage.isEncryptionAvailable()){
-    const win=createActivationWindow();
-    win.webContents.once('did-finish-load',()=>win.webContents.executeJavaScript("document.getElementById('status').textContent='Secure Windows storage is unavailable. Happy Bingo cannot be activated on this system.'"));
-    return
-  }
-  await ensureVoices()
-  ipcMain.handle('submit-license',async(_,key:string)=>{
+  ipcMain.handle('submit-license',async(event,key:string)=>{
+    if(!safeStorage.isEncryptionAvailable())return{ok:false,error:'Secure Windows storage is unavailable. Happy Bingo cannot be activated on this system.'}
     const payload=storeLicense(String(key||''))
     if(!payload)return{ok:false,error:'Invalid or expired Happy Bingo license key.'}
-    const win=BrowserWindow.fromWebContents(_)
-    if(win&&!win.isDestroyed())win.close()
+    const current=BrowserWindow.fromWebContents(event.sender)
+    if(current&&!current.isDestroyed())current.close()
     createWindow()
     return{ok:true,customerId:payload.customerId,expiry:payload.expiry}
   })
+  await ensureVoices()
   ipcMain.handle('play-voice',async(_,file:string)=>getVoiceData(file))
   ipcMain.handle('voice-health',async()=>{const dir=await ensureVoices();const files:string[]=[];for(const f of ALLOWED_VOICES){try{await readFile(join(dir,f));files.push(f)}catch{}}return{available:files.length,total:ALLOWED_VOICES.size,files}})
   ipcMain.handle('get-installed-set',async()=>getInstalledSet())
