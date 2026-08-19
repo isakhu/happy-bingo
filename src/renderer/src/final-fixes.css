@@ -1,24 +1,21 @@
-/* Final UI fixes: settings are one black control panel and the 75-number board fills the width. */
-.board-grid{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:7px!important;width:100%!important;height:100%!important;min-width:0!important;}
-.board-row{display:grid!important;grid-template-columns:clamp(34px,4vw,60px) repeat(15,minmax(0,1fr))!important;grid-template-rows:1fr!important;gap:5px!important;min-width:0!important;min-height:0!important;width:100%!important;}
-.board-row .letter-badge{width:100%!important;height:100%!important;min-width:0!important;}
-.board-row .number-cell{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:auto!important;}
+/* Final UI fixes. END GAME / CHECK / PAUSE positioning is intentionally untouched. */
+.board-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:1fr!important;gap:7px!important;width:100%!important;height:100%!important;min-width:0!important;}
+.board-column{display:grid!important;grid-template-rows:38px repeat(15,minmax(0,1fr))!important;gap:4px!important;min-width:0!important;min-height:0!important;}
+.board-column .letter-badge{width:100%!important;height:100%!important;min-width:0!important;}
+.board-column .number-cell{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:auto!important;}
 .number-cell{font-size:clamp(15px,2.1vw,34px)!important;}
 .call-stage{grid-template-columns:minmax(260px,34%) 1fr!important;}
 .marquee-ball{width:82px!important;height:82px!important;flex-basis:82px!important;border-width:5px!important;}
 .marquee-ball span{font-size:16px!important;}
 .marquee-ball strong{font-size:38px!important;text-shadow:2px 3px 0 #000!important;}
-.pause-action{position:relative!important;z-index:50!important;pointer-events:auto!important;min-width:120px!important;}
-.bottom-actions{position:relative!important;z-index:50!important;}
-.action{position:relative!important;z-index:51!important;pointer-events:auto!important;}
 
-/* One black settings panel — no four colored sections. */
-.settings-black{width:min(760px,94vw)!important;background:#050505!important;color:#fff!important;border:2px solid #2d6fa3!important;border-radius:18px!important;box-shadow:0 30px 90px #000!important;}
+/* One black settings panel, with a scrollable body and fixed footer inside the panel. */
+.settings-black{width:min(760px,94vw)!important;max-height:88vh!important;overflow:hidden!important;background:#050505!important;color:#fff!important;border:2px solid #2d6fa3!important;border-radius:18px!important;box-shadow:0 30px 90px #000!important;}
 .settings-black .settings-header{background:#050505!important;border-bottom:2px solid #1e88e5!important;padding:22px 26px!important;}
 .settings-black .settings-header h2{font-size:30px!important;font-weight:1000!important;color:#fff!important;text-shadow:2px 3px 0 #000!important;}
 .settings-black .settings-header span{font-size:11px!important;color:#55bfff!important;font-weight:1000!important;}
 .settings-black .settings-header small{font-size:11px!important;color:#b9c9d4!important;font-weight:900!important;}
-.settings-body{padding:20px 26px!important;background:#050505!important;display:flex!important;flex-direction:column!important;gap:12px!important;}
+.settings-body{padding:20px 26px!important;background:#050505!important;display:flex!important;flex-direction:column!important;gap:12px!important;max-height:calc(88vh - 150px)!important;overflow:auto!important;}
 .settings-row-main{display:grid!important;grid-template-columns:220px minmax(180px,1fr) 220px!important;align-items:center!important;gap:16px!important;min-height:64px!important;padding:12px 14px!important;background:#0c0c0c!important;border:1px solid #303030!important;border-radius:10px!important;}
 .settings-row-main label,.settings-speed label{font-size:16px!important;font-weight:1000!important;letter-spacing:.8px!important;color:#fff!important;text-shadow:2px 2px 0 #000!important;}
 .settings-row-main input,.settings-row-main select{width:100%!important;height:48px!important;background:#fff!important;color:#050505!important;border:2px solid #9cc6df!important;border-radius:8px!important;padding:8px 12px!important;font-size:22px!important;font-weight:1000!important;text-align:center!important;}
@@ -34,15 +31,31 @@
 .settings-speed strong{font-size:24px!important;color:#55bfff!important;font-weight:1000!important;text-shadow:2px 2px 0 #000!important;}
 .settings-speed input{width:100%!important;accent-color:#1e88e5!important;margin:12px 0 4px!important;}
 .speed-scale{display:flex!important;justify-content:space-between!important;color:#aab8c2!important;font-size:12px!important;font-weight:900!important;}
-.settings-black .settings-footer{background:#050505!important;border-top:2px solid #242424!important;padding:14px 20px!important;}
+.settings-black .settings-footer{background:#050505!important;border-top:2px solid #242424!important;padding:14px 20px!important;position:relative!important;z-index:2!important;}
 .settings-black .settings-footer span{font-size:11px!important;color:#aab8c2!important;font-weight:900!important;}
 .settings-black .settings-footer button{background:#1e88e5!important;color:#fff!important;font-size:15px!important;padding:12px 22px!important;border-radius:8px!important;font-weight:1000!important;}
-@media(max-width:900px){.settings-row-main{grid-template-columns:1fr 1fr!important}.settings-row-main span{grid-column:1/-1;text-align:left!important}.settings-balance{grid-template-columns:1fr!important}.board-row{grid-template-columns:34px repeat(15,minmax(0,1fr))!important;gap:3px!important}.number-cell{font-size:14px!important}.call-stage{grid-template-columns:220px 1fr!important}}
 
-/* Failed Bingo must present the claimant's real 5x5 Cartella, not text only. */
-.card-inspector{position:fixed!important;z-index:1000!important;}
-.card-inspector:not(:has(.inspector-cell.winning)){border:4px solid #e53935!important;box-shadow:0 24px 80px rgba(0,0,0,.75)!important;}
-.card-inspector:not(:has(.inspector-cell.winning)) .inspector-head{background:#b71c1c!important;color:#fff!important;}
-.card-inspector:not(:has(.inspector-cell.winning)) .inspector-head small::after{content:'  •  BINGO FAILED';font-size:18px;font-weight:1000;}
-.card-inspector:not(:has(.inspector-cell.winning)) .winning-line-label{background:#b71c1c!important;color:#fff!important;font-weight:1000!important;}
-.card-inspector:not(:has(.inspector-cell.winning)) .inspector-cell.marked{outline:3px solid #e53935!important;}
+/* Checked Cartella: compact centered panel, not fullscreen. */
+.card-inspector{position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;inset:auto!important;transform:translate(-50%,-50%)!important;width:min(560px,78vw)!important;max-height:82vh!important;overflow:auto!important;background:#090f14!important;border:3px solid #ffd23a!important;border-radius:20px!important;padding:18px 20px 14px!important;z-index:1000!important;box-shadow:0 24px 70px #000c!important;display:flex!important;flex-direction:column!important;align-items:center!important;}
+.inspector-head{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important;color:#fff!important;}
+.inspector-head small{font-size:10px!important;letter-spacing:1.2px!important;color:#ffd23a!important;font-weight:1000!important;}
+.inspector-head h2{margin:3px 0 8px!important;font-size:22px!important;}
+.inspector-grid{width:min(450px,70vw)!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:8px!important;}
+.inspector-cell{aspect-ratio:1!important;border-radius:12px!important;display:grid!important;place-items:center!important;background:#202a31!important;border:2px solid #45545d!important;color:#9ba7af!important;font-size:clamp(17px,2vw,28px)!important;font-weight:1000!important;}
+.inspector-cell.marked{background:#063b1b!important;color:#fff!important;border-color:#08a84d!important;box-shadow:0 0 18px #08a84d88!important;}
+.inspector-cell.winning{background:#0b8f3e!important;color:#fff!important;border-color:#63ff9b!important;box-shadow:0 0 28px #1aff76!important;transform:scale(1.05)!important;}
+.winning-line-label{width:100%!important;max-width:450px!important;margin-top:8px!important;background:#063b1b!important;border:2px solid #16e86d!important;color:#7dffb0!important;border-radius:9px!important;padding:8px!important;text-align:center!important;font-size:11px!important;font-weight:1000!important;}
+.lock-failed-button{width:100%!important;max-width:450px!important;margin-top:6px!important;border:0!important;border-radius:9px!important;background:#d32f2f!important;color:#fff!important;padding:10px!important;font-size:13px!important;font-weight:1000!important;}
+.inspector-close{width:100%!important;max-width:450px!important;margin-top:6px!important;border:0!important;border-radius:9px!important;background:#1976d2!important;color:#fff!important;padding:9px!important;font-size:13px!important;font-weight:1000!important;}
+
+@media(max-width:900px){
+ .settings-row-main{grid-template-columns:1fr 1fr!important}
+ .settings-row-main span{grid-column:1/-1;text-align:left!important}
+ .settings-balance{grid-template-columns:1fr!important}
+ .board-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:1fr!important}
+ .board-column{grid-template-rows:32px repeat(15,minmax(0,1fr))!important;gap:3px!important}
+ .number-cell{font-size:14px!important}
+ .call-stage{grid-template-columns:220px 1fr!important}
+ .card-inspector{width:min(560px,88vw)!important;max-height:84vh!important}
+ .inspector-grid{width:min(450px,78vw)!important}
+}
