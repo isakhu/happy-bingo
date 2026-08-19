@@ -1,10 +1,11 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { app, contextBridge, ipcRenderer } from 'electron'
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile, rename } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 
 const DEFAULT_PASSWORD = '48261937'
-const AUTH_FILE = join(process.env.APPDATA || process.cwd(), 'Happy Bingo', 'auth.json')
+const LEGACY_AUTH_FILE = join(process.env.APPDATA || process.cwd(), 'Happy Bingo', 'auth.json')
+const AUTH_FILE = join(app.getPath('userData'), 'auth.json')
 
 type AuthRecord = { salt: string; hash: string }
 
@@ -13,6 +14,19 @@ async function readAuthRecord(): Promise<AuthRecord | null> {
     const value = JSON.parse(await readFile(AUTH_FILE, 'utf8'))
     if (typeof value?.salt === 'string' && typeof value?.hash === 'string') return value
   } catch {}
+
+  // One-time migration from the previous APPDATA-based location.
+  if (LEGACY_AUTH_FILE !== AUTH_FILE) {
+    try {
+      const value = JSON.parse(await readFile(LEGACY_AUTH_FILE, 'utf8'))
+      if (typeof value?.salt === 'string' && typeof value?.hash === 'string') {
+        await mkdir(dirname(AUTH_FILE), { recursive: true })
+        await writeFile(AUTH_FILE, JSON.stringify(value), 'utf8')
+        return value
+      }
+    } catch {}
+  }
+
   return null
 }
 
