@@ -88,24 +88,25 @@ async function startAuth() {
       error.textContent = ''
       submit.disabled = true
       try {
+        let result
         if (needsSetup) {
           const currentDefault = gate.querySelector('#hb-default')?.value || ''
           const nextPassword = gate.querySelector('#hb-new')?.value || ''
           const confirm = gate.querySelector('#hb-confirm')?.value || ''
-          const result = await auth.setup(currentDefault, nextPassword, confirm)
-          if (!result.ok) {
-            error.textContent = result.error || 'Could not create password.'
-            return
-          }
+          result = await auth.setup(currentDefault, nextPassword, confirm)
         } else {
           const password = gate.querySelector('#hb-password')?.value || ''
-          const result = await auth.unlock(password)
-          if (!result.ok) {
-            error.textContent = result.error || 'Incorrect password.'
-            return
-          }
+          result = await auth.unlock(password)
+        }
+        if (!result.ok) {
+          error.textContent = result.error || 'Authentication failed.'
+          return
         }
         gate.remove()
+        document.documentElement.style.visibility = 'visible'
+        document.body.style.visibility = 'visible'
+        window.dispatchEvent(new Event('happy-bingo-auth-unlocked'))
+        window.setTimeout(() => window.location.reload(), 50)
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
         console.error(e)
@@ -120,7 +121,8 @@ async function startAuth() {
     })
   } catch (error) {
     document.documentElement.style.visibility = 'visible'
-    document.body.innerHTML = '<div style="height:100vh;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px"><div><h2>Happy Bingo cannot start</h2><p>The offline authentication system is unavailable.</p></div></div>'
+    document.body.innerHTML = '<div style="height:100vh;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px"><div><h2>Happy Bingo cannot start</h2><p>The offline authentication system is unavailable.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#1e88e5;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
+    document.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
     console.error(error)
   }
 }
