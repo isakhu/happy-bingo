@@ -76,6 +76,7 @@ function buildGate(needsSetup) {
 async function startAuth() {
   if (sessionStorage.getItem('happy-bingo-authenticated') === '1') {
     document.documentElement.style.visibility = 'visible'
+    document.body.style.visibility = 'visible'
     return
   }
 
@@ -103,26 +104,27 @@ async function startAuth() {
           const password = gate.querySelector('#hb-password')?.value || ''
           result = await auth.unlock(password)
         }
-        if (!result.ok) {
-          error.textContent = result.error || 'Authentication failed.'
+        if (!result?.ok) {
+          error.textContent = result?.error || 'Authentication failed.'
+          submit.disabled = false
           return
         }
+
+        // Mark the current renderer session as authenticated before leaving the gate.
+        // A clean reload guarantees React starts from a normal document state instead
+        // of leaving the renderer on a partially transitioned screen.
         sessionStorage.setItem('happy-bingo-authenticated', '1')
-        gate.remove()
-        document.documentElement.style.visibility = 'visible'
-        document.body.style.visibility = 'visible'
-        window.dispatchEvent(new Event('happy-bingo-auth-unlocked'))
+        window.location.reload()
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
-        console.error(e)
-      } finally {
         submit.disabled = false
+        console.error(e)
       }
     }
 
     submit.addEventListener('click', () => void handleSubmit())
     gate.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') void handleSubmit()
+      if (event.key === 'Enter' && !submit.disabled) void handleSubmit()
     })
   } catch (error) {
     document.documentElement.style.visibility = 'visible'
