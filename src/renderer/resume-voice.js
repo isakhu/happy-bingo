@@ -12,6 +12,10 @@
       const url = await api.playVoice('chewatawu.mp3')
       await new Promise((resolve, reject) => {
         const audio = new Audio(url)
+        audio.preload = 'auto'
+        audio.volume = 1
+        const speed = Number(localStorage.getItem('happy-bingo-voice-speed') || '1')
+        audio.playbackRate = Number.isFinite(speed) ? Math.min(4, Math.max(.25, speed)) : 1
         audio.onended = resolve
         audio.onerror = reject
         void audio.play().catch(reject)
