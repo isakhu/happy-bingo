@@ -1,0 +1,1 @@
+Customer test branch ready: exact 100 customer Cartellas added as source data; Happy Bingo falls back to them when no installed .hbc set exists. Resume sound script is already included in the renderer entry point.
