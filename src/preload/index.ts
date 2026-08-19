@@ -3,7 +3,7 @@ import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 
-const DEFAULT_PASSWORD = 'HB-2026!'
+const DEFAULT_PASSWORD = '48261937'
 const AUTH_FILE = join(process.env.APPDATA || process.cwd(), 'Happy Bingo', 'auth.json')
 
 type AuthRecord = { salt: string; hash: string }
