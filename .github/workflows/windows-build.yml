@@ -34,10 +34,13 @@ jobs:
         run: |
           $main = Get-Content "out/main/index.js" -Raw
           $preload = Get-Content "out/preload/index.mjs" -Raw
-          $renderer = Get-Content "out/renderer/index.html" -Raw
+          $rendererHtml = Get-Content "out/renderer/index.html" -Raw
+          $rendererJsFiles = Get-ChildItem "out/renderer/assets/*.js" -File -ErrorAction SilentlyContinue
+          if (-not $rendererJsFiles) { throw "Renderer JavaScript bundle is missing" }
+          $rendererJs = ($rendererJsFiles | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
           if ($main -notmatch "auth-status" -or $main -notmatch "auth-setup" -or $main -notmatch "auth-unlock") { throw "Main authentication IPC handlers are missing" }
           if ($preload -notmatch "auth-status" -or $preload -notmatch "auth-setup" -or $preload -notmatch "auth-unlock") { throw "Preload authentication bridge is missing" }
-          if ($renderer -notmatch "auth-guard.js") { throw "Renderer authentication guard is missing" }
+          if ($rendererHtml -notmatch "auth-guard" -or $rendererJs -notmatch "happyBingoAuth") { throw "Renderer authentication guard was not included in the production bundle" }
           Write-Host "Verified authentication main/preload/renderer wiring."
       - name: Build customer Windows installer
         run: npx electron-builder --win --publish never
