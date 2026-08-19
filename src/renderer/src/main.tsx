@@ -1,7 +1,7 @@
 import './auth-guard.js'
 import './startup-fallback.js'
 import './selection-summary.js'
-import './resume-voice.js'
+import '../resume-voice.js'
 import { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
