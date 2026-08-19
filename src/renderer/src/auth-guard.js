@@ -10,20 +10,66 @@ function waitForAuthApi(timeoutMs = 10000) {
   })
 }
 
+function inputStyle() {
+  return 'display:block;width:100%;margin-top:10px;padding:14px 16px;border-radius:9px;border:2px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box;font-size:18px;font-weight:700;outline:none;opacity:1;visibility:visible;'
+}
+
 function buildGate(needsSetup) {
   const gate = document.createElement('div')
   gate.id = 'happy-bingo-auth-gate'
-  gate.style.cssText = 'position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,Helvetica,sans-serif;'
-  gate.innerHTML = `
-    <div style="width:min(440px,92vw);padding:32px;background:#101c26;border:2px solid #1e88e5;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center">
-      <div style="font-size:28px;font-weight:1000;letter-spacing:2px">HAPPY <span style="color:#ffd22f">BINGO</span></div>
-      <h2 style="margin:18px 0 8px">${needsSetup ? 'FIRST-TIME SETUP' : 'ENTER PASSWORD'}</h2>
-      <p style="color:#aebfcc;font-size:12px;line-height:1.5">${needsSetup ? 'Enter the default password, then create your own password. Your new password will be required each time the app opens.' : 'Enter the password you created for this computer.'}</p>
-      ${needsSetup ? '<input id="hb-default" type="password" placeholder="Default password" autocomplete="off" style="width:100%;margin-top:14px;padding:12px;border-radius:9px;border:1px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box"><input id="hb-new" type="password" placeholder="Create new password" autocomplete="new-password" style="width:100%;margin-top:9px;padding:12px;border-radius:9px;border:1px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box"><input id="hb-confirm" type="password" placeholder="Confirm new password" autocomplete="new-password" style="width:100%;margin-top:9px;padding:12px;border-radius:9px;border:1px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box">' : '<input id="hb-password" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;margin-top:14px;padding:12px;border-radius:9px;border:1px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box">'}
-      <div id="hb-auth-error" style="min-height:20px;margin-top:9px;color:#ff737b;font-size:11px;font-weight:700"></div>
-      <button id="hb-auth-submit" style="width:100%;margin-top:9px;padding:12px;border:0;border-radius:9px;background:#1e88e5;color:#fff;font-weight:1000">${needsSetup ? 'CREATE PASSWORD' : 'UNLOCK'}</button>
-    </div>`
+  gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,Helvetica,sans-serif;opacity:1;visibility:visible;'
+
+  const panel = document.createElement('div')
+  panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#101c26;border:2px solid #1e88e5;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;opacity:1;visibility:visible;'
+
+  const brand = document.createElement('div')
+  brand.textContent = 'HAPPY BINGO'
+  brand.style.cssText = 'font-size:28px;font-weight:1000;letter-spacing:2px;'
+
+  const title = document.createElement('h2')
+  title.textContent = needsSetup ? 'FIRST-TIME SETUP' : 'ENTER PASSWORD'
+  title.style.cssText = 'margin:18px 0 8px;'
+
+  const description = document.createElement('p')
+  description.textContent = needsSetup
+    ? 'Enter the default password, then create your own password. Your new password will be required each time the app opens.'
+    : 'Enter the password created for this computer.'
+  description.style.cssText = 'color:#aebfcc;font-size:13px;line-height:1.5;'
+
+  const error = document.createElement('div')
+  error.id = 'hb-auth-error'
+  error.style.cssText = 'min-height:22px;margin-top:10px;color:#ff737b;font-size:12px;font-weight:700;'
+
+  const makeInput = (id, placeholder, autocomplete) => {
+    const el = document.createElement('input')
+    el.id = id
+    el.type = 'password'
+    el.placeholder = placeholder
+    el.autocomplete = autocomplete
+    el.style.cssText = inputStyle()
+    return el
+  }
+
+  const inputs = needsSetup
+    ? [
+        makeInput('hb-default', 'Default password', 'off'),
+        makeInput('hb-new', 'Create new password', 'new-password'),
+        makeInput('hb-confirm', 'Confirm new password', 'new-password'),
+      ]
+    : [makeInput('hb-password', 'Password', 'current-password')]
+
+  const submit = document.createElement('button')
+  submit.id = 'hb-auth-submit'
+  submit.type = 'button'
+  submit.textContent = needsSetup ? 'CREATE PASSWORD' : 'UNLOCK'
+  submit.style.cssText = 'display:block;width:100%;margin-top:8px;padding:14px;border:0;border-radius:9px;background:#1e88e5;color:#fff;font-weight:1000;font-size:16px;cursor:pointer;'
+
+  panel.append(brand, title, description, ...inputs, error, submit)
+  gate.appendChild(panel)
   document.body.appendChild(gate)
+
+  const focusTarget = inputs[0]
+  window.setTimeout(() => focusTarget?.focus(), 0)
   return gate
 }
 
@@ -34,32 +80,41 @@ async function startAuth() {
     const { needsSetup } = await auth.status()
     const gate = buildGate(needsSetup)
     document.documentElement.style.visibility = 'visible'
+
     const submit = gate.querySelector('#hb-auth-submit')
     const error = gate.querySelector('#hb-auth-error')
 
     const handleSubmit = async () => {
       error.textContent = ''
-      if (needsSetup) {
-        const currentDefault = gate.querySelector('#hb-default')?.value || ''
-        const nextPassword = gate.querySelector('#hb-new')?.value || ''
-        const confirm = gate.querySelector('#hb-confirm')?.value || ''
-        const result = await auth.setup(currentDefault, nextPassword, confirm)
-        if (!result.ok) {
-          error.textContent = result.error || 'Could not create password.'
-          return
+      submit.disabled = true
+      try {
+        if (needsSetup) {
+          const currentDefault = gate.querySelector('#hb-default')?.value || ''
+          const nextPassword = gate.querySelector('#hb-new')?.value || ''
+          const confirm = gate.querySelector('#hb-confirm')?.value || ''
+          const result = await auth.setup(currentDefault, nextPassword, confirm)
+          if (!result.ok) {
+            error.textContent = result.error || 'Could not create password.'
+            return
+          }
+        } else {
+          const password = gate.querySelector('#hb-password')?.value || ''
+          const result = await auth.unlock(password)
+          if (!result.ok) {
+            error.textContent = result.error || 'Incorrect password.'
+            return
+          }
         }
-      } else {
-        const password = gate.querySelector('#hb-password')?.value || ''
-        const result = await auth.unlock(password)
-        if (!result.ok) {
-          error.textContent = result.error || 'Incorrect password.'
-          return
-        }
+        gate.remove()
+      } catch (e) {
+        error.textContent = 'Authentication could not be completed.'
+        console.error(e)
+      } finally {
+        submit.disabled = false
       }
-      gate.remove()
     }
 
-    submit?.addEventListener('click', () => void handleSubmit())
+    submit.addEventListener('click', () => void handleSubmit())
     gate.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') void handleSubmit()
     })
