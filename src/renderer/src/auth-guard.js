@@ -74,6 +74,11 @@ function buildGate(needsSetup) {
 }
 
 async function startAuth() {
+  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') {
+    document.documentElement.style.visibility = 'visible'
+    return
+  }
+
   document.documentElement.style.visibility = 'hidden'
   try {
     const auth = await waitForAuthApi()
@@ -102,6 +107,7 @@ async function startAuth() {
           error.textContent = result.error || 'Authentication failed.'
           return
         }
+        sessionStorage.setItem('happy-bingo-authenticated', '1')
         gate.remove()
         document.documentElement.style.visibility = 'visible'
         document.body.style.visibility = 'visible'
