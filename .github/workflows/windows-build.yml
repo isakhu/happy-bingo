@@ -27,7 +27,7 @@ jobs:
           if (-not (Test-Path "out/renderer/index.html")) { throw "Missing out/renderer/index.html" }
           if (-not (Test-Path "audio/voices")) { throw "Missing audio/voices directory" }
           $voices = Get-ChildItem "audio/voices" -Filter *.mp3 -File
-          if ($voices.Count -lt 78) { throw "Expected at least 78 MP3 voices, found $($voices.Count)" }
+          if ($voices.Count -lt 79) { throw "Expected at least 79 MP3 voices, found $($voices.Count)" }
           Write-Host "Verified customer app and $($voices.Count) MP3 voice files."
       - name: Build customer Windows installer
         run: npx electron-builder --win --publish never
