@@ -30,7 +30,41 @@ function builtInCards():Card[]{
   return cards
 }
 const BUILT_IN_CARDS=builtInCards()
-async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return{setId:'HB-BUILTIN-100',createdAt:new Date().toISOString(),cards:BUILT_IN_CARDS};for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}catch{}}}return{setId:'HB-BUILTIN-100',createdAt:new Date().toISOString(),cards:BUILT_IN_CARDS}}
-app.whenReady().then(async()=>{await ensureVoices();ipcMain.handle('play-voice',async(_,file:string)=>getVoiceData(file));ipcMain.handle('voice-health',async()=>{const dir=await ensureVoices();const files:string[]=[];for(const f of ALLOWED_VOICES){try{await readFile(join(dir,f));files.push(f)}catch{}}return{available:files.length,total:ALLOWED_VOICES.size,files}});ipcMain.handle('get-installed-set',async()=>getInstalledSet());protocol.handle(AUDIO_SCHEME,async(req)=>{const name=decodeURIComponent(new URL(req.url).pathname).replace(/^\/+/, '');const canonical=VOICE_BY_KEY.get(name.toLowerCase());if(!canonical)return new Response('Not found',{status:404});const dir=await ensureVoices();try{const data=await readFile(join(dir,canonical));return new Response(data,{status:200,headers:{'Content-Type':'audio/mpeg','Cache-Control':'no-store','Accept-Ranges':'bytes'}})}catch{return new Response('Not found',{status:404})}});createWindow();app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0)createWindow()})})
+
+async function getInstalledSet(){
+  const dir=join(app.getPath('userData'),'cartella-sets')
+  await mkdir(dir,{recursive:true})
+  const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort()
+  if(!files.length)return{setId:'HB-BUILTIN-100',createdAt:new Date().toISOString(),cards:BUILT_IN_CARDS}
+  for(const file of files){
+    try{
+      const raw=JSON.parse(await readFile(join(dir,file),'utf8'))
+      if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){
+        return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}
+      }
+    }catch{}
+  }
+  return{setId:'HB-BUILTIN-100',createdAt:new Date().toISOString(),cards:BUILT_IN_CARDS}
+}
+
+app.whenReady().then(async()=>{
+  await ensureVoices()
+  ipcMain.handle('play-voice',async(_,file:string)=>getVoiceData(file))
+  ipcMain.handle('voice-health',async()=>{
+    const dir=await ensureVoices();const files:string[]=[]
+    for(const f of ALLOWED_VOICES){try{await readFile(join(dir,f));files.push(f)}catch{}}
+    return{available:files.length,total:ALLOWED_VOICES.size,files}
+  })
+  ipcMain.handle('get-installed-set',async()=>getInstalledSet())
+  protocol.handle(AUDIO_SCHEME,async(req)=>{
+    const name=decodeURIComponent(new URL(req.url).pathname).replace(/^\/+/, '')
+    const canonical=VOICE_BY_KEY.get(name.toLowerCase())
+    if(!canonical)return new Response('Not found',{status:404})
+    const dir=await ensureVoices()
+    try{const data=await readFile(join(dir,canonical));return new Response(data,{status:200,headers:{'Content-Type':'audio/mpeg','Cache-Control':'no-store','Accept-Ranges':'bytes'}})}catch{return new Response('Not found',{status:404})}
+  })
+  createWindow()
+  app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0)createWindow()})
+})
 app.commandLine.appendSwitch('autoplay-policy','no-user-gesture-required')
 app.on('window-all-closed',()=>{if(process.platform!=='darwin')app.quit()})
