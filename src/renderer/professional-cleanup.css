@@ -1,0 +1,13 @@
+/* Professional desktop cleanup */
+.settings-modal{background:#0b0b0b!important;color:#fff!important;border:1px solid #2a2a2a!important;border-radius:14px!important;box-shadow:0 24px 70px rgba(0,0,0,.65)!important;padding:24px!important}
+.settings-modal h2,.settings-modal h3,.settings-modal label,.settings-modal div,.settings-modal p{color:#fff!important}
+.settings-modal input,.settings-modal select{background:#151515!important;color:#fff!important;border:1px solid #3b3b3b!important}
+.settings-modal input::placeholder{color:#8b8b8b!important}
+.settings-modal button{border-radius:8px!important}
+.settings-modal hr{border-color:#303030!important}
+.topbar .ready-pill{border-radius:7px!important;background:#171717!important;color:#c9c9c9!important;border:1px solid #333!important}
+.toast{background:#111!important;color:#fff!important;border:1px solid #3d3d3d!important;box-shadow:0 10px 35px rgba(0,0,0,.45)!important}
+/* Remove decorative/AI-looking treatment from legacy rules */
+.app-shell:before,.app-shell:after{display:none!important}
+.brand{text-shadow:none!important}
+.top-button,.danger-button{box-shadow:none!important}
