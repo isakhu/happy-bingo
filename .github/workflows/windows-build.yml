@@ -44,39 +44,3 @@ jobs:
             dist/*.exe
             dist/*.zip
           if-no-files-found: error
-
-  build-card-setup:
-    runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: card-setup
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install private setup dependencies
-        run: npm install
-      - name: Verify setup app files
-        shell: pwsh
-        run: |
-          foreach ($f in @('main.cjs','preload.cjs','index.html','renderer.js','styles.css','package.json')) {
-            if (-not (Test-Path $f)) { throw "Missing setup file: $f" }
-          }
-      - name: Build private Card Setup installer
-        run: npx electron-builder --win --publish never
-      - name: Verify Card Setup installer
-        shell: pwsh
-        run: |
-          $exe = Get-ChildItem "dist/*.exe" -File
-          if (-not $exe) { throw "Card Setup Windows installer was not produced" }
-      - name: Upload private Card Setup app
-        uses: actions/upload-artifact@v4
-        with:
-          name: Happy-Bingo-Card-Setup-Windows
-          path: |
-            card-setup/dist/*.exe
-            card-setup/dist/*.zip
-          if-no-files-found: error
