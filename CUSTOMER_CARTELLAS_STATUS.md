@@ -1,0 +1,1 @@
+Customer set: 100 Cartellas supplied by the customer in the conversation. Center FREE is represented by 0 or f. This branch must not substitute generated/test cards for the customer set.
