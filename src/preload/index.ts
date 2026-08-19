@@ -7,3 +7,7 @@ contextBridge.exposeInMainWorld('happyBingo', {
   voiceHealth: () => ipcRenderer.invoke('voice-health'),
   getInstalledSet: () => ipcRenderer.invoke('get-installed-set'),
 })
+
+contextBridge.exposeInMainWorld('happyBingoActivation', {
+  submit: (key: string) => ipcRenderer.invoke('submit-license', key),
+})
