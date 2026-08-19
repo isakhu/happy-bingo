@@ -1,0 +1,15 @@
+/* Final cleanup: remove non-essential helper labels from manager and TV views. */
+.selection-screen .set-info,
+.selection-screen .selection-panel-head span,
+.selection-screen .ready-pill,
+.bingo-main .call-label,
+.bingo-main .recent-heading span,
+.tv-current small,
+.tv-recent small,
+.tv-meta{display:none!important}
+.selection-title h1{margin-top:0!important}
+.selection-panel-head{justify-content:flex-start!important}
+.call-stage{grid-template-columns:150px 1fr!important}
+.recent-heading{justify-content:flex-end!important}
+.tv-current{justify-content:center!important}
+.tv-recent{justify-content:center!important}
