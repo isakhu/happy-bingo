@@ -27,6 +27,19 @@
 .bingo-mode .bottom-actions{position:relative!important;z-index:50!important}
 .bingo-mode .action{position:relative!important;z-index:51!important;pointer-events:auto!important}
 
+/* Selection sidebar: only live player/game/money information. */
+.selection-mode .selection-screen{display:grid!important;grid-template-columns:minmax(0,1fr) 280px!important;grid-template-rows:auto minmax(0,1fr)!important;gap:14px!important}
+.selection-mode .selection-title{grid-column:1/-1!important}
+.selection-mode .selection-panel{grid-column:1!important;grid-row:2!important}
+.selection-mode .selection-sidebar{grid-column:2!important;grid-row:2!important;display:flex!important;flex-direction:column!important;gap:12px!important;min-height:0!important}
+.selection-mode .selection-info-card{background:#0f172a!important;border:1px solid #1e293b!important;border-radius:14px!important;padding:18px 16px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:7px!important;min-height:105px!important;box-shadow:0 12px 32px #0005!important}
+.selection-mode .selection-info-card span{font-size:11px!important;font-weight:1000!important;letter-spacing:1.2px!important;color:#94a3b8!important}
+.selection-mode .selection-info-card strong{font-size:30px!important;font-weight:1000!important;line-height:1!important;color:#f8fafc!important;text-shadow:2px 2px 0 #000!important}
+.selection-mode .selection-info-card.selected-info strong{color:#22c55e!important}
+.selection-mode .selection-info-card.game-info strong{color:#60a5fa!important}
+.selection-mode .selection-info-card.money-info strong{color:#fbbf24!important;font-size:26px!important}
+.selection-mode .selection-sidebar .start-button{width:100%!important;align-self:stretch!important;margin-top:auto!important}
+
 /* One black settings panel — readable from a distance and fully inside smaller windows. */
 .settings-black{width:min(820px,94vw)!important;max-height:calc(100vh - 28px)!important;background:#050505!important;color:#fff!important;border:2px solid #2d6fa3!important;border-radius:18px!important;box-shadow:0 30px 90px #000!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .settings-black .settings-header{background:#050505!important;border-bottom:2px solid #1e88e5!important;padding:22px 26px!important;flex:0 0 auto!important}
@@ -64,6 +77,9 @@
   .bingo-mode .number-cell{font-size:clamp(13px,1.55vw,23px)!important}
   .settings-black .settings-row-main{grid-template-columns:180px minmax(150px,1fr) 170px!important;gap:10px!important}
   .settings-black .settings-row-main label{font-size:16px!important}
+  .selection-mode .selection-screen{grid-template-columns:minmax(0,1fr) 230px!important}
+  .selection-mode .selection-info-card{min-height:92px!important;padding:14px!important}
+  .selection-mode .selection-info-card strong{font-size:26px!important}
 }
 @media(max-width:850px){
   .bingo-mode .bingo-main{grid-template-rows:minmax(0,1fr) 72px 56px!important}
@@ -78,6 +94,11 @@
   .settings-black .settings-row-main label{font-size:15px!important}
   .settings-black .settings-row-main input,.settings-black .settings-row-main select,.settings-black .voice-switch{height:46px!important;font-size:20px!important}
   .settings-black .settings-balance{grid-template-columns:1fr!important}
+  .selection-mode .selection-screen{grid-template-columns:1fr!important;grid-template-rows:auto minmax(0,1fr) auto!important}
+  .selection-mode .selection-panel{grid-column:1!important;grid-row:2!important}
+  .selection-mode .selection-sidebar{grid-column:1!important;grid-row:3!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+  .selection-mode .selection-info-card{min-height:82px!important}
+  .selection-mode .selection-sidebar .start-button{grid-column:1/-1!important;margin-top:0!important}
 }
 @media(max-height:760px){
   .bingo-mode .game-topbar{height:58px!important}
