@@ -3,7 +3,7 @@ name: Build Happy Bingo for Windows
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, feature/one-time-licensing]
 
 jobs:
   build-customer-app:
