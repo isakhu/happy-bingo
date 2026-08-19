@@ -13,8 +13,24 @@ function load(win:BrowserWindow){const url=process.env.ELECTRON_RENDERER_URL;if(
 function createWindow(){const d=screen.getPrimaryDisplay();const win=new BrowserWindow({x:d.workArea.x,y:d.workArea.y,width:d.workAreaSize.width,height:d.workAreaSize.height,minWidth:1100,minHeight:700,title:'Happy Bingo',backgroundColor:'#071a3a',webPreferences:{preload:join(__dirname,'../preload/index.mjs'),contextIsolation:true,nodeIntegration:false,sandbox:false}});win.maximize();load(win)}
 async function ensureVoices(){const sourceDirs=[join(app.getAppPath(),'audio','voices'),join(process.resourcesPath,'audio','voices'),join(process.cwd(),'audio','voices')];const targetDir=join(app.getPath('userData'),'voices');await mkdir(targetDir,{recursive:true});for(const file of ALLOWED_VOICES){const target=join(targetDir,file);let ok=false;for(const source of sourceDirs){try{await copyFile(join(source,file),target);ok=true;break}catch{}}if(!ok){try{await readFile(target)}catch{console.error(`Missing voice: ${file}`)}}}return targetDir}
 async function getVoiceData(file:string){const canonical=VOICE_BY_KEY.get(String(file).toLowerCase());if(!canonical)throw new Error(`Voice file not allowed: ${file}`);const dir=await ensureVoices();const data=await readFile(join(dir,canonical));return `data:audio/mpeg;base64,${data.toString('base64')}`}
-async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return null;for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}}catch{}}
-return null}
+function builtInCards():Card[]{
+  const cards:Card[]=[]
+  for(let id=1;id<=100;id++){
+    const values:number[]=[]
+    for(let col=0;col<5;col++){
+      const min=col*15+1
+      const pool=Array.from({length:15},(_,i)=>min+i)
+      let seed=(id*97)+(col*31)
+      for(let i=pool.length-1;i>0;i--){seed=(seed*1664525+1013904223)>>>0;const j=seed%(i+1);[pool[i],pool[j]]=[pool[j],pool[i]]}
+      const picked=pool.slice(0,5)
+      for(let row=0;row<5;row++) values[row*5+col]=(row===2&&col===2)?0:picked[row]
+    }
+    cards.push({id,values})
+  }
+  return cards
+}
+const BUILT_IN_CARDS=builtInCards()
+async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return{setId:'HB-BUILTIN-100',createdAt:new Date().toISOString(),cards:BUILT_IN_CARDS};for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100){return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}catch{}}}return{setId:'HB-BUILTIN-100',createdAt:new Date().toISOString(),cards:BUILT_IN_CARDS}}
 app.whenReady().then(async()=>{await ensureVoices();ipcMain.handle('play-voice',async(_,file:string)=>getVoiceData(file));ipcMain.handle('voice-health',async()=>{const dir=await ensureVoices();const files:string[]=[];for(const f of ALLOWED_VOICES){try{await readFile(join(dir,f));files.push(f)}catch{}}return{available:files.length,total:ALLOWED_VOICES.size,files}});ipcMain.handle('get-installed-set',async()=>getInstalledSet());protocol.handle(AUDIO_SCHEME,async(req)=>{const name=decodeURIComponent(new URL(req.url).pathname).replace(/^\/+/, '');const canonical=VOICE_BY_KEY.get(name.toLowerCase());if(!canonical)return new Response('Not found',{status:404});const dir=await ensureVoices();try{const data=await readFile(join(dir,canonical));return new Response(data,{status:200,headers:{'Content-Type':'audio/mpeg','Cache-Control':'no-store','Accept-Ranges':'bytes'}})}catch{return new Response('Not found',{status:404})}});createWindow();app.on('activate',()=>{if(BrowserWindow.getAllWindows().length===0)createWindow()})})
 app.commandLine.appendSwitch('autoplay-policy','no-user-gesture-required')
 app.on('window-all-closed',()=>{if(process.platform!=='darwin')app.quit()})
