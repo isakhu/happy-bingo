@@ -1,18 +1,54 @@
 (() => {
   const STARTING_BALANCE = 1000000;
+  const HOUSE_EARNED_KEY = 'happy-bingo-house-earned';
+  const CHARGED_GAMES_KEY = 'happy-bingo-house-charged-games';
   const money = (n) => Math.max(0, Math.round(Number(n) || 0)).toLocaleString();
 
-  function ensureStartingBalance() {
-    localStorage.setItem('happy-bingo-total-money', String(STARTING_BALANCE));
+  function ensureState() {
+    if (localStorage.getItem('happy-bingo-house-earned') === null) localStorage.setItem(HOUSE_EARNED_KEY, '0');
+    if (localStorage.getItem('happy-bingo-total-money') === null) localStorage.setItem('happy-bingo-total-money', String(STARTING_BALANCE));
+    if (localStorage.getItem(CHARGED_GAMES_KEY) === null) localStorage.setItem(CHARGED_GAMES_KEY, '[]');
+  }
+
+  function readChargedGames() {
+    try {
+      const value = JSON.parse(localStorage.getItem(CHARGED_GAMES_KEY) || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch { return []; }
+  }
+
+  function addHouseRevenueForGame(button) {
+    if (!button || button.dataset.houseCharged === '1') return;
+    button.dataset.houseCharged = '1';
+
+    const bet = Number(localStorage.getItem('happy-bingo-bet') || '0');
+    const cutRaw = localStorage.getItem('happy-bingo-cut');
+    const cut = cutRaw === null ? 20 : Number(cutRaw);
+    const players = document.querySelectorAll('.cartella.selected').length || Number(localStorage.getItem('happy-bingo-active-players') || '0');
+    if (!Number.isFinite(bet) || bet <= 0 || !Number.isFinite(players) || players <= 0) return;
+
+    const totalCollected = bet * players;
+    const houseRevenue = Math.max(0, Math.round(totalCollected * Math.max(0, Math.min(100, cut)) / 100));
+    if (houseRevenue <= 0) return;
+
+    const gameId = (document.querySelector('.game-id strong,.game-id,.game-id-value,[data-game-id]')?.textContent || '').trim() || `game-${Date.now()}`;
+    const charged = readChargedGames();
+    if (charged.includes(gameId)) return;
+
+    const earned = Number(localStorage.getItem(HOUSE_EARNED_KEY) || '0');
+    localStorage.setItem(HOUSE_EARNED_KEY, String(Math.max(0, Math.round(earned)) + houseRevenue));
+    localStorage.setItem(CHARGED_GAMES_KEY, JSON.stringify([...charged.slice(-199), gameId]));
+    renderBalance();
   }
 
   function balance() {
-    ensureStartingBalance();
-    const revenue = Number(localStorage.getItem('happy-bingo-bingo-made') || '0');
-    return Math.max(0, STARTING_BALANCE - revenue);
+    ensureState();
+    const earned = Number(localStorage.getItem(HOUSE_EARNED_KEY) || '0');
+    return STARTING_BALANCE + Math.max(0, Number.isFinite(earned) ? earned : 0);
   }
 
   function renderBalance() {
+    ensureState();
     let el = document.getElementById('happy-bingo-authoritative-balance');
     if (!el) {
       el = document.createElement('div');
@@ -47,7 +83,13 @@
     button.textContent = document.fullscreenElement ? '⛶ EXIT FULL SCREEN' : '⛶ FULL SCREEN';
   }
 
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target.closest('button') : null;
+    if (target?.matches('.start-button')) setTimeout(() => addHouseRevenueForGame(target), 50);
+  }, true);
+
   function install() {
+    ensureState();
     renderBalance();
     renderFullscreen();
   }
