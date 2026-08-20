@@ -1,0 +1,11 @@
+/* Current/recent call colors follow Bingo ranges: B red, I blue, N yellow, G purple, O green. */
+.bingo-mode .marquee-ball.hb-b-call{background:#EF233C!important;border-color:#FF7B8A!important;box-shadow:0 0 18px #EF233C,0 0 42px #EF233C99,0 0 70px #EF233C66!important}
+.bingo-mode .marquee-ball.hb-i-call{background:#0066FF!important;border-color:#66B7FF!important;box-shadow:0 0 18px #0066FF,0 0 42px #0066FF99,0 0 70px #0066FF66!important}
+.bingo-mode .marquee-ball.hb-n-call{background:#F1D42E!important;border-color:#FFF3A0!important;color:#111!important;box-shadow:0 0 18px #F1D42E,0 0 42px #F1D42E99,0 0 70px #F1D42E66!important}
+.bingo-mode .marquee-ball.hb-g-call{background:#8B3DFF!important;border-color:#D7B8FF!important;box-shadow:0 0 18px #8B3DFF,0 0 42px #8B3DFF99,0 0 70px #8B3DFF66!important}
+.bingo-mode .marquee-ball.hb-o-call{background:#20C96B!important;border-color:#9DFFD0!important;box-shadow:0 0 18px #20C96B,0 0 42px #20C96B99,0 0 70px #20C96B66!important}
+.bingo-mode .recent-calls .recent-ball.hb-b-call{background:#EF233C!important;border-color:#FF7B8A!important;color:#fff!important;box-shadow:0 0 18px #EF233C99!important}
+.bingo-mode .recent-calls .recent-ball.hb-i-call{background:#0066FF!important;border-color:#66B7FF!important;color:#fff!important;box-shadow:0 0 18px #0066FF99!important}
+.bingo-mode .recent-calls .recent-ball.hb-n-call{background:#F1D42E!important;border-color:#FFF3A0!important;color:#111!important;box-shadow:0 0 18px #F1D42E99!important}
+.bingo-mode .recent-calls .recent-ball.hb-g-call{background:#8B3DFF!important;border-color:#D7B8FF!important;color:#fff!important;box-shadow:0 0 18px #8B3DFF99!important}
+.bingo-mode .recent-calls .recent-ball.hb-o-call{background:#20C96B!important;border-color:#9DFFD0!important;color:#fff!important;box-shadow:0 0 18px #20C96B99!important}
