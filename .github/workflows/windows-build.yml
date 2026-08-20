@@ -19,6 +19,8 @@ jobs:
           node-version: 22
       - name: Install customer app dependencies
         run: npm install
+      - name: Run deterministic system audit
+        run: npm run audit
       - name: Build customer app renderer, main and preload
         run: npm run build
       - name: Verify customer app inputs
