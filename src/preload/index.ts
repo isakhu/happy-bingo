@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('happyBingoAuth', {
-  defaultPassword: '48261937',
   status: () => ipcRenderer.invoke('auth-status'),
-  setup: (currentDefault: string, newPassword: string, confirmPassword: string) => ipcRenderer.invoke('auth-setup', currentDefault, newPassword, confirmPassword),
+  setup: (currentDefault: string, newPassword: string, confirmPassword: string) =>
+    ipcRenderer.invoke('auth-setup', currentDefault, newPassword, confirmPassword),
   unlock: (password: string) => ipcRenderer.invoke('auth-unlock', password),
 })
 
