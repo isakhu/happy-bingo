@@ -23,7 +23,20 @@
   function balance() {
     ensureState();
     const earned = Number(localStorage.getItem(HOUSE_EARNED_KEY) || '0');
-    return STARTING_BALANCE + Math.max(0, Number.isFinite(earned) ? earned : 0);
+    const legacyCompanyRevenue = Number(localStorage.getItem('happy-bingo-bingo-made') || '0');
+    const safeEarned = Number.isFinite(earned) && earned >= 0 ? earned : 0;
+    const safeLegacy = Number.isFinite(legacyCompanyRevenue) && legacyCompanyRevenue >= 0 ? legacyCompanyRevenue : 0;
+    // The dedicated house ledger is authoritative; legacy company revenue is used only
+    // to recover amounts already earned before the dedicated ledger was visible in Settings.
+    return STARTING_BALANCE + Math.max(safeEarned, safeLegacy);
+  }
+
+  function stableGameId() {
+    const stored = Number(localStorage.getItem('happy-bingo-game-id') || '0');
+    if (Number.isInteger(stored) && stored > 0) return `game-${stored}`;
+    const text = Array.from(document.querySelectorAll('.game-metric strong')).map(el => el.textContent?.trim() || '');
+    const id = text.find(v => /^#\d+$/.test(v));
+    return id ? `game-${Number(id.slice(1))}` : null;
   }
 
   function addHouseRevenueForGame(button) {
@@ -33,33 +46,41 @@
     const cut = cutRaw === null ? 20 : Number(cutRaw);
     const players = document.querySelectorAll('.cartella.selected').length || Number(localStorage.getItem('happy-bingo-active-players') || '0');
     if (!Number.isFinite(bet) || bet <= 0 || !Number.isFinite(players) || players <= 0) return;
+
     const totalCollected = bet * players;
     const houseRevenue = Math.max(0, Math.round(totalCollected * Math.max(0, Math.min(100, cut)) / 100));
     if (houseRevenue <= 0) return;
 
-    const gameId = (document.querySelector('.game-id strong,.game-id,.game-id-value,[data-game-id]')?.textContent || '').trim() || `game-${Date.now()}`;
+    const gameId = stableGameId();
+    if (!gameId) return;
     const charged = readChargedGames();
     if (charged.includes(gameId)) {
       button.dataset.houseCharged = '1';
+      renderSettingsBalance();
       return;
     }
 
     const earned = Number(localStorage.getItem(HOUSE_EARNED_KEY) || '0');
-    localStorage.setItem(HOUSE_EARNED_KEY, String(Math.max(0, Math.round(earned)) + houseRevenue));
+    const safeEarned = Number.isFinite(earned) && earned >= 0 ? earned : 0;
+    localStorage.setItem(HOUSE_EARNED_KEY, String(Math.round(safeEarned + houseRevenue)));
     localStorage.setItem(CHARGED_GAMES_KEY, JSON.stringify([...charged.slice(-199), gameId]));
     button.dataset.houseCharged = '1';
     renderSettingsBalance();
   }
 
   function renderSettingsBalance() {
-    let el = document.getElementById('happy-bingo-settings-balance');
-    if (!el) {
+    const existing = document.getElementById('happy-bingo-settings-balance');
+    const settings = document.querySelector('.settings-redesigned .settings-main-real, .settings-main-real');
+    if (!settings) return;
+    let el = existing;
+    if (!el || !settings.contains(el)) {
+      el?.remove();
       el = document.createElement('div');
       el.id = 'happy-bingo-settings-balance';
       el.innerHTML = '<span>HOUSE BALANCE</span><strong></strong>';
-      const settings = document.querySelector('.settings-main-real, .settings-main, .settings-panel, [class*="settings"]');
-      if (settings) settings.appendChild(el);
-      else return;
+      const footer = settings.querySelector('.settings-footer-real');
+      if (footer) settings.insertBefore(el, footer);
+      else settings.appendChild(el);
     }
     const value = el.querySelector('strong');
     if (value) value.textContent = `${money(balance())} BIRR`;
@@ -87,7 +108,7 @@
   function updateFullscreen(button) { button.textContent = document.fullscreenElement ? '⛶ EXIT FULL SCREEN' : '⛶ FULL SCREEN'; }
 
   // Revenue is earned when the manager ends the game, not when the game starts.
-  // This avoids charging a game that was never completed and keeps the accounting idempotent.
+  // This avoids charging an abandoned game and prevents duplicate charging by game ID.
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target.closest('button') : null;
     if (target?.matches('.action.end')) setTimeout(() => addHouseRevenueForGame(target), 50);
@@ -101,6 +122,6 @@
 
   const observer = new MutationObserver(install);
   observer.observe(document.documentElement, { childList: true, subtree: true });
-  window.setInterval(install, 1000);
+  window.setInterval(install, 500);
   install();
 })();
