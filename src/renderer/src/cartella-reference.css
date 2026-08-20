@@ -1,71 +1,44 @@
-/* Checked Cartella presentation modeled on the supplied reference. */
+/* Final checked-Cartella design selected by the user. */
 .bingo-mode .card-inspector{
   position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
-  transform:translate(-50%,-50%)!important;width:min(60vw,900px)!important;min-width:560px!important;max-width:92vw!important;
-  height:auto!important;max-height:86vh!important;overflow:hidden!important;padding:22px 24px 20px!important;box-sizing:border-box!important;
-  z-index:3000!important;background:#07152b!important;color:#fff!important;border:2px solid #0066ff!important;border-radius:14px!important;
-  box-shadow:0 18px 60px #000a,0 0 28px #0066ff44!important;display:flex!important;flex-direction:column!important;font-family:Arial,Helvetica,sans-serif!important;
+  transform:translate(-50%,-50%)!important;width:60vw!important;max-width:900px!important;min-width:620px!important;
+  height:auto!important;max-height:88vh!important;overflow:hidden!important;padding:18px 20px 16px!important;box-sizing:border-box!important;
+  z-index:3000!important;background:#07152B!important;color:#fff!important;border:2px solid #0066FF!important;border-radius:16px!important;
+  box-shadow:0 20px 70px #000c,0 0 35px #0066FF33!important;display:flex!important;flex-direction:column!important;
+  font-family:Arial,Helvetica,sans-serif!important;
 }
-.bingo-mode .card-inspector .inspector-head{position:relative!important;display:block!important;flex:0 0 auto!important;margin:0 0 10px!important;padding:0 40px 0 0!important;text-align:center!important;}
-.bingo-mode .card-inspector .inspector-head small{display:block!important;margin:0 0 4px!important;font-size:clamp(22px,2vw,34px)!important;line-height:1.15!important;color:#20d26b!important;font-weight:1000!important;text-shadow:0 2px 0 #000!important;}
-.bingo-mode .card-inspector .inspector-head h2{margin:0!important;font-size:0!important;line-height:1.25!important;color:#fff!important;font-weight:800!important;}
-.bingo-mode .cartella-reference-accumulated{display:none!important;}
-.bingo-mode .card-inspector .inspector-head button{position:absolute!important;top:-2px!important;right:-4px!important;width:32px!important;height:32px!important;border:0!important;background:transparent!important;color:#fff!important;font-size:28px!important;line-height:1!important;cursor:pointer!important;}
-.bingo-mode .cartella-reference-stats{display:none!important;}
-.bingo-mode .card-inspector .inspector-grid{width:100%!important;height:auto!important;max-width:none!important;margin:4px 0 0!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:0!important;overflow:hidden!important;border:1px solid #18365c!important;}
-.bingo-mode .card-inspector .inspector-cell{width:100%!important;aspect-ratio:1.15!important;min-width:0!important;min-height:0!important;display:grid!important;place-items:center!important;border-right:1px solid #18365c!important;border-bottom:1px solid #18365c!important;border-radius:0!important;box-sizing:border-box!important;color:#111827!important;font-size:clamp(20px,2.8vw,40px)!important;line-height:1!important;font-weight:1000!important;background:#f5a8b3!important;box-shadow:none!important;transform:none!important;}
-.bingo-mode .card-inspector .inspector-cell:nth-child(5n){border-right:0!important;}
-.bingo-mode .card-inspector .inspector-cell:nth-last-child(-n+5){border-bottom:0!important;}
-.bingo-mode .card-inspector .inspector-cell:nth-child(5n+3){background:#f1dc46!important;}
+.bingo-mode .card-inspector .inspector-head{position:relative!important;display:block!important;flex:0 0 auto!important;margin:0 0 10px!important;padding:0 40px 0 0!important;text-align:left!important;}
+.bingo-mode .card-inspector .inspector-head small{display:block!important;margin:0 0 3px!important;font-size:22px!important;line-height:1.2!important;color:#FFD83D!important;font-weight:1000!important;text-shadow:2px 2px 0 #000!important;}
+.bingo-mode .card-inspector .inspector-head h2{margin:0!important;font-size:15px!important;line-height:1.25!important;color:#fff!important;font-weight:900!important;text-shadow:2px 2px 0 #000!important;}
+.bingo-mode .card-inspector .inspector-head button{position:absolute!important;top:0!important;right:0!important;width:34px!important;height:34px!important;border:0!important;background:#0066FF!important;color:#fff!important;border-radius:7px!important;font-size:23px!important;line-height:1!important;cursor:pointer!important;}
+/* User selected: hide House Accumulated and statistics. */
+.bingo-mode .cartella-reference-accumulated,.bingo-mode .cartella-reference-stats{display:none!important;}
+.bingo-mode .card-inspector .inspector-grid{
+  width:100%!important;height:auto!important;max-width:none!important;margin:0!important;display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;
+  gap:3px!important;overflow:hidden!important;border:2px solid #18365C!important;background:#18365C!important;
+}
+.bingo-mode .card-inspector .inspector-cell{
+  width:100%!important;aspect-ratio:1.08!important;min-width:0!important;min-height:0!important;display:grid!important;place-items:center!important;
+  border:0!important;border-radius:2px!important;box-sizing:border-box!important;color:#111827!important;
+  font-size:clamp(20px,2.4vw,34px)!important;line-height:1!important;font-weight:1000!important;background:#F5A8B3!important;box-shadow:none!important;transform:none!important;
+}
+/* Pink B/I/G/O columns and yellow N column. */
+.bingo-mode .card-inspector .inspector-cell:nth-child(5n+3){background:#F1DC46!important;}
 .bingo-mode .card-inspector .inspector-cell.marked{font-weight:1000!important;}
-.bingo-mode .card-inspector .inspector-cell.winning{background:#5fcf7e!important;color:#082b16!important;box-shadow:inset 0 0 0 3px #0d8f3b,0 0 16px #20d26b88!important;}
-.bingo-mode .card-inspector .inspector-cell:nth-child(13){background:#f1dc46!important;color:#111827!important;font-size:0!important;}
-.bingo-mode .card-inspector .inspector-cell:nth-child(13)::after{content:'★';font-size:clamp(24px,3.2vw,42px)!important;line-height:1!important;color:#111827!important;}
+/* Green highlights for actual winning cells. */
+.bingo-mode .card-inspector .inspector-cell.winning{background:#39C86A!important;color:#062A14!important;box-shadow:inset 0 0 0 3px #0A8F3C!important;}
+/* Center FREE/star. */
+.bingo-mode .card-inspector .inspector-cell:nth-child(13){background:#F1DC46!important;color:#111827!important;font-size:0!important;}
+.bingo-mode .card-inspector .inspector-cell:nth-child(13)::after{content:'★';font-size:clamp(24px,3vw,40px)!important;line-height:1!important;color:#111827!important;}
+/* User selected: no winning-line/statistics extras. */
+.bingo-mode .card-inspector .winning-line-label{display:none!important;}
+/* Failed claim: red BLOCK + blue CLOSE. Winner: blue CLOSE only. */
 .bingo-mode .cartella-reference-footer{display:flex!important;justify-content:center!important;gap:14px!important;margin-top:14px!important;}
-.bingo-mode .cartella-reference-footer button{min-width:110px!important;padding:10px 18px!important;border:0!important;border-radius:7px!important;color:#fff!important;font-size:12px!important;font-weight:1000!important;letter-spacing:.5px!important;cursor:pointer!important;box-shadow:none!important;}
-.bingo-mode .cartella-reference-footer .ref-close{background:#0066ff!important;}
-.bingo-mode .cartella-reference-footer .ref-block{background:#ef233c!important;}
-.bingo-mode .card-inspector:has(.failed-check) .inspector-head small{color:#ef4052!important;}
-.bingo-mode .card-inspector:not(:has(.failed-check)) .ref-block{display:none!important;}
-.bingo-mode .card-inspector .winning-line-label,.bingo-mode .card-inspector .lock-failed-button,.bingo-mode .card-inspector .inspector-close{display:none!important;}
+.bingo-mode .cartella-reference-footer button{min-width:110px!important;padding:10px 16px!important;border:0!important;border-radius:7px!important;color:#fff!important;font-size:11px!important;font-weight:1000!important;letter-spacing:.5px!important;cursor:pointer!important;box-shadow:0 4px 14px #0005!important;}
+.bingo-mode .cartella-reference-footer .ref-close{background:#0066FF!important;}
+.bingo-mode .cartella-reference-footer .ref-block{background:#EF233C!important;}
+.bingo-mode .card-inspector .lock-failed-button,.bingo-mode .card-inspector .inspector-close{display:none!important;}
 .bingo-mode:has(.card-inspector)>.toast{display:none!important;}
-
-/* Single-screen 75-number Bingo design. HDMI mirrors this same window; no second UI is introduced. */
-.bingo-mode{background:#040d1a!important;color:#fff!important;min-height:100vh!important;overflow:hidden!important;}
-.bingo-mode .topbar.game-topbar{background:#07152b!important;border:0!important;border-bottom:1px solid #18365c!important;min-height:92px!important;padding:10px 22px!important;display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;gap:18px!important;}
-.bingo-mode .brand{color:#fff!important;font-weight:1000!important;font-size:clamp(24px,2.5vw,38px)!important;letter-spacing:2px!important;text-shadow:0 0 16px #0066ff99!important;}
-.bingo-mode .brand span{color:#fff!important;}
-.bingo-mode .game-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;align-items:center!important;}
-.bingo-mode .game-metric{min-width:0!important;text-align:center!important;}
-.bingo-mode .game-metric span{display:block!important;color:#66b7ff!important;font-weight:1000!important;font-size:clamp(9px,.72vw,13px)!important;letter-spacing:1px!important;}
-.bingo-mode .game-metric strong{display:block!important;color:#ffd83d!important;font-weight:1000!important;font-size:clamp(13px,1.2vw,20px)!important;text-shadow:2px 2px 0 #000,0 0 8px #000!important;white-space:nowrap!important;}
-.bingo-mode .bingo-main{height:calc(100vh - 92px)!important;min-height:0!important;padding:12px 18px 10px!important;display:grid!important;grid-template-rows:minmax(0,70fr) minmax(130px,18fr) minmax(62px,12fr)!important;gap:10px!important;overflow:hidden!important;}
-.bingo-mode .board-shell{min-height:0!important;background:#07152b!important;border:2px solid #0066ff!important;border-radius:16px!important;box-shadow:0 0 0 1px #18365c,0 12px 32px #0008!important;padding:10px!important;overflow:hidden!important;}
-.bingo-mode .board-heading{display:none!important;}
-.bingo-mode .board-grid{height:100%!important;min-height:0!important;display:grid!important;grid-template-columns:repeat(16,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;grid-auto-flow:row!important;gap:6px!important;}
-.bingo-mode .board-column{display:contents!important;}
-.bingo-mode .letter-badge{display:grid!important;place-items:center!important;background:#0066ff!important;color:#fff!important;border-radius:10px!important;font-size:clamp(20px,2.3vw,34px)!important;font-weight:1000!important;text-shadow:0 0 10px #66b7ff,0 0 18px #0066ff!important;box-shadow:0 0 14px #0066ff66!important;}
-.bingo-mode .number-cell{min-width:0!important;min-height:0!important;display:grid!important;place-items:center!important;background:#07152b!important;color:#fff!important;border:1px solid #18365c!important;border-radius:10px!important;font-size:clamp(15px,1.55vw,26px)!important;font-weight:1000!important;box-shadow:inset 0 0 0 1px #0b1e37!important;transition:background .16s ease,box-shadow .16s ease,transform .16s ease,color .16s ease!important;}
-.bingo-mode .number-cell.called{background:#0066ff!important;color:#fff!important;border-color:#0066ff!important;box-shadow:0 0 14px #0066ff99!important;}
-.bingo-mode .number-cell.latest{background:#0066ff!important;color:#fff!important;border-color:#66b7ff!important;box-shadow:0 0 12px #0066ff,0 0 28px #0066ff,0 0 44px #0066ff99!important;transform:scale(1.035)!important;z-index:2!important;animation:bingoLatestPulse .7s ease-out!important;}
-.bingo-mode .call-stage{min-height:0!important;display:grid!important;grid-template-columns:170px minmax(0,1fr)!important;align-items:center!important;gap:18px!important;padding:0 4px!important;overflow:hidden!important;}
-.bingo-mode .latest-call{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;position:relative!important;}
-.bingo-mode .latest-call:before{content:'CURRENT NUMBER';position:absolute!important;top:-20px!important;color:#fff!important;font-size:clamp(10px,.85vw,14px)!important;font-weight:1000!important;letter-spacing:1.5px!important;text-shadow:0 0 10px #0066ff,0 0 18px #0066ff!important;}
-.bingo-mode .marquee-ball{width:140px!important;height:140px!important;flex:0 0 140px!important;border-radius:50%!important;background:#0066ff!important;border:4px solid #66b7ff!important;display:grid!important;place-items:center!important;align-content:center!important;color:#fff!important;box-shadow:0 0 18px #0066ff,0 0 40px #0066ff99,0 0 70px #0066ff66!important;animation:bingoCurrentPulse 1.2s ease-in-out infinite!important;}
-.bingo-mode .marquee-ball span{display:none!important;}
-.bingo-mode .marquee-ball strong{font-size:clamp(42px,4vw,66px)!important;line-height:1!important;font-weight:1000!important;text-shadow:2px 2px 0 #000!important;}
-.bingo-mode .recent-panel{min-width:0!important;overflow:hidden!important;}
-.bingo-mode .recent-calls{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:10px!important;align-items:center!important;width:100%!important;}
-.bingo-mode .recent-ball{min-width:0!important;height:72px!important;border-radius:10px!important;display:grid!important;place-items:center!important;background:#0066ff!important;border:2px solid #66b7ff!important;color:#fff!important;font-size:clamp(20px,2vw,32px)!important;font-weight:1000!important;box-shadow:0 0 12px #0066ff66!important;text-shadow:2px 2px 0 #000!important;}
-.bingo-mode .recent-ball span{display:none!important;}
-.bingo-mode .recent-ball.latest{box-shadow:0 0 12px #0066ff66!important;transform:none!important;}
-.bingo-mode .recent-ball:nth-child(n+7){display:none!important;}
-.bingo-mode .bottom-bar{min-height:0!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:4px 0!important;}
-.bingo-mode .game-status{display:none!important;}
-.bingo-mode .bottom-actions{display:flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;}
-.bingo-mode .bottom-actions .action{min-width:140px!important;height:48px!important;border-radius:10px!important;font-weight:1000!important;font-size:14px!important;}
-.bingo-mode .top-button{background:#0066ff!important;color:#fff!important;border:1px solid #66b7ff!important;box-shadow:0 0 12px #0066ff55!important;font-weight:1000!important;}
-@keyframes bingoLatestPulse{0%{transform:scale(1)}45%{transform:scale(1.06);box-shadow:0 0 22px #0066ff,0 0 48px #0066ff,0 0 70px #0066ff99}100%{transform:scale(1.035)}}
-@keyframes bingoCurrentPulse{0%,100%{box-shadow:0 0 18px #0066ff,0 0 40px #0066ff99,0 0 70px #0066ff44}50%{box-shadow:0 0 24px #0066ff,0 0 52px #0066ff,0 0 86px #0066ff88}}
-@media(max-width:1100px){.bingo-mode .game-metrics{gap:6px!important}.bingo-mode .bingo-main{padding:8px 10px!important;gap:7px!important}.bingo-mode .board-grid{gap:4px!important}.bingo-mode .number-cell{font-size:clamp(12px,1.45vw,20px)!important}.bingo-mode .marquee-ball{width:120px!important;height:120px!important;flex-basis:120px!important}.bingo-mode .call-stage{grid-template-columns:145px minmax(0,1fr)!important}.bingo-mode .recent-calls{gap:6px!important}.bingo-mode .recent-ball{height:58px!important}.bingo-mode .bottom-actions .action{min-width:118px!important;height:42px!important}}
-@media(max-width:900px){.bingo-mode .card-inspector{width:min(60vw,900px)!important;min-width:0!important;max-width:94vw!important}.bingo-mode .card-inspector .inspector-cell{font-size:clamp(16px,4.8vw,28px)!important}}
+@media(max-width:1000px){.bingo-mode .card-inspector{width:82vw!important;min-width:0!important}.bingo-mode .card-inspector .inspector-cell{font-size:clamp(17px,4vw,29px)!important}}
+@media(max-width:700px){.bingo-mode .card-inspector{width:92vw!important;padding:12px!important}.bingo-mode .card-inspector .inspector-cell{font-size:clamp(15px,5vw,25px)!important}}
