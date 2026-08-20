@@ -108,7 +108,7 @@ async function startAuth() {
         }
 
         sessionStorage.setItem('happy-bingo-authenticated', '1')
-        window.location.reload()
+        gate.remove()
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
         submit.disabled = false
