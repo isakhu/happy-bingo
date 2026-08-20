@@ -7,59 +7,28 @@
   box-shadow:0 18px 55px #0008!important;display:flex!important;flex-direction:column!important;
   font-family:Arial,Helvetica,sans-serif!important;
 }
-/* Golden frame header. */
-.bingo-mode .card-inspector .inspector-head{
-  position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
-  flex:0 0 auto!important;margin:0!important;padding:5px 42px 10px!important;background:#D4A62A!important;
-  min-height:48px!important;box-sizing:border-box!important;text-align:center!important;
-}
-.bingo-mode .card-inspector .inspector-head small{
-  display:none!important;
-}
-.bingo-mode .card-inspector .inspector-head h2{
-  margin:0!important;color:#fff!important;font-size:clamp(18px,2vw,28px)!important;line-height:1.15!important;
-  font-weight:900!important;letter-spacing:7px!important;text-shadow:2px 2px 0 #7B5C12!important;
-}
-/* Use B I N G O as a clear white header across the gold frame. */
-.bingo-mode .card-inspector .inspector-head h2::before{content:'B  I  N  G  O';display:block!important;}
-.bingo-mode .card-inspector .inspector-head h2{font-size:0!important}.bingo-mode .card-inspector .inspector-head h2::before{font-size:clamp(18px,2vw,28px)!important}
-.bingo-mode .card-inspector .inspector-head button{
-  position:absolute!important;top:50%!important;right:7px!important;transform:translateY(-50%)!important;width:32px!important;height:32px!important;
-  border:0!important;background:#0066FF!important;color:#fff!important;border-radius:6px!important;font-size:21px!important;line-height:1!important;cursor:pointer!important;
-}
+.bingo-mode .card-inspector .inspector-head{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;margin:0!important;padding:5px 42px 10px!important;background:#D4A62A!important;min-height:48px!important;box-sizing:border-box!important;text-align:center!important}
+.bingo-mode .card-inspector .inspector-head small{display:none!important}
+.bingo-mode .card-inspector .inspector-head h2{margin:0!important;color:#fff!important;font-size:0!important;line-height:1.15!important;font-weight:900!important;letter-spacing:7px!important;text-shadow:2px 2px 0 #7B5C12!important}
+.bingo-mode .card-inspector .inspector-head h2::before{content:'B  I  N  G  O';display:block!important;font-size:clamp(18px,2vw,28px)!important}
+.bingo-mode .card-inspector .inspector-head button{position:absolute!important;top:50%!important;right:7px!important;transform:translateY(-50%)!important;width:32px!important;height:32px!important;border:0!important;background:#0066FF!important;color:#fff!important;border-radius:6px!important;font-size:21px!important;line-height:1!important;cursor:pointer!important}
 .bingo-mode .cartella-reference-accumulated,.bingo-mode .cartella-reference-stats{display:none!important}
-/* 5x5 card, centered, thin light-grey separators. */
-.bingo-mode .card-inspector .inspector-grid{
-  width:100%!important;height:auto!important;max-width:none!important;margin:0!important;display:grid!important;
-  grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;
-  gap:1px!important;overflow:hidden!important;border:1px solid #C9CED4!important;background:#C9CED4!important;
-}
-.bingo-mode .card-inspector .inspector-cell{
-  width:100%!important;aspect-ratio:1.08!important;min-width:0!important;min-height:0!important;display:grid!important;place-items:center!important;
-  border:0!important;border-radius:0!important;box-sizing:border-box!important;color:#000!important;
-  font-family:'Times New Roman',Times,serif!important;font-size:clamp(20px,2.8vw,38px)!important;line-height:1!important;font-weight:700!important;
-  background:#fff!important;box-shadow:none!important;transform:none!important;
-}
-/* Called cells are vibrant medium green. */
-.bingo-mode .card-inspector .inspector-cell.marked,
-.bingo-mode .card-inspector .inspector-cell.called,
-.bingo-mode .card-inspector .inspector-cell.winning{
-  background:#35B95F!important;color:#000!important;box-shadow:none!important;
-}
-/* Center FREE/star remains yellow. */
+.bingo-mode .card-inspector .inspector-grid{width:100%!important;height:auto!important;max-width:none!important;margin:0!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:1px!important;overflow:hidden!important;border:1px solid #C9CED4!important;background:#C9CED4!important}
+.bingo-mode .card-inspector .inspector-cell{width:100%!important;aspect-ratio:1.08!important;min-width:0!important;min-height:0!important;display:grid!important;place-items:center!important;border:0!important;border-radius:0!important;box-sizing:border-box!important;color:#000!important;font-family:'Times New Roman',Times,serif!important;font-size:clamp(20px,2.8vw,38px)!important;line-height:1!important;font-weight:700!important;background:#fff!important;box-shadow:none!important;transform:none!important}
+.bingo-mode .card-inspector .inspector-cell.marked,.bingo-mode .card-inspector .inspector-cell.called,.bingo-mode .card-inspector .inspector-cell.winning{background:#35B95F!important;color:#000!important;box-shadow:none!important}
 .bingo-mode .card-inspector .inspector-cell:nth-child(13){background:#F1D447!important;color:#111!important;font-size:0!important}
 .bingo-mode .card-inspector .inspector-cell:nth-child(13)::after{content:'★';font-size:clamp(24px,3vw,40px)!important;line-height:1!important;color:#111!important}
 .bingo-mode .card-inspector .winning-line-label{display:none!important}
-/* Two manager/player actions below the card. */
-.bingo-mode .cartella-reference-footer{display:flex!important;justify-content:center!important;align-items:center!important;gap:14px!important;margin-top:12px!important;padding:0!important}
-.bingo-mode .cartella-reference-footer button{
-  min-width:120px!important;padding:10px 18px!important;border:0!important;border-radius:7px!important;color:#fff!important;
-  font-size:12px!important;font-weight:1000!important;letter-spacing:.6px!important;cursor:pointer!important;box-shadow:0 4px 12px #0004!important;
-}
-.bingo-mode .cartella-reference-footer .ref-close{background:#0066FF!important}
-.bingo-mode .cartella-reference-footer .ref-block{background:#EF233C!important}
-.bingo-mode .cartella-reference-footer .ref-block:disabled{opacity:.45!important;cursor:not-allowed!important}
-.bingo-mode .card-inspector .lock-failed-button,.bingo-mode .card-inspector .inspector-close{display:none!important}
+/* The React result component uses .lock-failed-button and .inspector-close directly. */
+.bingo-mode .card-inspector .lock-failed-button,.bingo-mode .card-inspector .inspector-close{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:120px!important;padding:10px 18px!important;margin-top:12px!important;border:0!important;border-radius:7px!important;color:#fff!important;font-size:0!important;font-weight:1000!important;letter-spacing:.6px!important;cursor:pointer!important;box-shadow:0 4px 12px #0004!important}
+.bingo-mode .card-inspector .lock-failed-button{background:#EF233C!important;order:2!important}
+.bingo-mode .card-inspector .lock-failed-button::after{content:'BLOCK';font-size:12px!important}
+.bingo-mode .card-inspector .lock-failed-button:disabled{opacity:.45!important;cursor:not-allowed!important}
+.bingo-mode .card-inspector .inspector-close{background:#0066FF!important;order:1!important}
+.bingo-mode .card-inspector .inspector-close::after{content:'CLOSE';font-size:12px!important}
+.bingo-mode .card-inspector .inspector-close{margin-right:7px!important}
+.bingo-mode .card-inspector .inspector-close,.bingo-mode .card-inspector .lock-failed-button{align-self:center!important}
+.bingo-mode .card-inspector .inspector-head+ .inspector-grid + .winning-line-label + .lock-failed-button + .inspector-close{margin-left:0!important}
 .bingo-mode:has(.card-inspector)>.toast{display:none!important}
 @media(max-width:1000px){.bingo-mode .card-inspector{width:82vw!important;min-width:0!important}.bingo-mode .card-inspector .inspector-cell{font-size:clamp(17px,4vw,29px)!important}}
 @media(max-width:700px){.bingo-mode .card-inspector{width:92vw!important;padding:10px!important;border-width:7px!important}.bingo-mode .card-inspector .inspector-cell{font-size:clamp(15px,5vw,25px)!important}}
