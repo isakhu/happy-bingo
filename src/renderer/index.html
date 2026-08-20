@@ -30,14 +30,7 @@
           .settings-main-real { width: 100% !important; }
           .settings-section-label { font-size: 0 !important; }
           .settings-section-label::after { content: 'SETTINGS'; font-size: 14px !important; color: #6da8ff !important; font-weight: 1000 !important; }
-          .card-inspector { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important; transform: translate(-50%, -50%) !important; }
           .check-modal { width: min(60vw, 620px) !important; max-height: 60vh !important; }
-          .game-metrics { display: flex !important; align-items: flex-end !important; justify-content: center !important; gap: 18px !important; flex: 1 !important; }
-          .game-metric { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 4px !important; }
-          .game-metric span { color: #fff !important; text-shadow: 0 2px 0 #000 !important; }
-          .game-metric strong { background: #050a10 !important; color: #ffd83a !important; text-shadow: 2px 2px 0 #000 !important; }
-          .marquee-ball { width: 116px !important; height: 116px !important; flex-basis: 116px !important; }
-          .marquee-ball strong { font-size: 52px !important; }
         `;
         function install() {
           if (document.getElementById('happy-bingo-final-runtime-css')) return;
@@ -46,11 +39,7 @@
           style.textContent = finalCss;
           document.head.appendChild(style);
         }
-        const boot = () => {
-          install();
-          window.setTimeout(install, 250);
-          window.setTimeout(install, 1000);
-        };
+        const boot = () => { install(); window.setTimeout(install, 250); window.setTimeout(install, 1000); };
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
         else boot();
       })();
@@ -59,5 +48,6 @@
     <script src="./src/authority-runtime.js"></script>
     <link rel="stylesheet" href="./src/cartella-reference.css" />
     <script src="./src/cartella-reference.js"></script>
+    <script src="./src/main-screen-final.js"></script>
   </body>
 </html>
