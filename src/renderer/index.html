@@ -14,6 +14,7 @@
     <script type="module" src="./src/main.tsx"></script>
     <script src="./src/ui-patch.js"></script>
     <link rel="stylesheet" href="./src/ui-patch.css" />
+    <link rel="stylesheet" href="./src/last-verified-fixes.css" />
     <script>
       (() => {
         const finalCss = `
@@ -29,12 +30,7 @@
           .settings-main-real { width: 100% !important; }
           .settings-section-label { font-size: 0 !important; }
           .settings-section-label::after { content: 'SETTINGS'; font-size: 14px !important; color: #6da8ff !important; font-weight: 1000 !important; }
-          .card-inspector { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important; transform: translate(-50%, -50%) !important; width: 75vw !important; max-width: 1100px !important; max-height: 84vh !important; overflow: hidden !important; }
-          .card-inspector .inspector-grid { width: 100% !important; max-width: none !important; grid-template-columns: repeat(5,minmax(0,1fr)) !important; gap: 12px !important; overflow: hidden !important; }
-          .card-inspector .inspector-cell { min-width: 0 !important; aspect-ratio: 1 !important; font-size: clamp(18px,2.4vw,34px) !important; }
-          .winner-card-with-grid { width: 75vw !important; max-width: 1100px !important; max-height: 84vh !important; overflow: hidden !important; }
-          .winner-grid { width: 100% !important; grid-template-columns: repeat(5,minmax(0,1fr)) !important; gap: 12px !important; overflow: hidden !important; }
-          .winner-grid-cell { min-width: 0 !important; aspect-ratio: 1 !important; font-size: clamp(18px,2.4vw,34px) !important; }
+          .card-inspector { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important; transform: translate(-50%, -50%) !important; }
           .check-modal { width: min(60vw, 620px) !important; max-height: 60vh !important; }
           .game-metrics { display: flex !important; align-items: flex-end !important; justify-content: center !important; gap: 18px !important; flex: 1 !important; }
           .game-metric { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 4px !important; }
@@ -42,15 +38,6 @@
           .game-metric strong { background: #050a10 !important; color: #ffd83a !important; text-shadow: 2px 2px 0 #000 !important; }
           .marquee-ball { width: 116px !important; height: 116px !important; flex-basis: 116px !important; }
           .marquee-ball strong { font-size: 52px !important; }
-
-          /* IMPORTANT: final runtime board override — B/I/N/G/O are horizontal rows. */
-          .board-grid { display:grid !important; grid-template-columns:42px repeat(15,minmax(0,1fr)) !important; grid-template-rows:repeat(5,minmax(0,1fr)) !important; gap:6px !important; }
-          .board-column { display:contents !important; }
-          .board-column:nth-child(1) { --r:1; } .board-column:nth-child(2) { --r:2; } .board-column:nth-child(3) { --r:3; } .board-column:nth-child(4) { --r:4; } .board-column:nth-child(5) { --r:5; }
-          .board-column .letter-badge { grid-column:1 !important; grid-row:var(--r) !important; }
-          .board-column .number-cell { grid-row:var(--r) !important; }
-          .board-column .number-cell:nth-child(2) { grid-column:2 !important; } .board-column .number-cell:nth-child(3) { grid-column:3 !important; } .board-column .number-cell:nth-child(4) { grid-column:4 !important; } .board-column .number-cell:nth-child(5) { grid-column:5 !important; } .board-column .number-cell:nth-child(6) { grid-column:6 !important; } .board-column .number-cell:nth-child(7) { grid-column:7 !important; } .board-column .number-cell:nth-child(8) { grid-column:8 !important; } .board-column .number-cell:nth-child(9) { grid-column:9 !important; } .board-column .number-cell:nth-child(10) { grid-column:10 !important; } .board-column .number-cell:nth-child(11) { grid-column:11 !important; } .board-column .number-cell:nth-child(12) { grid-column:12 !important; } .board-column .number-cell:nth-child(13) { grid-column:13 !important; } .board-column .number-cell:nth-child(14) { grid-column:14 !important; } .board-column .number-cell:nth-child(15) { grid-column:15 !important; } .board-column .number-cell:nth-child(16) { grid-column:16 !important; }
-          .number-cell { min-width:0 !important; aspect-ratio:auto !important; }
         `;
         function install() {
           if (document.getElementById('happy-bingo-final-runtime-css')) return;
