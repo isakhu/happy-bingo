@@ -1,12 +1,16 @@
 (() => {
-  const STARTING_BALANCE = 1000000;
+  // New company: house balance starts at zero and grows only from earned house revenue.
+  const STARTING_BALANCE = 0;
   const HOUSE_EARNED_KEY = 'happy-bingo-house-earned';
   const CHARGED_GAMES_KEY = 'happy-bingo-house-charged-games';
   const money = (n) => Math.max(0, Math.round(Number(n) || 0)).toLocaleString();
 
   function ensureState() {
-    if (localStorage.getItem('happy-bingo-house-earned') === null) localStorage.setItem(HOUSE_EARNED_KEY, '0');
-    if (localStorage.getItem('happy-bingo-total-money') === null) localStorage.setItem('happy-bingo-total-money', String(STARTING_BALANCE));
+    // Migrate the old 1,000,000-BIRR baseline if this installation was previously initialized.
+    const existingTotal = localStorage.getItem('happy-bingo-total-money');
+    if (existingTotal === '1000000') localStorage.setItem('happy-bingo-total-money', '0');
+    if (localStorage.getItem(HOUSE_EARNED_KEY) === null) localStorage.setItem(HOUSE_EARNED_KEY, '0');
+    if (localStorage.getItem('happy-bingo-total-money') === null) localStorage.setItem('happy-bingo-total-money', '0');
     if (localStorage.getItem(CHARGED_GAMES_KEY) === null) localStorage.setItem(CHARGED_GAMES_KEY, '[]');
   }
 
