@@ -48,5 +48,14 @@
 #happy-bingo-fullscreen{border:1px solid #2e9cff;background:#0066ff;color:#fff;border-radius:7px;padding:8px 10px;font-size:9px;font-weight:1000;letter-spacing:.4px;cursor:pointer;box-shadow:0 3px 10px #0008;}
 #happy-bingo-fullscreen:hover{filter:brightness(1.12);}
 
+/* 7. Root-level startup safety: never expose the old orange/yellow shell. */
+html,body,#root{background:#071a3a!important;color:#fff!important;}
+body{background:#071a3a!important;}
+.app-shell{background:#071a3a!important;}
+.app-shell:before{background:#071a3a!important;}
+.app-shell:after{display:none!important;}
+.loading-screen{background:#071a3a!important;color:#fff!important;}
+.selection-mode,.selection-mode .selection-screen,.bingo-mode,.bingo-mode .bingo-main{background:#071a3a!important;}
+
 @media(max-width:1250px){.game-metrics{gap:8px!important;margin:0 8px!important}.game-metric{min-width:96px!important}.game-metric strong{min-width:96px!important;font-size:12px!important}.game-metric span{font-size:8px!important}}
 @media(max-width:900px){.game-metrics{gap:5px!important;margin:0 5px!important}.game-metric{min-width:76px!important}.game-metric strong{min-width:76px!important;font-size:10px!important}.game-metric span{font-size:7px!important}.marquee-ball{width:100px!important;height:100px!important;flex-basis:100px!important}.marquee-ball strong{font-size:44px!important}#happy-bingo-balance{display:none!important}}
