@@ -31,6 +31,16 @@
 .settings-single-page .settings-two-col-real{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;}
 .settings-single-page .settings-info-real{display:none!important;}
 
+/* 5. Keep the post-password Cartella selection screen dark instead of exposing the orange/yellow app background. */
+.app-shell.selection-mode:before{background:#071a3a!important;}
+.app-shell.selection-mode:after{display:none!important;}
+.selection-mode .selection-screen{background:#071a3a!important;}
+.selection-mode .selection-panel,.selection-mode .empty-set-card{background:#0b1624!important;border-color:#21496d!important;}
+.selection-mode .selection-count{background:#0b1624!important;border-color:#21496d!important;}
+.selection-mode .selection-title h1{color:#fff!important;}
+.selection-mode .selection-title small{color:#8ddcff!important;}
+.selection-mode .set-info{color:#9fb6c8!important;}
+
 /* 6. Extra window controls live independently from React so they remain stable while numbers update. */
 #happy-bingo-window-controls{position:fixed;right:18px;top:8px;z-index:1000;display:flex;align-items:center;gap:8px;font-family:Arial,Helvetica,sans-serif;}
 #happy-bingo-balance{background:#050a10;border:1px solid #ffd83a;border-radius:7px;padding:8px 10px;color:#fff;font-size:9px;font-weight:1000;letter-spacing:.7px;text-shadow:1px 1px 0 #000;box-shadow:0 3px 10px #0008;}
