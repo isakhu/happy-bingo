@@ -1,16 +1,7 @@
 /* Final authoritative fixes for the tested manager build. Loaded after every other UI style. */
 
 /* B/I/N/G/O: five full-width horizontal rows. */
-.bingo-mode .board-grid{
-  display:grid!important;
-  grid-template-columns:42px repeat(15,minmax(0,1fr))!important;
-  grid-template-rows:repeat(5,minmax(0,1fr))!important;
-  gap:6px!important;
-  width:100%!important;
-  height:100%!important;
-  min-width:0!important;
-  min-height:0!important;
-}
+.bingo-mode .board-grid{display:grid!important;grid-template-columns:42px repeat(15,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:6px!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;}
 .bingo-mode .board-grid .board-column{display:contents!important;}
 .bingo-mode .board-grid .board-column:nth-child(1){--r:1}.bingo-mode .board-grid .board-column:nth-child(2){--r:2}.bingo-mode .board-grid .board-column:nth-child(3){--r:3}.bingo-mode .board-grid .board-column:nth-child(4){--r:4}.bingo-mode .board-grid .board-column:nth-child(5){--r:5}
 .bingo-mode .board-grid .board-column .letter-badge{grid-column:1!important;grid-row:var(--r)!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;}
@@ -19,29 +10,17 @@
 .bingo-mode .board-grid .number-cell{font-size:clamp(15px,2.1vw,34px)!important;}
 
 /* Checked Cartella: complete 5x5 card always visible, no scrolling. */
-.bingo-mode .card-inspector{
-  position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
-  transform:translate(-50%,-50%)!important;
-  width:72vw!important;max-width:1050px!important;height:78vh!important;max-height:780px!important;
-  overflow:hidden!important;padding:20px 24px!important;box-sizing:border-box!important;z-index:1200!important;
-  display:flex!important;flex-direction:column!important;
-}
+.bingo-mode .card-inspector{position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:72vw!important;max-width:1050px!important;height:78vh!important;max-height:780px!important;overflow:hidden!important;padding:20px 24px!important;box-sizing:border-box!important;z-index:1200!important;display:flex!important;flex-direction:column!important;}
 .bingo-mode .card-inspector .inspector-head{flex:0 0 auto!important;margin:0 0 10px!important;}
-.bingo-mode .card-inspector .inspector-grid{
-  flex:1 1 auto!important;min-height:0!important;width:100%!important;max-width:none!important;margin:0!important;
-  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;
-  gap:10px!important;overflow:hidden!important;
-}
-.bingo-mode .card-inspector .inspector-cell{
-  width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:auto!important;
-  display:grid!important;place-items:center!important;font-size:clamp(18px,2.6vw,36px)!important;
-}
+.bingo-mode .card-inspector .inspector-grid{flex:1 1 auto!important;min-height:0!important;width:100%!important;max-width:none!important;margin:0!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:10px!important;overflow:hidden!important;}
+.bingo-mode .card-inspector .inspector-cell{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:auto!important;display:grid!important;place-items:center!important;font-size:clamp(18px,2.6vw,36px)!important;}
 .bingo-mode .card-inspector .winning-line-label{flex:0 0 auto!important;margin:10px 0 0!important;max-width:none!important;font-size:12px!important;}
 .bingo-mode .card-inspector .lock-failed-button,.bingo-mode .card-inspector .inspector-close{flex:0 0 auto!important;width:100%!important;margin:9px 0 0!important;}
-.bingo-mode .toast:has(+ .card-inspector),.bingo-mode:has(.card-inspector)>.toast{display:none!important;}
+.bingo-mode:has(.card-inspector)>.toast{display:none!important;}
 
-@media(max-width:900px){
-  .bingo-mode .board-grid{grid-template-columns:30px repeat(15,minmax(0,1fr))!important;gap:4px!important;}
-  .bingo-mode .card-inspector{width:92vw!important;height:82vh!important;padding:14px!important;}
-  .bingo-mode .card-inspector .inspector-grid{gap:6px!important;}
-}
+/* House balance and fullscreen controls. */
+#happy-bingo-authoritative-balance{position:fixed!important;top:64px!important;right:190px!important;z-index:5000!important;display:flex!important;align-items:center!important;gap:8px!important;padding:7px 11px!important;background:#050a10!important;border:1px solid #ffd83a!important;border-radius:7px!important;box-shadow:0 3px 10px #0008!important;color:#fff!important;font-family:Arial,Helvetica,sans-serif!important;font-size:9px!important;font-weight:1000!important;letter-spacing:.6px!important;text-shadow:1px 1px 0 #000!important;white-space:nowrap!important;}
+#happy-bingo-authoritative-balance strong{color:#ffd83a!important;font-size:12px!important;}
+#happy-bingo-authoritative-fullscreen{position:fixed!important;top:64px!important;right:18px!important;z-index:5000!important;border:1px solid #2e9cff!important;background:#0066ff!important;color:#fff!important;border-radius:7px!important;padding:7px 10px!important;font-size:9px!important;font-weight:1000!important;letter-spacing:.4px!important;cursor:pointer!important;box-shadow:0 3px 10px #0008!important;}
+@media(max-width:1100px){#happy-bingo-authoritative-balance{right:160px!important;font-size:8px!important}#happy-bingo-authoritative-fullscreen{right:10px!important}}
+@media(max-width:900px){.bingo-mode .board-grid{grid-template-columns:30px repeat(15,minmax(0,1fr))!important;gap:4px!important}.bingo-mode .card-inspector{width:92vw!important;height:82vh!important;padding:14px!important}.bingo-mode .card-inspector .inspector-grid{gap:6px!important}#happy-bingo-authoritative-balance{display:none!important}.game-topbar .top-actions{padding-right:115px!important}}
