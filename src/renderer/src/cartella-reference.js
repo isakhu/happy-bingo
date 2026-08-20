@@ -4,9 +4,20 @@
     if (!card) return;
 
     const failed = !!card.querySelector('.failed-check');
-    const small = card.querySelector('.inspector-head small');
+    const head = card.querySelector('.inspector-head');
     const h2 = card.querySelector('.inspector-head h2');
-    if (small) small.textContent = failed ? 'NOT A WIN' : 'BINGO WINNER';
+    if (!head || !h2) return;
+
+    const idMatch = (h2.textContent || '').match(/#\s*(\d+)/);
+    const cartellaNumber = idMatch ? String(Number(idMatch[1])).padStart(3, '0') : '---';
+
+    let numberBadge = head.querySelector('.cartella-number-badge');
+    if (!numberBadge) {
+      numberBadge = document.createElement('div');
+      numberBadge.className = 'cartella-number-badge';
+      head.appendChild(numberBadge);
+    }
+    numberBadge.textContent = `CARTELLA ${cartellaNumber}`;
 
     card.querySelector('.cartella-reference-accumulated')?.remove();
     card.querySelector('.cartella-reference-stats')?.remove();
@@ -32,8 +43,6 @@
     block.title = failed ? 'Manager authority: block this failed claim' : 'Only available for a failed claim';
     block.onclick = () => {
       if (!failed) return;
-      /* Delegate to the existing authoritative lock action. This preserves the
-         existing player-lock + cartellawu behavior instead of creating a second sound path. */
       card.querySelector('.lock-failed-button')?.click();
     };
 
