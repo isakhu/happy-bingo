@@ -1,0 +1,42 @@
+/* Focused fixes requested for the main manager screen. Existing game styles remain untouched. */
+
+/* 1. Make the 75-number board read left-to-right by rows:
+   1 16 31 46 61, then 2 17 32 47 62, etc. */
+.board-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:38px repeat(15,minmax(0,1fr))!important;gap:7px!important;}
+.board-column{display:contents!important;}
+.board-column:nth-child(1){--c:1}.board-column:nth-child(2){--c:2}.board-column:nth-child(3){--c:3}.board-column:nth-child(4){--c:4}.board-column:nth-child(5){--c:5}
+.board-column .letter-badge{grid-column:var(--c)!important;grid-row:1!important;width:100%!important;height:100%!important;}
+.board-column .number-cell{grid-column:var(--c)!important;aspect-ratio:auto!important;width:100%!important;height:100%!important;}
+.board-column .number-cell:nth-child(2){--r:2}.board-column .number-cell:nth-child(3){--r:3}.board-column .number-cell:nth-child(4){--r:4}.board-column .number-cell:nth-child(5){--r:5}.board-column .number-cell:nth-child(6){--r:6}.board-column .number-cell:nth-child(7){--r:7}.board-column .number-cell:nth-child(8){--r:8}.board-column .number-cell:nth-child(9){--r:9}.board-column .number-cell:nth-child(10){--r:10}.board-column .number-cell:nth-child(11){--r:11}.board-column .number-cell:nth-child(12){--r:12}.board-column .number-cell:nth-child(13){--r:13}.board-column .number-cell:nth-child(14){--r:14}.board-column .number-cell:nth-child(15){--r:15}.board-column .number-cell:nth-child(16){--r:16}
+.board-column .number-cell{grid-row:var(--r)!important;}
+
+/* 2. Clean metric row: label outside, value in a box. */
+.game-metrics{display:flex!important;align-items:flex-end!important;justify-content:center!important;gap:18px!important;flex:1!important;margin:0 20px!important;}
+.game-metric{display:flex!important;flex-direction:column!important;align-items:center!important;gap:4px!important;min-width:118px!important;}
+.game-metric span{font-size:9px!important;font-weight:1000!important;letter-spacing:1px!important;color:#fff!important;text-shadow:0 2px 0 #000!important;white-space:nowrap!important;}
+.game-metric strong{display:flex!important;align-items:center!important;justify-content:center!important;min-height:34px!important;min-width:118px!important;padding:5px 10px!important;background:#050a10!important;border:1px solid #42586a!important;border-radius:7px!important;color:#ffd83a!important;font-size:14px!important;font-weight:1000!important;text-shadow:2px 2px 0 #000!important;box-shadow:inset 0 0 8px #000,0 2px 8px #0006!important;white-space:nowrap!important;}
+
+/* 3. Much larger NOW CALLED ball. */
+.marquee-ball{width:116px!important;height:116px!important;flex-basis:116px!important;border-width:6px!important;}
+.marquee-ball span{font-size:21px!important;}
+.marquee-ball strong{font-size:52px!important;line-height:1!important;text-shadow:3px 4px 0 #000!important;}
+.call-stage{grid-template-columns:minmax(300px,36%) 1fr!important;}
+
+/* 4. Settings is one page, without the GENERAL/SOUND/GAME PLAY/DISPLAY/SECURITY navigation. */
+.settings-single-page .settings-sidebar-real{display:none!important;}
+.settings-single-page .settings-main-real{width:100%!important;padding:26px 32px 20px!important;}
+.settings-single-page .settings-section-label{font-size:0!important;}
+.settings-single-page .settings-section-label::after{content:'SETTINGS';font-size:14px!important;letter-spacing:1.9px!important;color:#6da8ff!important;font-weight:1000!important;}
+.settings-single-page .settings-subtitle{font-size:10px!important;color:#8A99AD!important;}
+.settings-single-page .settings-two-col-real{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;}
+.settings-single-page .settings-info-real{display:none!important;}
+
+/* 6. Extra window controls live independently from React so they remain stable while numbers update. */
+#happy-bingo-window-controls{position:fixed;right:18px;top:8px;z-index:1000;display:flex;align-items:center;gap:8px;font-family:Arial,Helvetica,sans-serif;}
+#happy-bingo-balance{background:#050a10;border:1px solid #ffd83a;border-radius:7px;padding:8px 10px;color:#fff;font-size:9px;font-weight:1000;letter-spacing:.7px;text-shadow:1px 1px 0 #000;box-shadow:0 3px 10px #0008;}
+#happy-bingo-balance strong{color:#ffd83a;margin-left:4px;font-size:11px;}
+#happy-bingo-fullscreen{border:1px solid #2e9cff;background:#0066ff;color:#fff;border-radius:7px;padding:8px 10px;font-size:9px;font-weight:1000;letter-spacing:.4px;cursor:pointer;box-shadow:0 3px 10px #0008;}
+#happy-bingo-fullscreen:hover{filter:brightness(1.12);}
+
+@media(max-width:1250px){.game-metrics{gap:8px!important;margin:0 8px!important}.game-metric{min-width:96px!important}.game-metric strong{min-width:96px!important;font-size:12px!important}.game-metric span{font-size:8px!important}}
+@media(max-width:900px){.game-metrics{gap:5px!important;margin:0 5px!important}.game-metric{min-width:76px!important}.game-metric strong{min-width:76px!important;font-size:10px!important}.game-metric span{font-size:7px!important}.marquee-ball{width:100px!important;height:100px!important;flex-basis:100px!important}.marquee-ball strong{font-size:44px!important}#happy-bingo-balance{display:none!important}}
