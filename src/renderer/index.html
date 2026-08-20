@@ -8,11 +8,12 @@
       html, body { margin: 0; min-height: 100%; background: #071a3a; }
       body { min-height: 100vh; }
     </style>
-    <link rel="stylesheet" href="./src/ui-patch.css" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="./src/main.tsx"></script>
     <script src="./src/ui-patch.js"></script>
+    <!-- Load the focused UI overrides after the React bundle so they win over base styles. -->
+    <link rel="stylesheet" href="./src/ui-patch.css" />
   </body>
 </html>
