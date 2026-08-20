@@ -1,3 +1,13 @@
+function markUnlocked() {
+  document.documentElement.dataset.happyBingoUnlocked = '1'
+  document.body.dataset.happyBingoUnlocked = '1'
+  document.documentElement.style.background = '#071a3a'
+  document.body.style.background = '#071a3a'
+  const root = document.querySelector('#root')
+  if (root) root.style.background = '#071a3a'
+  window.dispatchEvent(new Event('happy-bingo-authenticated'))
+}
+
 function waitForAuthApi(timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const started = Date.now()
@@ -76,7 +86,10 @@ function buildGate(needsSetup) {
 }
 
 async function startAuth() {
-  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') return
+  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') {
+    markUnlocked()
+    return
+  }
 
   try {
     const auth = await waitForAuthApi()
@@ -108,10 +121,8 @@ async function startAuth() {
         }
 
         sessionStorage.setItem('happy-bingo-authenticated', '1')
+        markUnlocked()
         gate.remove()
-        document.documentElement.dataset.happyBingoUnlocked = '1'
-        document.body.style.background = '#071a3a'
-        window.dispatchEvent(new Event('happy-bingo-authenticated'))
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
         submit.disabled = false
