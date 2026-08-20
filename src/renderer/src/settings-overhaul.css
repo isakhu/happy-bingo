@@ -1,0 +1,40 @@
+/* Happy Bingo settings overhaul */
+.settings-black.settings-redesign{width:min(1040px,94vw);height:min(720px,90vh);background:#07152B;color:#fff;border:1px solid #18365c;border-radius:18px;box-shadow:0 30px 90px #000b;display:flex;flex-direction:column;overflow:hidden}
+.settings-redesign .settings-header{display:none}
+.settings-redesign .settings-redesign-inner{display:flex;min-height:0;flex:1}
+.settings-redesign .settings-sidebar{width:230px;flex:0 0 230px;background:#040D1A;padding:22px 14px;border-right:1px solid #173154;display:flex;flex-direction:column;gap:10px}
+.settings-redesign .settings-sidebar-title{font-size:11px;font-weight:900;letter-spacing:1.5px;color:#8A99AD;padding:4px 10px 12px}
+.settings-redesign .settings-tab{width:100%;border:1px solid #1A2E4C;background:#07152B;color:#8A99AD;border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:12px;text-align:left;font-size:11px;font-weight:1000;letter-spacing:.7px}
+.settings-redesign .settings-tab.active{background:#0066FF;border-color:#0066FF;color:#fff;box-shadow:0 8px 24px #0066ff44}
+.settings-redesign .settings-tab-icon{width:25px;text-align:center;font-size:17px;color:inherit}
+.settings-redesign .settings-content{flex:1;min-width:0;padding:28px 30px 24px;display:flex;flex-direction:column}
+.settings-redesign .settings-content-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.settings-redesign .settings-content-header h2{margin:0;color:#6da8ff;font-size:14px;letter-spacing:2px;text-transform:uppercase}
+.settings-redesign .settings-content-header p{margin:5px 0 0;color:#8A99AD;font-size:10px}
+.settings-redesign .settings-close{border:0;background:transparent;color:#8A99AD;font-size:25px;line-height:1}
+.settings-redesign .settings-grid-new{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.settings-redesign .settings-col{padding:8px 26px 10px 0}
+.settings-redesign .settings-col.right{padding:8px 0 10px 30px;border-left:1px solid #1f3048}
+.settings-redesign .settings-field{display:grid;grid-template-columns:minmax(0,1fr) 150px;align-items:center;gap:18px;margin-bottom:22px}
+.settings-redesign .settings-field label{font-size:12px;font-weight:900;color:#fff}
+.settings-redesign .settings-field input,.settings-redesign .settings-field select{width:100%;height:40px;background:#0A1C38;border:1px solid #1A2E4C;border-radius:9px;color:#fff;padding:0 12px;outline:none;font-weight:800}
+.settings-redesign .settings-field input:focus,.settings-redesign .settings-field select:focus{border-color:#0066FF;box-shadow:0 0 0 2px #0066ff22}
+.settings-redesign .settings-field input[readonly]{color:#b5c0cf}
+.settings-redesign .settings-field small{grid-column:1/-1;color:#8A99AD;font-size:9px;margin-top:-13px}
+.settings-redesign .settings-control{margin-bottom:30px}
+.settings-redesign .settings-control-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.settings-redesign .settings-control-head label{font-size:12px;font-weight:900;color:#fff}
+.settings-redesign .settings-value{min-width:78px;padding:9px 11px;text-align:center;border:1px solid #2a4366;background:#0A1C38;border-radius:8px;color:#fff;font-weight:900}
+.settings-redesign .settings-range{width:100%;accent-color:#0066FF}
+.settings-redesign .settings-scale{display:flex;justify-content:space-between;margin-top:7px;color:#8A99AD;font-size:9px;font-weight:800}
+.settings-redesign .theme-title{font-size:12px;font-weight:900;color:#fff;margin-bottom:13px}
+.settings-redesign .theme-swatches{display:flex;gap:12px}
+.settings-redesign .theme-swatch{width:40px;height:40px;border-radius:9px;border:2px solid #314a6c;cursor:pointer;box-shadow:inset 0 0 0 2px #07152B}
+.settings-redesign .theme-swatch.blue{background:#0066FF}.settings-redesign .theme-swatch.green{background:#19a974}.settings-redesign .theme-swatch.purple{background:#7c3aed}.settings-redesign .theme-swatch.red{background:#e53935}.settings-redesign .theme-swatch.orange{background:#f59e0b}.settings-redesign .theme-swatch.selected{outline:2px solid #fff;outline-offset:2px}
+.settings-redesign .settings-voice-row{display:flex;align-items:center;justify-content:space-between;background:#0A1C38;border:1px solid #1A2E4C;border-radius:10px;padding:12px;margin-top:22px}
+.settings-redesign .settings-voice-row span{font-size:11px;font-weight:900}.settings-redesign .voice-switch{border:0;border-radius:999px;padding:7px 14px;background:#37465a;color:#fff;font-size:10px;font-weight:1000}.settings-redesign .voice-switch.on{background:#0066FF}
+.settings-redesign .settings-placeholder{margin-top:10px;padding:18px;border:1px dashed #264363;border-radius:10px;color:#8A99AD;font-size:10px;line-height:1.5}
+.settings-redesign .settings-footer-new{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding-top:16px;border-top:1px solid #1f3048}
+.settings-redesign .settings-footer-new .save-settings{border:0;border-radius:9px;background:#0066FF;color:#fff;padding:12px 24px;font-size:11px;font-weight:1000;letter-spacing:.4px;box-shadow:0 8px 20px #0066ff33}
+.settings-redesign .settings-footer-new .save-settings:hover{filter:brightness(1.08)}
+@media(max-width:850px){.settings-redesign .settings-sidebar{width:175px;flex-basis:175px}.settings-redesign .settings-grid-new{grid-template-columns:1fr}.settings-redesign .settings-col.right{border-left:0;padding-left:0}.settings-redesign .settings-col{padding-right:0}.settings-redesign{overflow:auto!important;height:92vh!important}.settings-redesign .settings-redesign-inner{min-height:800px}}
