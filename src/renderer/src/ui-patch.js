@@ -2,13 +2,17 @@
   const HOUSE_STARTING_BALANCE = 1000000;
   const money = (n) => Math.max(0, Math.round(Number(n) || 0)).toLocaleString();
 
-  // House balance is fixed at 1,000,000 BIRR. Each ended game's company revenue
-  // is accumulated in happy-bingo-bingo-made and deducted from this balance.
-  localStorage.setItem('happy-bingo-total-money', String(HOUSE_STARTING_BALANCE));
+  // One authoritative house balance: 1,000,000 BIRR minus cumulative house revenue.
+  function currentRevenue() {
+    return Math.max(0, Math.round(Number(localStorage.getItem('happy-bingo-bingo-made') || '0')));
+  }
 
   function currentBalance() {
-    const revenue = Number(localStorage.getItem('happy-bingo-bingo-made') || '0');
-    return Math.max(0, HOUSE_STARTING_BALANCE - revenue);
+    const balance = Math.max(0, HOUSE_STARTING_BALANCE - currentRevenue());
+    localStorage.setItem('happy-bingo-house-balance', String(balance));
+    // Keep the legacy total-money key aligned for older screens/builds without allowing edits to change the start value.
+    localStorage.setItem('happy-bingo-total-money', String(HOUSE_STARTING_BALANCE));
+    return balance;
   }
 
   function ensureWindowControls() {
@@ -22,11 +26,8 @@
       const button = wrap.querySelector('#happy-bingo-fullscreen');
       button.addEventListener('click', async () => {
         try {
-          if (document.fullscreenElement) {
-            await document.exitFullscreen();
-          } else if (document.documentElement.requestFullscreen) {
-            await document.documentElement.requestFullscreen();
-          }
+          if (document.fullscreenElement) await document.exitFullscreen();
+          else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
         } catch (error) {
           console.error('Fullscreen toggle failed:', error);
         }
@@ -76,16 +77,9 @@
         box-sizing: border-box !important;
         z-index: 120 !important;
       }
-      .card-inspector .inspector-head {
-        margin-bottom: 14px !important;
-      }
-      .card-inspector .inspector-head h2 {
-        font-size: clamp(20px, 2.2vw, 30px) !important;
-        margin: 3px 0 7px !important;
-      }
-      .card-inspector .inspector-head small {
-        font-size: 10px !important;
-      }
+      .card-inspector .inspector-head { margin-bottom: 14px !important; }
+      .card-inspector .inspector-head h2 { font-size: clamp(20px, 2.2vw, 30px) !important; margin: 3px 0 7px !important; }
+      .card-inspector .inspector-head small { font-size: 10px !important; }
       .card-inspector .inspector-grid {
         width: 100% !important;
         max-width: none !important;
@@ -95,68 +89,23 @@
         gap: 12px !important;
         overflow: hidden !important;
       }
-      .card-inspector .inspector-cell {
-        width: 100% !important;
-        min-width: 0 !important;
-        aspect-ratio: 1 !important;
-        font-size: clamp(18px, 2.4vw, 34px) !important;
-      }
-      .card-inspector .winning-line-label {
-        max-width: none !important;
-        margin: 14px auto 0 !important;
-        font-size: 12px !important;
-      }
+      .card-inspector .inspector-cell { width: 100% !important; min-width: 0 !important; aspect-ratio: 1 !important; font-size: clamp(18px, 2.4vw, 34px) !important; }
+      .card-inspector .winning-line-label { max-width: none !important; margin: 14px auto 0 !important; font-size: 12px !important; }
       .card-inspector .inspector-close,
-      .card-inspector .lock-failed-button {
-        display: block !important;
-        width: 100% !important;
-        margin: 11px auto 0 !important;
-        box-sizing: border-box !important;
-      }
+      .card-inspector .lock-failed-button { display: block !important; width: 100% !important; margin: 11px auto 0 !important; box-sizing: border-box !important; }
 
       /* Winner result: same clean 75% centered presentation. */
-      .winner-overlay {
-        overflow: hidden !important;
-      }
-      .winner-card-with-grid {
-        width: 75vw !important;
-        max-width: 1100px !important;
-        max-height: 84vh !important;
-        overflow: hidden !important;
-        box-sizing: border-box !important;
-        padding: 24px !important;
-      }
-      .winner-grid {
-        width: 100% !important;
-        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-        gap: 12px !important;
-        margin: 16px auto !important;
-      }
-      .winner-grid-cell {
-        min-width: 0 !important;
-        font-size: clamp(18px, 2.4vw, 34px) !important;
-      }
+      .winner-overlay { overflow: hidden !important; }
+      .winner-card-with-grid { width: 75vw !important; max-width: 1100px !important; max-height: 84vh !important; overflow: hidden !important; box-sizing: border-box !important; padding: 24px !important; }
+      .winner-grid { width: 100% !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 12px !important; margin: 16px auto !important; overflow: hidden !important; }
+      .winner-grid-cell { min-width: 0 !important; aspect-ratio: 1 !important; font-size: clamp(18px, 2.4vw, 34px) !important; }
 
-      .check-modal {
-        width: min(60vw, 620px) !important;
-        max-height: 60vh !important;
-      }
-      .check-body {
-        max-width: 520px !important;
-        margin: 0 auto !important;
-      }
+      .check-modal { width: min(60vw, 620px) !important; max-height: 60vh !important; }
+      .check-body { max-width: 520px !important; margin: 0 auto !important; }
 
       @media (max-width: 800px) {
-        .card-inspector,
-        .winner-card-with-grid {
-          width: 90vw !important;
-          max-height: 88vh !important;
-          padding: 16px !important;
-        }
-        .card-inspector .inspector-grid,
-        .winner-grid {
-          gap: 7px !important;
-        }
+        .card-inspector, .winner-card-with-grid { width: 90vw !important; max-height: 88vh !important; padding: 16px !important; }
+        .card-inspector .inspector-grid, .winner-grid { gap: 7px !important; }
       }
     `;
     document.head.appendChild(style);
