@@ -81,8 +81,10 @@
   };
 
   const balanceValue = () => {
-    const raw = Number(localStorage.getItem('happy-bingo-house-earned') || '0');
-    return Number.isFinite(raw) && raw >= 0 ? Math.round(raw).toLocaleString() : '0';
+    const house = Number(localStorage.getItem('happy-bingo-house-earned') || '0');
+    const legacyGameRevenue = Number(localStorage.getItem('happy-bingo-bingo-made') || '0');
+    const values = [house, legacyGameRevenue].filter(v => Number.isFinite(v) && v >= 0);
+    return Math.max(0, ...values).toLocaleString();
   };
 
   const settingsVisible = (el) => {
@@ -125,7 +127,7 @@
   };
 
   const observer = new MutationObserver(run);
-  observer.observe(document.documentElement, { childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:['class','style'] });
+  observer.observe(document.documentElement, { childList:true, subtree:true, characterData:true });
   run();
-  window.setInterval(run, 250);
+  window.setInterval(run, 350);
 })();
