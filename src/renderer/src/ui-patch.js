@@ -1,14 +1,14 @@
 (() => {
+  const HOUSE_STARTING_BALANCE = 1000000;
   const money = (n) => Math.max(0, Math.round(Number(n) || 0)).toLocaleString();
 
-  if (!localStorage.getItem('happy-bingo-total-money')) {
-    localStorage.setItem('happy-bingo-total-money', '1000000');
-  }
+  // House balance is fixed at 1,000,000 BIRR. Each ended game's company revenue
+  // is accumulated in happy-bingo-bingo-made and deducted from this balance.
+  localStorage.setItem('happy-bingo-total-money', String(HOUSE_STARTING_BALANCE));
 
   function currentBalance() {
-    const total = Number(localStorage.getItem('happy-bingo-total-money') || '1000000');
     const revenue = Number(localStorage.getItem('happy-bingo-bingo-made') || '0');
-    return Math.max(0, total - revenue);
+    return Math.max(0, HOUSE_STARTING_BALANCE - revenue);
   }
 
   function ensureWindowControls() {
@@ -16,7 +16,7 @@
     if (!wrap) {
       wrap = document.createElement('div');
       wrap.id = 'happy-bingo-window-controls';
-      wrap.innerHTML = '<div id="happy-bingo-balance">BALANCE <strong>1,000,000 BIRR</strong></div><button id="happy-bingo-fullscreen" type="button" title="Toggle full screen">⛶ FULL SCREEN</button>';
+      wrap.innerHTML = '<div id="happy-bingo-balance">HOUSE BALANCE <strong>1,000,000 BIRR</strong></div><button id="happy-bingo-fullscreen" type="button" title="Toggle full screen">⛶ FULL SCREEN</button>';
       document.body.appendChild(wrap);
 
       const button = wrap.querySelector('#happy-bingo-fullscreen');
@@ -58,54 +58,85 @@
     const style = document.createElement('style');
     style.id = 'happy-bingo-card-check-layout';
     style.textContent = `
-      /* Bingo claim card: compact centered presentation, about 60% of the screen. */
+      /* Checked Cartella: clean centered 75% presentation with no side scrolling. */
       .card-inspector {
         position: fixed !important;
         left: 50% !important;
         top: 50% !important;
         right: auto !important;
+        bottom: auto !important;
         transform: translate(-50%, -50%) !important;
-        width: min(60vw, 760px) !important;
+        width: 75vw !important;
+        max-width: 1100px !important;
         height: auto !important;
-        max-height: 72vh !important;
-        overflow: auto !important;
-        padding: 20px !important;
-        border-radius: 18px !important;
+        max-height: 84vh !important;
+        overflow: hidden !important;
+        padding: 22px !important;
+        border-radius: 20px !important;
+        box-sizing: border-box !important;
         z-index: 120 !important;
       }
       .card-inspector .inspector-head {
-        margin-bottom: 12px !important;
+        margin-bottom: 14px !important;
       }
       .card-inspector .inspector-head h2 {
-        font-size: clamp(18px, 2vw, 26px) !important;
-        margin: 3px 0 6px !important;
+        font-size: clamp(20px, 2.2vw, 30px) !important;
+        margin: 3px 0 7px !important;
       }
       .card-inspector .inspector-head small {
         font-size: 10px !important;
       }
       .card-inspector .inspector-grid {
         width: 100% !important;
-        max-width: 620px !important;
+        max-width: none !important;
         margin: 0 auto !important;
-        grid-template-columns: repeat(5, 1fr) !important;
-        gap: 9px !important;
+        display: grid !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        overflow: hidden !important;
       }
       .card-inspector .inspector-cell {
         width: 100% !important;
+        min-width: 0 !important;
         aspect-ratio: 1 !important;
-        font-size: clamp(16px, 2.3vw, 30px) !important;
+        font-size: clamp(18px, 2.4vw, 34px) !important;
       }
       .card-inspector .winning-line-label {
-        max-width: 620px !important;
-        margin: 12px auto 0 !important;
-        font-size: 11px !important;
+        max-width: none !important;
+        margin: 14px auto 0 !important;
+        font-size: 12px !important;
       }
       .card-inspector .inspector-close,
       .card-inspector .lock-failed-button {
         display: block !important;
-        width: min(620px, 100%) !important;
-        margin: 10px auto 0 !important;
+        width: 100% !important;
+        margin: 11px auto 0 !important;
+        box-sizing: border-box !important;
       }
+
+      /* Winner result: same clean 75% centered presentation. */
+      .winner-overlay {
+        overflow: hidden !important;
+      }
+      .winner-card-with-grid {
+        width: 75vw !important;
+        max-width: 1100px !important;
+        max-height: 84vh !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        padding: 24px !important;
+      }
+      .winner-grid {
+        width: 100% !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        margin: 16px auto !important;
+      }
+      .winner-grid-cell {
+        min-width: 0 !important;
+        font-size: clamp(18px, 2.4vw, 34px) !important;
+      }
+
       .check-modal {
         width: min(60vw, 620px) !important;
         max-height: 60vh !important;
@@ -114,10 +145,17 @@
         max-width: 520px !important;
         margin: 0 auto !important;
       }
+
       @media (max-width: 800px) {
         .card-inspector,
-        .check-modal {
-          width: 88vw !important;
+        .winner-card-with-grid {
+          width: 90vw !important;
+          max-height: 88vh !important;
+          padding: 16px !important;
+        }
+        .card-inspector .inspector-grid,
+        .winner-grid {
+          gap: 7px !important;
         }
       }
     `;
