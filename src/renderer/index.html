@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Bingo</title>
     <style>
-      html, body { margin: 0; min-height: 100%; background: #071a3a; }
+      html, body { margin: 0; min-height: 100%; background: #071a3a !important; }
       body { min-height: 100vh; }
     </style>
   </head>
@@ -13,7 +13,52 @@
     <div id="root"></div>
     <script type="module" src="./src/main.tsx"></script>
     <script src="./src/ui-patch.js"></script>
-    <!-- Load the focused UI overrides after the React bundle so they win over base styles. -->
     <link rel="stylesheet" href="./src/ui-patch.css" />
+    <script>
+      (() => {
+        const finalCss = `
+          html, body, #root { background: #071a3a !important; }
+          .app-shell { background: #071a3a !important; }
+          .app-shell:before { background: #071a3a !important; }
+          .app-shell:after { display: none !important; }
+          .selection-screen { background: #071a3a !important; }
+          .selection-panel, .empty-set-card { background: #0b1624 !important; border-color: #21496d !important; }
+          .selection-count { background: #0b1624 !important; border-color: #21496d !important; }
+          .selection-title h1, .selection-title small, .set-info { text-shadow: 0 2px 0 #000 !important; }
+          .settings-sidebar-real { display: none !important; }
+          .settings-main-real { width: 100% !important; }
+          .settings-section-label { font-size: 0 !important; }
+          .settings-section-label::after { content: 'SETTINGS'; font-size: 14px !important; color: #6da8ff !important; font-weight: 1000 !important; }
+          .card-inspector { left: 50% !important; top: 50% !important; right: auto !important; transform: translate(-50%, -50%) !important; width: min(60vw, 760px) !important; max-height: 72vh !important; overflow: auto !important; }
+          .check-modal { width: min(60vw, 620px) !important; max-height: 60vh !important; }
+          .game-metrics { display: flex !important; align-items: flex-end !important; justify-content: center !important; gap: 18px !important; flex: 1 !important; }
+          .game-metric { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 4px !important; }
+          .game-metric span { color: #fff !important; text-shadow: 0 2px 0 #000 !important; }
+          .game-metric strong { background: #050a10 !important; color: #ffd83a !important; text-shadow: 2px 2px 0 #000 !important; }
+          .marquee-ball { width: 116px !important; height: 116px !important; flex-basis: 116px !important; }
+          .marquee-ball strong { font-size: 52px !important; }
+          .board-grid { grid-template-columns: repeat(5, minmax(0,1fr)) !important; grid-template-rows: 38px repeat(15,minmax(0,1fr)) !important; }
+          .board-column { display: contents !important; }
+          .board-column:nth-child(1) { --c: 1; } .board-column:nth-child(2) { --c: 2; } .board-column:nth-child(3) { --c: 3; } .board-column:nth-child(4) { --c: 4; } .board-column:nth-child(5) { --c: 5; }
+          .board-column .letter-badge { grid-column: var(--c) !important; grid-row: 1 !important; }
+          .board-column .number-cell { grid-column: var(--c) !important; }
+          .board-column .number-cell:nth-child(2) { grid-row: 2 !important; } .board-column .number-cell:nth-child(3) { grid-row: 3 !important; } .board-column .number-cell:nth-child(4) { grid-row: 4 !important; } .board-column .number-cell:nth-child(5) { grid-row: 5 !important; } .board-column .number-cell:nth-child(6) { grid-row: 6 !important; } .board-column .number-cell:nth-child(7) { grid-row: 7 !important; } .board-column .number-cell:nth-child(8) { grid-row: 8 !important; } .board-column .number-cell:nth-child(9) { grid-row: 9 !important; } .board-column .number-cell:nth-child(10) { grid-row: 10 !important; } .board-column .number-cell:nth-child(11) { grid-row: 11 !important; } .board-column .number-cell:nth-child(12) { grid-row: 12 !important; } .board-column .number-cell:nth-child(13) { grid-row: 13 !important; } .board-column .number-cell:nth-child(14) { grid-row: 14 !important; } .board-column .number-cell:nth-child(15) { grid-row: 15 !important; } .board-column .number-cell:nth-child(16) { grid-row: 16 !important; }
+        `;
+        function install() {
+          if (document.getElementById('happy-bingo-final-runtime-css')) return;
+          const style = document.createElement('style');
+          style.id = 'happy-bingo-final-runtime-css';
+          style.textContent = finalCss;
+          document.head.appendChild(style);
+        }
+        const boot = () => {
+          install();
+          window.setTimeout(install, 250);
+          window.setTimeout(install, 1000);
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+        else boot();
+      })();
+    </script>
   </body>
 </html>
