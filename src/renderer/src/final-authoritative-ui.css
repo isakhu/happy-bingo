@@ -1,0 +1,63 @@
+/* SINGLE AUTHORITATIVE CUSTOMER UI LAYER
+   Loaded last so earlier patch layers cannot override the agreed visual behavior.
+   No game logic is changed here.
+*/
+
+/* Customer-facing gameplay: never show developer/test toasts. */
+.bingo-mode .toast,
+.bingo-mode > .toast,
+.bingo-mode .bingo-main > .toast { display:none!important; }
+
+/* Top metric wording. */
+.bingo-mode .prize-metric > span { font-size:0!important; }
+.bingo-mode .prize-metric > span::after { content:'TOTAL PAY OUT'; font-size:clamp(9px,.72vw,13px)!important; }
+
+/* Exact B/I/N/G/O called-number colors on the 75-number board. */
+.bingo-mode .board-grid .board-column:nth-child(1) .number-cell.called,
+.bingo-mode .board-grid .board-column:nth-child(1) .number-cell.latest { background:#EF233C!important;color:#fff!important;border-color:#FF7B8A!important;box-shadow:0 0 18px #EF233C99!important; }
+.bingo-mode .board-grid .board-column:nth-child(2) .number-cell.called,
+.bingo-mode .board-grid .board-column:nth-child(2) .number-cell.latest { background:#0066FF!important;color:#fff!important;border-color:#66B7FF!important;box-shadow:0 0 18px #0066FF99!important; }
+.bingo-mode .board-grid .board-column:nth-child(3) .number-cell.called,
+.bingo-mode .board-grid .board-column:nth-child(3) .number-cell.latest { background:#F1D42E!important;color:#111!important;border-color:#FFF3A0!important;box-shadow:0 0 18px #F1D42E99!important; }
+.bingo-mode .board-grid .board-column:nth-child(4) .number-cell.called,
+.bingo-mode .board-grid .board-column:nth-child(4) .number-cell.latest { background:#8B3DFF!important;color:#fff!important;border-color:#D7B8FF!important;box-shadow:0 0 18px #8B3DFF99!important; }
+.bingo-mode .board-grid .board-column:nth-child(5) .number-cell.called,
+.bingo-mode .board-grid .board-column:nth-child(5) .number-cell.latest { background:#20C96B!important;color:#fff!important;border-color:#9DFFD0!important;box-shadow:0 0 18px #20C96B99!important; }
+
+/* Current and recently-called are deliberately not blue-by-default. The final JS assigns an exact range class. */
+.bingo-mode .marquee-ball.hb-b-final { background:#EF233C!important;border-color:#FF7B8A!important;color:#fff!important;box-shadow:0 0 20px #EF233C,0 0 44px #EF233C88!important; }
+.bingo-mode .marquee-ball.hb-i-final { background:#0066FF!important;border-color:#66B7FF!important;color:#fff!important;box-shadow:0 0 20px #0066FF,0 0 44px #0066FF88!important; }
+.bingo-mode .marquee-ball.hb-n-final { background:#F1D42E!important;border-color:#FFF3A0!important;color:#111!important;box-shadow:0 0 20px #F1D42E,0 0 44px #F1D42E88!important; }
+.bingo-mode .marquee-ball.hb-g-final { background:#8B3DFF!important;border-color:#D7B8FF!important;color:#fff!important;box-shadow:0 0 20px #8B3DFF,0 0 44px #8B3DFF88!important; }
+.bingo-mode .marquee-ball.hb-o-final { background:#20C96B!important;border-color:#9DFFD0!important;color:#fff!important;box-shadow:0 0 20px #20C96B,0 0 44px #20C96B88!important; }
+.bingo-mode .recent-calls .recent-ball.hb-b-final { background:#EF233C!important;border-color:#FF7B8A!important;color:#fff!important;box-shadow:0 0 16px #EF233C88!important; }
+.bingo-mode .recent-calls .recent-ball.hb-i-final { background:#0066FF!important;border-color:#66B7FF!important;color:#fff!important;box-shadow:0 0 16px #0066FF88!important; }
+.bingo-mode .recent-calls .recent-ball.hb-n-final { background:#F1D42E!important;border-color:#FFF3A0!important;color:#111!important;box-shadow:0 0 16px #F1D42E88!important; }
+.bingo-mode .recent-calls .recent-ball.hb-g-final { background:#8B3DFF!important;border-color:#D7B8FF!important;color:#fff!important;box-shadow:0 0 16px #8B3DFF88!important; }
+.bingo-mode .recent-calls .recent-ball.hb-o-final { background:#20C96B!important;border-color:#9DFFD0!important;color:#fff!important;box-shadow:0 0 16px #20C96B88!important; }
+
+/* Final Cartella checking screen. */
+.bingo-mode .card-inspector {
+  width:60vw!important;max-width:900px!important;min-width:620px!important;
+  background:#F3FAFF!important;color:#111!important;border:12px solid #D4A62A!important;
+  overflow:hidden!important;padding:16px 18px 78px!important;box-sizing:border-box!important;
+}
+.bingo-mode .card-inspector .inspector-head { background:#D4A62A!important;min-height:64px!important;padding:4px 54px 8px!important;display:flex!important;align-items:center!important;justify-content:center!important;position:relative!important; }
+.bingo-mode .card-inspector .inspector-head small { display:none!important; }
+.bingo-mode .card-inspector .inspector-head h2 { font-size:0!important;margin:0!important;color:#fff!important;text-shadow:2px 2px 0 #7B5C12!important;text-align:center!important; }
+.bingo-mode .card-inspector .inspector-head h2::before { content:'B  I  N  G  O';display:block!important;font-size:clamp(18px,2vw,28px)!important;letter-spacing:7px!important; }
+.bingo-mode .card-inspector .inspector-head::after { content:'CARTELLA';position:absolute!important;left:16px!important;bottom:7px!important;color:#fff!important;font-size:10px!important;font-weight:900!important;letter-spacing:1px!important;opacity:.9!important; }
+.bingo-mode .card-inspector .inspector-grid { gap:0!important;border:2px solid #B8BEC6!important;background:#B8BEC6!important; }
+.bingo-mode .card-inspector .inspector-cell { border:1px solid #B8BEC6!important;background:#fff!important;color:#000!important;font-family:'Times New Roman',Times,serif!important;font-weight:700!important; }
+.bingo-mode .card-inspector .inspector-cell.marked,
+.bingo-mode .card-inspector .inspector-cell.called,
+.bingo-mode .card-inspector .inspector-cell.winning { background:#35B95F!important;color:#000!important; }
+.bingo-mode .card-inspector .inspector-cell:nth-child(13) { background:#F1D447!important;color:#111!important; }
+.bingo-mode .card-inspector .inspector-cell:nth-child(13)::after { color:#111!important; }
+
+/* Bottom result actions. */
+.bingo-mode .card-inspector .lock-failed-button,
+.bingo-mode .card-inspector .inspector-close { bottom:14px!important;height:38px!important; }
+
+@media(max-width:1000px){.bingo-mode .card-inspector{width:82vw!important;min-width:0!important}}
+@media(max-width:700px){.bingo-mode .card-inspector{width:92vw!important;min-width:0!important;border-width:7px!important}}
