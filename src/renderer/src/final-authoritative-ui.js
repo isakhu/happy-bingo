@@ -11,11 +11,7 @@
     if (v <= 60) return 'hb-g-final';
     return 'hb-o-final';
   };
-
-  const clean = (el) => {
-    el?.classList.remove('hb-b-final','hb-i-final','hb-n-final','hb-g-final','hb-o-final');
-  };
-
+  const clean = (el) => el?.classList.remove('hb-b-final','hb-i-final','hb-n-final','hb-g-final','hb-o-final');
   const applyCurrent = () => {
     const el = document.querySelector('.bingo-mode .marquee-ball');
     if (!el) return;
@@ -24,49 +20,34 @@
     const cls = rangeClass(m ? m[1] : '');
     if (cls) el.classList.add(cls);
   };
-
-  const applyRecent = () => {
-    document.querySelectorAll('.bingo-mode .recent-calls .recent-ball').forEach(el => {
-      clean(el);
-      const m = (el.textContent || '').match(/(?:^|\D)([1-9]|[1-6][0-9]|7[0-5])(?:\D|$)/);
-      const cls = rangeClass(m ? m[1] : '');
-      if (cls) el.classList.add(cls);
-    });
-  };
-
+  const applyRecent = () => document.querySelectorAll('.bingo-mode .recent-calls .recent-ball').forEach(el => {
+    clean(el);
+    const m = (el.textContent || '').match(/(?:^|\D)([1-9]|[1-6][0-9]|7[0-5])(?:\D|$)/);
+    const cls = rangeClass(m ? m[1] : '');
+    if (cls) el.classList.add(cls);
+  });
   const labelTopMetric = () => {
     const span = document.querySelector('.bingo-mode .prize-metric > span');
     if (span) span.textContent = 'TOTAL PAY OUT';
   };
-
   const setCartellaNumber = () => {
     const card = document.querySelector('.bingo-mode .card-inspector');
     if (!card) return;
-    const id = card.querySelector('.inspector-head h2')?.getAttribute('data-cartella-id');
-    if (!id) return;
+    const heading = card.querySelector('.inspector-head h2');
+    const match = (heading?.textContent || '').match(/\d{1,3}/);
+    if (!match) return;
     let badge = card.querySelector('.hb-cartella-number');
     if (!badge) {
       badge = document.createElement('div');
       badge.className = 'hb-cartella-number';
       card.querySelector('.inspector-head')?.appendChild(badge);
     }
-    badge.textContent = `CARTELLA ${id}`;
+    badge.textContent = `CARTELLA ${String(Number(match[0])).padStart(3,'0')}`;
   };
-
   const hideGameplayDiagnostics = () => {
-    document.querySelectorAll('.bingo-mode > .toast, .bingo-mode .bingo-main > .toast, .bingo-mode .toast').forEach(el => {
-      el.style.display = 'none';
-    });
+    document.querySelectorAll('.bingo-mode .toast').forEach(el => { el.style.display = 'none'; });
   };
-
-  const run = () => {
-    applyCurrent();
-    applyRecent();
-    labelTopMetric();
-    setCartellaNumber();
-    hideGameplayDiagnostics();
-  };
-
+  const run = () => { applyCurrent(); applyRecent(); labelTopMetric(); setCartellaNumber(); hideGameplayDiagnostics(); };
   const observer = new MutationObserver(run);
   observer.observe(document.documentElement, { childList:true, subtree:true, characterData:true });
   run();
