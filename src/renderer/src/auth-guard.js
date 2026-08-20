@@ -10,6 +10,11 @@ function waitForAuthApi(timeoutMs = 10000) {
   })
 }
 
+function revealApp() {
+  window.happyBingoRuntime?.showApp?.()
+  window.dispatchEvent(new Event('happy-bingo-auth-unlocked'))
+}
+
 function inputStyle() {
   return 'display:block;width:100%;margin-top:10px;padding:14px 16px;border-radius:9px;border:2px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box;font-size:18px;font-weight:700;outline:none;opacity:1;visibility:visible;'
 }
@@ -77,7 +82,10 @@ async function startAuth() {
   try {
     const auth = await waitForAuthApi()
     const alreadyAuthenticated = sessionStorage.getItem('happy-bingo-authenticated') === '1'
-    if (alreadyAuthenticated) return
+    if (alreadyAuthenticated) {
+      revealApp()
+      return
+    }
 
     const { needsSetup } = await auth.status()
     const gate = buildGate(needsSetup)
@@ -108,7 +116,7 @@ async function startAuth() {
 
         sessionStorage.setItem('happy-bingo-authenticated', '1')
         gate.remove()
-        window.dispatchEvent(new Event('happy-bingo-auth-unlocked'))
+        revealApp()
       } catch (e) {
         console.error('Authentication action failed:', e)
         error.textContent = e instanceof Error ? e.message : 'Authentication could not be completed.'
@@ -124,6 +132,7 @@ async function startAuth() {
     console.error('Happy Bingo authentication startup failed:', error)
     const root = document.querySelector('#root')
     if (root) {
+      root.style.visibility = 'visible'
       root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup authentication failed</h2><p style="color:#aebfcc;max-width:520px;line-height:1.5">The offline authentication bridge did not become available. Restart Happy Bingo and try again.</p><p style="color:#6da8ff;font-size:11px;word-break:break-word">Check the application logs for the exact startup error.</p></div></div>'
     }
   }
