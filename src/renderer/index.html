@@ -9,7 +9,7 @@
       body { min-height: 100vh; }
     </style>
     <script>
-      // The company starts at zero. Migrate the legacy 1,000,000 BIRR seed before React initializes.
+      // New company starts at zero; migrate legacy 1,000,000 BIRR seed before React initializes.
       try {
         if (localStorage.getItem('happy-bingo-total-money') === '1000000') {
           localStorage.setItem('happy-bingo-total-money', '0');
@@ -62,5 +62,8 @@
     <script src="./src/cartella-reference.js"></script>
     <link rel="stylesheet" href="./src/cartella-reference.css" />
     <script src="./src/main-screen-final.js"></script>
+    <!-- Final authoritative customer UI; loaded last to prevent earlier patch conflicts. -->
+    <link rel="stylesheet" href="./src/final-authoritative-ui.css" />
+    <script src="./src/final-authoritative-ui.js"></script>
   </body>
 </html>
