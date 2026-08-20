@@ -1,0 +1,3 @@
+/* Customer-facing main game screen: keep gameplay clean and visual.
+   Validation and manager logic remain active; explanatory diagnostic messages stay out of the game view. */
+.bingo-mode > .toast{display:none!important}
