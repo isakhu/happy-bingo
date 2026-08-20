@@ -8,6 +8,14 @@
       html, body { margin: 0; min-height: 100%; background: #071a3a !important; }
       body { min-height: 100vh; }
     </style>
+    <script>
+      // The company starts at zero. Migrate the legacy 1,000,000 BIRR seed before React initializes.
+      try {
+        if (localStorage.getItem('happy-bingo-total-money') === '1000000') {
+          localStorage.setItem('happy-bingo-total-money', '0');
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
