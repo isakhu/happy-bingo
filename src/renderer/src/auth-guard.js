@@ -15,6 +15,9 @@ function inputStyle() {
 }
 
 function buildGate(needsSetup) {
+  const existing = document.querySelector('#happy-bingo-auth-gate')
+  if (existing) existing.remove()
+
   const gate = document.createElement('div')
   gate.id = 'happy-bingo-auth-gate'
   gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,Helvetica,sans-serif;opacity:1;visibility:visible;'
@@ -68,24 +71,17 @@ function buildGate(needsSetup) {
   gate.appendChild(panel)
   document.body.appendChild(gate)
 
-  const focusTarget = inputs[0]
-  window.setTimeout(() => focusTarget?.focus(), 0)
+  window.setTimeout(() => inputs[0]?.focus(), 0)
   return gate
 }
 
 async function startAuth() {
-  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') {
-    document.documentElement.style.visibility = 'visible'
-    document.body.style.visibility = 'visible'
-    return
-  }
+  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') return
 
-  document.documentElement.style.visibility = 'hidden'
   try {
     const auth = await waitForAuthApi()
     const { needsSetup } = await auth.status()
     const gate = buildGate(needsSetup)
-    document.documentElement.style.visibility = 'visible'
 
     const submit = gate.querySelector('#hb-auth-submit')
     const error = gate.querySelector('#hb-auth-error')
@@ -104,15 +100,13 @@ async function startAuth() {
           const password = gate.querySelector('#hb-password')?.value || ''
           result = await auth.unlock(password)
         }
+
         if (!result?.ok) {
           error.textContent = result?.error || 'Authentication failed.'
           submit.disabled = false
           return
         }
 
-        // Mark the current renderer session as authenticated before leaving the gate.
-        // A clean reload guarantees React starts from a normal document state instead
-        // of leaving the renderer on a partially transitioned screen.
         sessionStorage.setItem('happy-bingo-authenticated', '1')
         window.location.reload()
       } catch (e) {
@@ -127,11 +121,18 @@ async function startAuth() {
       if (event.key === 'Enter' && !submit.disabled) void handleSubmit()
     })
   } catch (error) {
-    document.documentElement.style.visibility = 'visible'
-    document.body.innerHTML = '<div style="height:100vh;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px"><div><h2>Happy Bingo cannot start</h2><p>The offline authentication system is unavailable.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#1e88e5;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
-    document.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
     console.error(error)
+    const root = document.querySelector('#root')
+    if (root) {
+      root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#071a3a;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup error</h2><p style="color:#aebfcc;max-width:460px;line-height:1.5">The offline authentication service did not start. Please retry the application.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#1e88e5;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
+      root.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
+    }
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => void startAuth())
+const bootAuth = () => void startAuth()
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootAuth, { once: true })
+} else {
+  bootAuth()
+}
