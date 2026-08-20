@@ -8,7 +8,6 @@
     const h2 = card.querySelector('.inspector-head h2');
     if (small) small.textContent = failed ? 'NOT A WIN' : 'BINGO WINNER';
 
-    /* User selected: no House Accumulated line and no statistics. */
     card.querySelector('.cartella-reference-accumulated')?.remove();
     card.querySelector('.cartella-reference-stats')?.remove();
 
@@ -22,20 +21,23 @@
     const close = footer.querySelector('.ref-close') || document.createElement('button');
     close.type = 'button';
     close.className = 'ref-close';
-    close.textContent = '✕ CLOSE';
+    close.textContent = 'CLOSE';
     close.onclick = () => card.querySelector('.inspector-close')?.click();
 
-    const existingBlock = footer.querySelector('.ref-block');
-    if (failed) {
-      const block = existingBlock || document.createElement('button');
-      block.type = 'button';
-      block.className = 'ref-block';
-      block.textContent = '⊘ BLOCK';
-      block.onclick = () => card.querySelector('.lock-failed-button')?.click();
-      footer.replaceChildren(close, block);
-    } else {
-      footer.replaceChildren(close);
-    }
+    const block = footer.querySelector('.ref-block') || document.createElement('button');
+    block.type = 'button';
+    block.className = 'ref-block';
+    block.textContent = 'BLOCK';
+    block.disabled = !failed;
+    block.title = failed ? 'Manager authority: block this failed claim' : 'Only available for a failed claim';
+    block.onclick = () => {
+      if (!failed) return;
+      /* Delegate to the existing authoritative lock action. This preserves the
+         existing player-lock + cartellawu behavior instead of creating a second sound path. */
+      card.querySelector('.lock-failed-button')?.click();
+    };
+
+    footer.replaceChildren(close, block);
   }
 
   const run = () => updateInspector(document.body);
