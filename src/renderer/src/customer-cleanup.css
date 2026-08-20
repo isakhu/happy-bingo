@@ -1,0 +1,4 @@
+/* Customer-facing gameplay must stay clean and professional.
+   Keep validation and game logic intact; hide only the diagnostic toast layer on the active game screen. */
+.bingo-mode > .toast { display:none !important; }
+.bingo-mode .toast { display:none !important; }
