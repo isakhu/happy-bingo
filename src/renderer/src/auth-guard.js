@@ -1,4 +1,8 @@
+let reactAppReady = false
+let unlocked = sessionStorage.getItem('happy-bingo-authenticated') === '1'
+
 function markUnlocked() {
+  unlocked = true
   document.documentElement.dataset.happyBingoUnlocked = '1'
   document.body.dataset.happyBingoUnlocked = '1'
   document.documentElement.style.background = '#071a3a'
@@ -6,6 +10,15 @@ function markUnlocked() {
   const root = document.querySelector('#root')
   if (root) root.style.background = '#071a3a'
   window.dispatchEvent(new Event('happy-bingo-authenticated'))
+  maybeFinishStartup()
+}
+
+function maybeFinishStartup() {
+  if (!unlocked || !reactAppReady) return
+  const gate = document.querySelector('#happy-bingo-auth-gate')
+  if (gate) gate.remove()
+  document.documentElement.dataset.happyBingoStartupComplete = '1'
+  document.body.dataset.happyBingoStartupComplete = '1'
 }
 
 function waitForAuthApi(timeoutMs = 10000) {
@@ -86,7 +99,7 @@ function buildGate(needsSetup) {
 }
 
 async function startAuth() {
-  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') {
+  if (unlocked) {
     markUnlocked()
     return
   }
@@ -122,7 +135,7 @@ async function startAuth() {
 
         sessionStorage.setItem('happy-bingo-authenticated', '1')
         markUnlocked()
-        gate.remove()
+        if (!reactAppReady) error.textContent = 'Opening Happy Bingo…'
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
         submit.disabled = false
@@ -143,6 +156,11 @@ async function startAuth() {
     }
   }
 }
+
+window.addEventListener('happy-bingo-react-ready', () => {
+  reactAppReady = true
+  maybeFinishStartup()
+})
 
 const bootAuth = () => void startAuth()
 if (document.readyState === 'loading') {
