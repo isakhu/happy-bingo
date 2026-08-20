@@ -15,15 +15,14 @@ function inputStyle() {
 }
 
 function buildGate(needsSetup) {
-  const existing = document.querySelector('#happy-bingo-auth-gate')
-  if (existing) existing.remove()
+  document.querySelector('#happy-bingo-auth-gate')?.remove()
 
   const gate = document.createElement('div')
   gate.id = 'happy-bingo-auth-gate'
-  gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,Helvetica,sans-serif;opacity:1;visibility:visible;'
+  gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,Helvetica,sans-serif;opacity:1;visibility:visible;'
 
   const panel = document.createElement('div')
-  panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#101c26;border:2px solid #1e88e5;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;opacity:1;visibility:visible;'
+  panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#07152B;border:2px solid #0066FF;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;opacity:1;visibility:visible;'
 
   const brand = document.createElement('div')
   brand.textContent = 'HAPPY BINGO'
@@ -65,40 +64,40 @@ function buildGate(needsSetup) {
   submit.id = 'hb-auth-submit'
   submit.type = 'button'
   submit.textContent = needsSetup ? 'CREATE PASSWORD' : 'UNLOCK'
-  submit.style.cssText = 'display:block;width:100%;margin-top:8px;padding:14px;border:0;border-radius:9px;background:#1e88e5;color:#fff;font-weight:1000;font-size:16px;cursor:pointer;'
+  submit.style.cssText = 'display:block;width:100%;margin-top:8px;padding:14px;border:0;border-radius:9px;background:#0066FF;color:#fff;font-weight:1000;font-size:16px;cursor:pointer;'
 
   panel.append(brand, title, description, ...inputs, error, submit)
   gate.appendChild(panel)
   document.body.appendChild(gate)
-
   window.setTimeout(() => inputs[0]?.focus(), 0)
   return gate
 }
 
 async function startAuth() {
-  if (sessionStorage.getItem('happy-bingo-authenticated') === '1') return
-
   try {
     const auth = await waitForAuthApi()
+    const alreadyAuthenticated = sessionStorage.getItem('happy-bingo-authenticated') === '1'
+    if (alreadyAuthenticated) return
+
     const { needsSetup } = await auth.status()
     const gate = buildGate(needsSetup)
-
     const submit = gate.querySelector('#hb-auth-submit')
     const error = gate.querySelector('#hb-auth-error')
 
     const handleSubmit = async () => {
+      if (submit.disabled) return
       error.textContent = ''
       submit.disabled = true
       try {
         let result
         if (needsSetup) {
-          const currentDefault = gate.querySelector('#hb-default')?.value || ''
-          const nextPassword = gate.querySelector('#hb-new')?.value || ''
-          const confirm = gate.querySelector('#hb-confirm')?.value || ''
-          result = await auth.setup(currentDefault, nextPassword, confirm)
+          result = await auth.setup(
+            gate.querySelector('#hb-default')?.value || '',
+            gate.querySelector('#hb-new')?.value || '',
+            gate.querySelector('#hb-confirm')?.value || '',
+          )
         } else {
-          const password = gate.querySelector('#hb-password')?.value || ''
-          result = await auth.unlock(password)
+          result = await auth.unlock(gate.querySelector('#hb-password')?.value || '')
         }
 
         if (!result?.ok) {
@@ -108,11 +107,12 @@ async function startAuth() {
         }
 
         sessionStorage.setItem('happy-bingo-authenticated', '1')
-        window.location.reload()
+        gate.remove()
+        window.dispatchEvent(new Event('happy-bingo-auth-unlocked'))
       } catch (e) {
-        error.textContent = 'Authentication could not be completed.'
+        console.error('Authentication action failed:', e)
+        error.textContent = e instanceof Error ? e.message : 'Authentication could not be completed.'
         submit.disabled = false
-        console.error(e)
       }
     }
 
@@ -121,11 +121,10 @@ async function startAuth() {
       if (event.key === 'Enter' && !submit.disabled) void handleSubmit()
     })
   } catch (error) {
-    console.error(error)
+    console.error('Happy Bingo authentication startup failed:', error)
     const root = document.querySelector('#root')
     if (root) {
-      root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#071a3a;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup error</h2><p style="color:#aebfcc;max-width:460px;line-height:1.5">The offline authentication service did not start. Please retry the application.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#1e88e5;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
-      root.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
+      root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup authentication failed</h2><p style="color:#aebfcc;max-width:520px;line-height:1.5">The offline authentication bridge did not become available. Restart Happy Bingo and try again.</p><p style="color:#6da8ff;font-size:11px;word-break:break-word">Check the application logs for the exact startup error.</p></div></div>'
     }
   }
 }
