@@ -28,7 +28,6 @@
 
   function addHouseRevenueForGame(button) {
     if (!button || button.dataset.houseCharged === '1') return;
-    button.dataset.houseCharged = '1';
     const bet = Number(localStorage.getItem('happy-bingo-bet') || '0');
     const cutRaw = localStorage.getItem('happy-bingo-cut');
     const cut = cutRaw === null ? 20 : Number(cutRaw);
@@ -37,12 +36,19 @@
     const totalCollected = bet * players;
     const houseRevenue = Math.max(0, Math.round(totalCollected * Math.max(0, Math.min(100, cut)) / 100));
     if (houseRevenue <= 0) return;
+
     const gameId = (document.querySelector('.game-id strong,.game-id,.game-id-value,[data-game-id]')?.textContent || '').trim() || `game-${Date.now()}`;
     const charged = readChargedGames();
-    if (charged.includes(gameId)) return;
+    if (charged.includes(gameId)) {
+      button.dataset.houseCharged = '1';
+      return;
+    }
+
     const earned = Number(localStorage.getItem(HOUSE_EARNED_KEY) || '0');
     localStorage.setItem(HOUSE_EARNED_KEY, String(Math.max(0, Math.round(earned)) + houseRevenue));
     localStorage.setItem(CHARGED_GAMES_KEY, JSON.stringify([...charged.slice(-199), gameId]));
+    button.dataset.houseCharged = '1';
+    renderSettingsBalance();
   }
 
   function renderSettingsBalance() {
@@ -80,9 +86,11 @@
 
   function updateFullscreen(button) { button.textContent = document.fullscreenElement ? '⛶ EXIT FULL SCREEN' : '⛶ FULL SCREEN'; }
 
+  // Revenue is earned when the manager ends the game, not when the game starts.
+  // This avoids charging a game that was never completed and keeps the accounting idempotent.
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target.closest('button') : null;
-    if (target?.matches('.start-button')) setTimeout(() => addHouseRevenueForGame(target), 50);
+    if (target?.matches('.action.end')) setTimeout(() => addHouseRevenueForGame(target), 50);
   }, true);
 
   function install() {
