@@ -1,74 +1,137 @@
-/* Cartella CHECK view: centered, high-contrast verification */
+/* Cartella CHECK view — restored light/gold/green presentation */
 .card-inspector{
   position:fixed!important;
   left:50%!important;
   top:50%!important;
   right:auto!important;
+  bottom:auto!important;
   transform:translate(-50%,-50%)!important;
-  width:min(520px,86vw)!important;
-  max-height:88vh!important;
-  overflow:auto!important;
+  width:min(700px,82vw)!important;
+  max-height:86vh!important;
+  overflow:hidden!important;
   z-index:120!important;
-  background:#050505!important;
-  border:3px solid #2f4150!important;
-  border-radius:20px!important;
+  background:#f3f8fc!important;
+  border:10px solid #d7ad22!important;
+  border-radius:18px!important;
   padding:18px!important;
-  box-shadow:0 28px 90px rgba(0,0,0,.9),0 0 0 100vmax rgba(0,0,0,.66)!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.35),0 0 0 100vmax rgba(4,13,26,.55)!important;
+  color:#111!important;
 }
-.card-inspector .inspector-head{background:#000!important;border-radius:12px;padding:8px 10px;margin-bottom:12px}
-.card-inspector .inspector-head small{color:#6f8795!important}
-.card-inspector .inspector-head h2{font-size:22px!important;color:#fff!important;letter-spacing:1px!important}
-.card-inspector .inspector-grid{gap:9px!important}
+.card-inspector .inspector-head{
+  background:#d7ad22!important;
+  border-radius:8px!important;
+  padding:10px 12px!important;
+  margin-bottom:12px!important;
+  text-align:center!important;
+}
+.card-inspector .inspector-head small{color:#fff!important;font-weight:900!important}
+.card-inspector .inspector-head h2{font-size:24px!important;color:#fff!important;letter-spacing:2px!important;margin:2px 0!important}
+.card-inspector .inspector-grid{
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(5,1fr)!important;
+  gap:1px!important;
+  background:#cfd5da!important;
+  border:1px solid #cfd5da!important;
+}
+.card-inspector .inspector-cell{
+  min-width:0!important;
+  aspect-ratio:1!important;
+  display:grid!important;
+  place-items:center!important;
+  background:#fff!important;
+  color:#111!important;
+  border:0!important;
+  border-radius:0!important;
+  font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(18px,3vw,34px)!important;
+  font-weight:700!important;
+  text-shadow:none!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
 .card-inspector .inspector-cell.marked{
-  background:#075b2a!important;
-  color:#fff!important;
-  border:3px solid #13d65c!important;
-  box-shadow:0 0 14px rgba(0,255,94,.34),inset 0 0 12px rgba(255,255,255,.08)!important;
-  text-shadow:0 2px 3px #000!important;
+  background:#35a853!important;
+  color:#000!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
 }
 .card-inspector .inspector-cell.winning{
-  background:#00a83b!important;
-  color:#fff!important;
-  border:4px solid #72ff9b!important;
-  box-shadow:0 0 24px rgba(0,255,92,.75),0 0 0 3px rgba(255,255,255,.18)!important;
-  transform:scale(1.09)!important;
+  background:#159447!important;
+  color:#000!important;
+  border:0!important;
+  box-shadow:inset 0 0 0 3px #0b6f32!important;
+  transform:none!important;
 }
-.card-inspector .inspector-cell:not(.marked){background:#171717!important;color:#6f777c!important;border-color:#333!important}
 .card-inspector .winning-line-label{
-  margin-top:14px!important;
-  background:#000!important;
-  border:2px solid #20d85c!important;
-  color:#fff!important;
-  border-radius:10px!important;
-  padding:13px!important;
-  font-size:0!important;
-  letter-spacing:1px!important;
-  box-shadow:0 0 18px rgba(0,255,94,.22)!important;
+  margin-top:12px!important;
+  background:#fff!important;
+  border:2px solid #35a853!important;
+  color:#111!important;
+  border-radius:8px!important;
+  padding:10px!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  text-align:center!important;
+  box-shadow:none!important;
 }
-.card-inspector .winning-line-label::before{
-  content:'✓  VALID / CORRECT BINGO';
-  font-size:15px;
-  font-weight:1000;
-  color:#55ff8a;
-}
+.card-inspector .winning-line-label::before{content:none!important}
 .card-inspector::after{
   content:'✕  INVALID / NOT BINGO';
-  display:block;
-  margin-top:14px;
-  padding:13px;
-  background:#000;
-  border:2px solid #333;
-  border-radius:10px;
-  color:#ff4b4b;
-  text-align:center;
-  font-size:15px;
-  font-weight:1000;
-  letter-spacing:1px;
+  display:block!important;
+  margin-top:12px!important;
+  padding:10px!important;
+  background:#fff!important;
+  border:2px solid #d9534f!important;
+  border-radius:8px!important;
+  color:#b52b27!important;
+  text-align:center!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  letter-spacing:1px!important;
 }
-.card-inspector:has(.winning-line-label)::after{display:none}
-@media(max-width:650px){
-  .card-inspector{width:94vw!important;padding:12px!important}
-  .card-inspector .inspector-grid{gap:5px!important}
-  .card-inspector .inspector-head h2{font-size:17px!important}
-  .card-inspector .winning-line-label::before,.card-inspector::after{font-size:12px}
+.card-inspector:has(.winning-line-label)::after{display:none!important}
+.card-inspector .inspector-close,
+.card-inspector .lock-failed-button{
+  width:100%!important;
+  min-height:42px!important;
+  margin-top:10px!important;
+  border-radius:8px!important;
+  font-weight:900!important;
+  cursor:pointer!important;
+}
+.card-inspector .inspector-close{background:#0066ff!important;color:#fff!important;border:0!important}
+.card-inspector .lock-failed-button{background:#d9534f!important;color:#fff!important;border:0!important}
+.check-backdrop{
+  position:fixed!important;
+  inset:0!important;
+  display:grid!important;
+  place-items:center!important;
+  background:rgba(4,13,26,.48)!important;
+  z-index:110!important;
+}
+.check-modal{
+  width:min(520px,72vw)!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  border-radius:16px!important;
+  background:#f7fbff!important;
+  border:6px solid #d7ad22!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.35)!important;
+  color:#111!important;
+}
+.check-head{background:#d7ad22!important;color:#fff!important}
+.check-head strong{color:#fff!important;font-size:18px!important}
+.check-head button{color:#fff!important}
+.check-body{padding:22px!important}
+.check-body label{color:#1c3650!important;font-weight:900!important}
+.check-body input{background:#fff!important;color:#111!important;border:2px solid #bfc8d0!important}
+.check-body > button{background:#0066ff!important;color:#fff!important}
+@media(max-width:700px){
+  .card-inspector{width:92vw!important;border-width:7px!important;padding:10px!important}
+  .card-inspector .inspector-grid{gap:1px!important}
+  .card-inspector .inspector-head h2{font-size:18px!important}
+  .card-inspector .inspector-cell{font-size:clamp(14px,4vw,25px)!important}
+  .check-modal{width:88vw!important}
 }
