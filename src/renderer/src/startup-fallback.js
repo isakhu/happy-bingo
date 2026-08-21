@@ -1,21 +1,17 @@
 // Startup safety and voice fallback.
-// Keeps legacy money migration behavior and prevents one unavailable voice
-// asset from blocking the customer from starting a game.
+// Keeps the customer's 10,000,000 Birr starting balance intact and prevents one
+// unavailable voice asset from blocking the customer from starting a game.
 const legacyTotal = Number(localStorage.getItem('happy-bingo-total-money') || '0')
-if (legacyTotal === 1000000 || legacyTotal === 10000000) {
-  localStorage.setItem('happy-bingo-total-money', '0')
-}
+if (legacyTotal === 1000000) localStorage.setItem('happy-bingo-total-money', '0')
 
 const legacyBalance = Number(localStorage.getItem('happy-bingo-money-balance') || '0')
-if (legacyBalance === 1000000 || legacyBalance === 10000000) {
+if (legacyBalance === 1000000) {
   localStorage.setItem('happy-bingo-money-balance', '0')
   localStorage.removeItem('happy-bingo-money-last-game')
 }
 
 const cut = Number(localStorage.getItem('happy-bingo-cut') || '')
-if (!Number.isFinite(cut) || cut < 0 || cut > 100) {
-  localStorage.setItem('happy-bingo-cut', '20')
-}
+if (!Number.isFinite(cut) || cut < 0 || cut > 100) localStorage.setItem('happy-bingo-cut', '20')
 
 const SILENT_WAV = (() => {
   const sampleRate = 8000
@@ -54,12 +50,8 @@ function patchVoiceBridge() {
     bridge.voiceHealth = async () => {
       try {
         const result = await originalHealth()
-        if (localStorage.getItem('happy-bingo-voice') === 'off') {
-          return { ...(result || {}), available: 79, total: 79, files: result?.files || [] }
-        }
-        if (result && Number.isFinite(result.total) && Number.isFinite(result.available)) {
-          return result
-        }
+        if (localStorage.getItem('happy-bingo-voice') === 'off') return { ...(result || {}), available: 79, total: 79, files: result?.files || [] }
+        if (result && Number.isFinite(result.total) && Number.isFinite(result.available)) return result
         return { available: 0, total: 79, files: [] }
       } catch {
         if (localStorage.getItem('happy-bingo-voice') === 'off') return { available: 79, total: 79, files: [] }
@@ -80,11 +72,7 @@ function patchVoiceBridge() {
     }
   }
 
-  Object.defineProperty(bridge, '__happyBingoVoiceFallbackPatched', {
-    value: true,
-    enumerable: false,
-    configurable: false,
-  })
+  Object.defineProperty(bridge, '__happyBingoVoiceFallbackPatched', { value: true, enumerable: false, configurable: false })
   return true
 }
 
