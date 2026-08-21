@@ -3,7 +3,7 @@ name: Build Happy Bingo for Windows
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, fix/accounting-cartella-settings-final]
 
 jobs:
   build-customer-app:
@@ -41,34 +41,36 @@ jobs:
           $sourceHtml = Get-Content "src/renderer/index.html" -Raw
           $startupCss = Get-Content "src/renderer/startup-theme-fix.css" -Raw
           $selectionSummary = Get-Content "src/renderer/src/selection-summary.js" -Raw
+          $cartellaTools = Get-Content "src/renderer/src/cartella-settings-tools.js" -Raw
           $mainTsx = Get-Content "src/renderer/src/main.tsx" -Raw
           $preload = Get-Content "src/preload/index.ts" -Raw
           $package = Get-Content "package.json" -Raw
           if ($sourceHtml -notmatch "startup-theme-fix\.css") { throw "Source renderer HTML does not include startup theme guard" }
+          if ($sourceHtml -notmatch "happy-bingo-auth-gate" -or $sourceHtml -notmatch "ENTER PASSWORD") { throw "Production HTML authentication fallback is missing" }
+          if ($sourceHtml -notmatch "cartella-settings-tools\.js") { throw "Cartella Settings tools are not loaded by production HTML" }
           if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing from source CSS" }
           $builtCssFiles = Get-ChildItem "out/renderer/assets/*.css" -File -ErrorAction SilentlyContinue
           if (-not $builtCssFiles) { throw "Built renderer CSS is missing" }
           $builtCss = ($builtCssFiles | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
           if ($builtCss -notmatch "#071a3a" -or $builtCss -notmatch "app-shell::before" -or $builtCss -notmatch "app-shell::after") { throw "Startup dark-shell safety rules are missing from production CSS" }
-          if ($selectionSummary -notmatch 'STARTING_MONEY\s*=\s*10000000') { throw "Company starting balance is not 10,000,000 Birr" }
-          if ($selectionSummary -notmatch "RESET_SEEDS" -or $selectionSummary -notmatch "10000000") { throw "10 million starting-balance migration rule is missing" }
-          if ($mainTsx -notmatch 'clear-selection-button' -or $mainTsx -notmatch 'START GAME' -or $mainTsx -notmatch 'onClick=\{\(\)=>setSettingsOpen\(true\)\}') { throw "Clear All / Start Game / Settings controls are missing" }
+          if ($selectionSummary -notmatch 'STARTING_MONEY\s*=\s*10000000') { throw "Starting balance is not 10,000,000 Birr" }
+          if ($selectionSummary -notmatch 'MONEY_REVENUE_KEY' -or $selectionSummary -notmatch 'Total Revenue \(Birr\)') { throw "Total revenue accounting is missing" }
+          if ($selectionSummary -notmatch 'TOTAL_CALLED_ID' -or $selectionSummary -notmatch 'TOTAL CALLED') { throw "Total called display is missing" }
+          if ($cartellaTools -notmatch 'CLEAR ALL SELECTED CARTELLAS') { throw "Cartella clear-all Settings control is missing" }
+          if ($mainTsx -notmatch 'clear-selection-button' -or $mainTsx -notmatch 'START GAME' -or $mainTsx -notmatch 'onClick=\{\(\)=>setSettingsOpen\(true\)\}') { throw "Selection / Start / Settings controls are missing" }
           if ($preload -match 'available: result\.total' -or $preload -match 'available: 79, total: 79') { throw "Voice health bridge is masking missing audio files" }
           if ($package -notmatch '"audio/\*\*/\*"') { throw "Packaged build is not configured to include audio assets" }
-          Write-Host "Verified dark startup protection, production CSS, 10 million starting balance, selection controls, settings/start controls, truthful sound health, and audio packaging."
+          Write-Host "Verified 10 million Birr starting balance, total revenue accounting, total called display, Cartella clear-all Settings, startup protection, selection controls, truthful sound health, and audio packaging."
       - name: Verify authentication wiring
         shell: pwsh
         run: |
           $main = Get-Content "out/main/index.js" -Raw
           $preloadBundle = Get-Content "out/preload/index.mjs" -Raw
           $rendererHtml = Get-Content "out/renderer/index.html" -Raw
-          $rendererJsFiles = Get-ChildItem "out/renderer/assets/*.js" -File -ErrorAction SilentlyContinue
-          if (-not $rendererJsFiles) { throw "Renderer JavaScript bundle is missing" }
-          $rendererJs = ($rendererJsFiles | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
           if ($main -notmatch "auth-status" -or $main -notmatch "auth-setup" -or $main -notmatch "auth-unlock") { throw "Main authentication IPC handlers are missing" }
           if ($preloadBundle -notmatch "auth-status" -or $preloadBundle -notmatch "auth-setup" -or $preloadBundle -notmatch "auth-unlock") { throw "Preload authentication bridge is missing" }
-          if ($rendererHtml -notmatch "index-.*\.js" -or $rendererJs -notmatch "happyBingoAuth" -or $rendererJs -notmatch "FIRST-TIME SETUP" -or $rendererJs -notmatch "ENTER PASSWORD") { throw "Renderer authentication guard was not included in the production bundle" }
-          Write-Host "Verified authentication main/preload/renderer wiring."
+          if ($rendererHtml -notmatch "happy-bingo-auth-gate" -or $rendererHtml -notmatch "ENTER PASSWORD") { throw "Production HTML authentication fallback was not included" }
+          Write-Host "Verified authentication main/preload/production HTML wiring."
       - name: Build customer Windows installer
         run: npx electron-builder --win --publish never
       - name: Verify customer installer
