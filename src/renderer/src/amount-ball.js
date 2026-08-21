@@ -32,6 +32,21 @@
     const value = ball.querySelector('strong')
     const nextText = `${format(possibleWin)} Br`
     if (value && value.textContent !== nextText) value.textContent = nextText
+
+    const latestCall = stage.querySelector('.latest-call')
+    if (latestCall) {
+      let counter = latestCall.querySelector('.total-called-box')
+      if (!counter) {
+        counter = document.createElement('div')
+        counter.className = 'total-called-box'
+        counter.innerHTML = '<span>TOTAL CALLED</span><strong>0/75</strong>'
+        latestCall.appendChild(counter)
+      }
+      const total = app.querySelectorAll('.recent-calls .recent-ball').length
+      const called = Math.min(75, total)
+      const counterValue = counter.querySelector('strong')
+      if (counterValue) counterValue.textContent = `${called}/75`
+    }
   }
 
   const timer = window.setInterval(sync, 700)
