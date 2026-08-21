@@ -1,0 +1,90 @@
+/* Final game-screen interaction layer.
+   Do not blanket-disable the whole game renderer. Keep the display surface
+   visual-only, while giving every real control a stable hit area. */
+
+.bingo-mode .bingo-main {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Display-only regions never intercept mouse input. */
+.bingo-mode .board-shell,
+.bingo-mode .board-grid,
+.bingo-mode .board-column,
+.bingo-mode .number-cell,
+.bingo-mode .call-stage,
+.bingo-mode .latest-call,
+.bingo-mode .recent-panel,
+.bingo-mode .recent-calls,
+.bingo-mode .recent-ball,
+.bingo-mode .marquee-ball,
+.bingo-mode .game-status,
+.bingo-mode .game-metrics,
+.bingo-mode .game-metric,
+.bingo-mode .brand {
+  pointer-events: none !important;
+}
+
+/* Header is always above the game board. */
+.bingo-mode > .topbar,
+.bingo-mode .game-topbar {
+  position: relative !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+.bingo-mode .game-topbar .top-actions,
+.bingo-mode .game-topbar .top-button {
+  position: relative !important;
+  z-index: 1001 !important;
+  pointer-events: auto !important;
+}
+
+/* Bottom controls are always above the display surface. */
+.bingo-mode .bottom-bar,
+.bingo-mode .bottom-actions,
+.bingo-mode .bottom-actions .action {
+  position: relative !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+/* Settings/check/winner layers must own their entire interaction surface. */
+.bingo-mode .modal-backdrop,
+.bingo-mode .check-backdrop,
+.bingo-mode .card-inspector,
+.bingo-mode .winner-overlay {
+  position: fixed !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
+}
+
+.bingo-mode .modal-backdrop > *,
+.bingo-mode .check-backdrop > *,
+.bingo-mode .card-inspector > *,
+.bingo-mode .winner-overlay > * {
+  pointer-events: auto !important;
+}
+
+.bingo-mode .modal-backdrop button,
+.bingo-mode .modal-backdrop input,
+.bingo-mode .modal-backdrop select,
+.bingo-mode .modal-backdrop textarea,
+.bingo-mode .check-backdrop button,
+.bingo-mode .check-backdrop input,
+.bingo-mode .check-backdrop select,
+.bingo-mode .check-backdrop textarea,
+.bingo-mode .card-inspector button,
+.bingo-mode .winner-overlay button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10001 !important;
+  cursor: pointer !important;
+}
+
+/* Visual-only amount ball can never block a control. */
+.bingo-mode .total-amount-ball,
+.bingo-mode .total-amount-ball * {
+  pointer-events: none !important;
+}
