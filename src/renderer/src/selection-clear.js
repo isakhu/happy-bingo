@@ -1,8 +1,9 @@
 (() => {
   const BUTTON_ID = 'happy-bingo-clear-selected'
+  const CALLED_ID = 'happy-bingo-total-called'
   let observer
 
-  function install() {
+  function installClearButton() {
     if (document.getElementById(BUTTON_ID)) return
 
     const title = document.querySelector('.selection-title')
@@ -39,8 +40,7 @@
     wrapper.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;'
     wrapper.append(button, count)
 
-    const titleParent = title
-    titleParent.replaceChild(wrapper, count)
+    title.replaceChild(wrapper, count)
 
     const update = () => {
       const anySelected = document.querySelector('.cartella.selected')
@@ -50,10 +50,38 @@
     }
 
     update()
-    const grid = document.querySelector('.cartella-grid')
-    if (grid && !observer) {
-      observer = new MutationObserver(update)
-      observer.observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] })
+  }
+
+  function installTotalCalledMetric() {
+    const metrics = document.querySelector('.game-metrics')
+    if (!metrics) return
+
+    let metric = document.getElementById(CALLED_ID)
+    if (!metric) {
+      metric = document.createElement('div')
+      metric.id = CALLED_ID
+      metric.className = 'game-metric'
+      metric.innerHTML = '<span>TOTAL CALLED</span><strong>0</strong>'
+      metrics.appendChild(metric)
+    }
+
+    const heading = document.querySelector('.board-heading strong')
+    const match = heading?.textContent?.match(/(\d+)\s*\/\s*75\s*CALLED/i)
+    const value = match ? Number(match[1]) : 0
+    const strong = metric.querySelector('strong')
+    if (strong) strong.textContent = String(value)
+  }
+
+  function install() {
+    installClearButton()
+    installTotalCalledMetric()
+
+    if (!observer) {
+      observer = new MutationObserver(() => {
+        installClearButton()
+        installTotalCalledMetric()
+      })
+      observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class'] })
     }
   }
 
