@@ -44,17 +44,18 @@ jobs:
           $mainTsx = Get-Content "src/renderer/src/main.tsx" -Raw
           $preload = Get-Content "src/preload/index.ts" -Raw
           $package = Get-Content "package.json" -Raw
-          if ($sourceHtml -notmatch "startup-theme-fix\.css") { throw "Startup theme guard is not referenced by renderer source HTML" }
-          if (-not (Test-Path "out/renderer/startup-theme-fix.css")) { throw "Startup theme guard CSS was not copied into production renderer output" }
-          $builtStartupCss = Get-Content "out/renderer/startup-theme-fix.css" -Raw
+          if ($sourceHtml -notmatch "startup-theme-fix\.css") { throw "Source renderer HTML does not include startup theme guard" }
           if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing from source CSS" }
-          if ($builtStartupCss -notmatch "#071a3a" -or $builtStartupCss -notmatch "\.app-shell::before" -or $builtStartupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing from production CSS" }
+          $builtCssFiles = Get-ChildItem "out/renderer/assets/*.css" -File -ErrorAction SilentlyContinue
+          if (-not $builtCssFiles) { throw "Built renderer CSS is missing" }
+          $builtCss = ($builtCssFiles | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+          if ($builtCss -notmatch "#071a3a" -or $builtCss -notmatch "app-shell::before" -or $builtCss -notmatch "app-shell::after") { throw "Startup dark-shell safety rules are missing from production CSS" }
           if ($selectionSummary -notmatch 'STARTING_MONEY\s*=\s*10000000') { throw "Company starting balance is not 10,000,000 Birr" }
           if ($selectionSummary -notmatch "RESET_SEEDS" -or $selectionSummary -notmatch "10000000") { throw "10 million starting-balance migration rule is missing" }
           if ($mainTsx -notmatch 'clear-selection-button' -or $mainTsx -notmatch 'START GAME' -or $mainTsx -notmatch 'onClick=\{\(\)=>setSettingsOpen\(true\)\}') { throw "Clear All / Start Game / Settings controls are missing" }
           if ($preload -match 'available: result\.total' -or $preload -match 'available: 79, total: 79') { throw "Voice health bridge is masking missing audio files" }
           if ($package -notmatch '"audio/\*\*/\*"') { throw "Packaged build is not configured to include audio assets" }
-          Write-Host "Verified dark startup, 10 million starting balance, selection controls, settings/start controls, truthful sound health, and audio packaging."
+          Write-Host "Verified dark startup protection, production CSS, 10 million starting balance, selection controls, settings/start controls, truthful sound health, and audio packaging."
       - name: Verify authentication wiring
         shell: pwsh
         run: |
