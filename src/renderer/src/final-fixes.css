@@ -21,9 +21,41 @@
 .bingo-mode .game-metrics{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 .bingo-mode .game-metrics .game-metric:nth-child(4){display:none!important}
 
-/* Professional 75-ball Bingo board: distinct B/I/N/G/O column colors. */
-.bingo-mode .board-shell{background:#07152b!important;border:2px solid #263f55!important;box-shadow:0 10px 30px #0008,0 0 0 1px #3a5266!important}
-.bingo-mode .board-grid{gap:8px!important}
+/* Premium 75-ball board panel. */
+.bingo-mode .board-shell{
+  position:relative!important;
+  overflow:hidden!important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(0,102,255,.18),transparent 38%),
+    radial-gradient(circle at 20% 100%,rgba(255,210,47,.07),transparent 30%),
+    linear-gradient(145deg,#081b32 0%,#07152b 48%,#06111f 100%)!important;
+  border:2px solid #315a7b!important;
+  border-radius:20px!important;
+  box-shadow:0 18px 45px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(0,102,255,.14)!important;
+  padding:14px!important;
+}
+.bingo-mode .board-shell::before{
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(115deg,rgba(255,255,255,.055),transparent 22%,transparent 78%,rgba(0,102,255,.035))!important;
+  z-index:0!important;
+}
+.bingo-mode .board-shell::after{
+  content:''!important;
+  position:absolute!important;
+  top:-90px!important;
+  left:50%!important;
+  width:420px!important;
+  height:180px!important;
+  transform:translateX(-50%)!important;
+  background:radial-gradient(ellipse,rgba(0,102,255,.18),transparent 70%)!important;
+  filter:blur(14px)!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+.bingo-mode .board-grid{position:relative!important;z-index:1!important;gap:8px!important;padding:4px!important;border-radius:14px!important;background:rgba(255,255,255,.018)!important}
 
 /* True Bingo balls: enlarged, centered, perfectly circular. */
 .bingo-mode .board-column .letter-badge{
@@ -51,17 +83,18 @@
 .bingo-mode .board-column:nth-child(4) .letter-badge{background:linear-gradient(145deg,#63d889,#27a653)!important}
 .bingo-mode .board-column:nth-child(5) .letter-badge{background:linear-gradient(145deg,#ffc766,#f39c12)!important;color:#111!important;text-shadow:0 1px 2px #fff9!important}
 
-.bingo-mode .number-cell{background:#f7fafc!important;color:#17212a!important;border:2px solid #d0d8df!important;border-radius:10px!important;box-shadow:inset 0 0 0 1px #fff,0 2px 5px #0002!important;font-weight:1000!important}
+.bingo-mode .number-cell{background:linear-gradient(180deg,#fbfdff 0%,#eef3f7 100%)!important;color:#17212a!important;border:2px solid #d0d8df!important;border-radius:10px!important;box-shadow:inset 0 0 0 1px #fff,0 3px 7px rgba(0,0,0,.18)!important;font-weight:1000!important}
+.bingo-mode .number-cell:hover{transform:translateY(-1px)!important;box-shadow:inset 0 0 0 1px #fff,0 5px 10px rgba(0,0,0,.22)!important}
 .bingo-mode .board-column:nth-child(1) .number-cell{border-top-color:#6ab7ff!important;border-bottom-color:#6ab7ff!important}
 .bingo-mode .board-column:nth-child(2) .number-cell{border-top-color:#ff8c8c!important;border-bottom-color:#ff8c8c!important}
 .bingo-mode .board-column:nth-child(3) .number-cell{border-top-color:#f4d979!important;border-bottom-color:#f4d979!important}
 .bingo-mode .board-column:nth-child(4) .number-cell{border-top-color:#7fdda0!important;border-bottom-color:#7fdda0!important}
 .bingo-mode .board-column:nth-child(5) .number-cell{border-top-color:#ffc76d!important;border-bottom-color:#ffc76d!important}
-.bingo-mode .board-column:nth-child(1) .number-cell.called{background:#1976d2!important;color:#fff!important;border-color:#63b3ff!important;box-shadow:0 0 16px #1976d299!important}
-.bingo-mode .board-column:nth-child(2) .number-cell.called{background:#d83b3b!important;color:#fff!important;border-color:#ff8d8d!important;box-shadow:0 0 16px #d83b3b99!important}
-.bingo-mode .board-column:nth-child(3) .number-cell.called{background:#f2c94c!important;color:#111!important;border-color:#fff0a8!important;box-shadow:0 0 16px #f2c94c99!important}
-.bingo-mode .board-column:nth-child(4) .number-cell.called{background:#27a653!important;color:#fff!important;border-color:#80eca0!important;box-shadow:0 0 16px #27a65399!important}
-.bingo-mode .board-column:nth-child(5) .number-cell.called{background:#f39c12!important;color:#111!important;border-color:#ffe0a3!important;box-shadow:0 0 16px #f39c1299!important}
+.bingo-mode .board-column:nth-child(1) .number-cell.called{background:linear-gradient(145deg,#54a8ff,#1976d2)!important;color:#fff!important;border-color:#8fd0ff!important;box-shadow:0 0 16px #1976d299!important}
+.bingo-mode .board-column:nth-child(2) .number-cell.called{background:linear-gradient(145deg,#ff6f6f,#d83b3b)!important;color:#fff!important;border-color:#ffb1b1!important;box-shadow:0 0 16px #d83b3b99!important}
+.bingo-mode .board-column:nth-child(3) .number-cell.called{background:linear-gradient(145deg,#ffe781,#f2c94c)!important;color:#111!important;border-color:#fff0a8!important;box-shadow:0 0 16px #f2c94c99!important}
+.bingo-mode .board-column:nth-child(4) .number-cell.called{background:linear-gradient(145deg,#61d788,#27a653)!important;color:#fff!important;border-color:#a0f4b8!important;box-shadow:0 0 16px #27a65399!important}
+.bingo-mode .board-column:nth-child(5) .number-cell.called{background:linear-gradient(145deg,#ffc65f,#f39c12)!important;color:#111!important;border-color:#ffe0a3!important;box-shadow:0 0 16px #f39c1299!important}
 .bingo-mode .number-cell.latest{transform:scale(1.06)!important;z-index:4!important;border-width:3px!important;box-shadow:0 0 0 3px #fff8,0 0 24px currentColor!important}
 .bingo-mode .board-column:nth-child(1) .number-cell.latest{box-shadow:0 0 0 3px #fff,0 0 28px #1976d2!important}
 .bingo-mode .board-column:nth-child(2) .number-cell.latest{box-shadow:0 0 0 3px #fff,0 0 28px #d83b3b!important}
