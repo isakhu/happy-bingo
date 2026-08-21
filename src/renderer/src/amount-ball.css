@@ -17,10 +17,10 @@
   place-items:center!important;
   align-content:center!important;
   gap:3px!important;
-  background:radial-gradient(circle at 35% 28%,#4aa3ff 0%,#0066ff 45%,#0042a8 100%)!important;
-  border:4px solid #8bc7ff!important;
-  color:#fff!important;
-  box-shadow:0 0 18px #0066ff,0 0 40px #0066ff88,0 0 70px #0066ff44!important;
+  background:radial-gradient(circle at 35% 28%,#fff38a 0%,#ffd92f 46%,#e4ad00 100%)!important;
+  border:4px solid #fff1a8!important;
+  color:#111!important;
+  box-shadow:0 0 18px #ffd43b,0 0 40px #ffd43b88,0 0 70px #ffd43b44!important;
   text-align:center!important;
   font-family:Arial,Helvetica,sans-serif!important;
   overflow:hidden!important;
@@ -32,7 +32,8 @@
   line-height:1!important;
   font-weight:1000!important;
   letter-spacing:1.4px!important;
-  text-shadow:2px 2px 0 #0008!important;
+  text-shadow:none!important;
+  color:#111!important;
   pointer-events:none!important;
 }
 .bingo-mode .total-amount-ball strong{
@@ -41,7 +42,8 @@
   font-size:clamp(17px,1.45vw,25px)!important;
   line-height:1.05!important;
   font-weight:1000!important;
-  text-shadow:2px 2px 0 #0008!important;
+  text-shadow:none!important;
+  color:#111!important;
   margin-top:3px!important;
   overflow:hidden!important;
   text-overflow:ellipsis!important;
