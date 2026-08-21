@@ -1,0 +1,38 @@
+/* Final Settings interaction layer: visual changes only. */
+.bingo-mode .topbar,
+.bingo-mode .game-topbar,
+.bingo-mode .top-actions,
+.bingo-mode .top-button,
+.selection-mode .topbar,
+.selection-mode .top-actions,
+.selection-mode .top-button {
+  position: relative !important;
+  z-index: 20000 !important;
+  pointer-events: auto !important;
+}
+
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 30000 !important;
+  pointer-events: auto !important;
+}
+
+.modal-backdrop .settings-modal,
+.modal-backdrop .settings-redesign-shell,
+.modal-backdrop .settings-sidebar-real,
+.modal-backdrop .settings-main-real {
+  position: relative !important;
+  z-index: 30001 !important;
+  pointer-events: auto !important;
+}
+
+.modal-backdrop button,
+.modal-backdrop input,
+.modal-backdrop select,
+.modal-backdrop textarea,
+.modal-backdrop [role="button"] {
+  position: relative !important;
+  z-index: 30002 !important;
+  pointer-events: auto !important;
+}
