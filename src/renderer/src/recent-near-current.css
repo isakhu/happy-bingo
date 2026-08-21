@@ -1,0 +1,50 @@
+/* Keep recent calls directly beside the current-number ball. */
+.bingo-mode .call-stage{
+  grid-template-columns:140px max-content 150px!important;
+  justify-content:start!important;
+  align-items:center!important;
+  column-gap:8px!important;
+  padding:6px 10px!important;
+  overflow:hidden!important;
+}
+.bingo-mode .latest-call{
+  grid-column:1!important;
+  width:140px!important;
+  min-width:140px!important;
+  justify-self:start!important;
+}
+.bingo-mode .recent-panel{
+  grid-column:2!important;
+  width:max-content!important;
+  min-width:0!important;
+  max-width:calc(100vw - 330px)!important;
+  justify-self:start!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow:hidden!important;
+}
+.bingo-mode .recent-calls{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  width:max-content!important;
+  max-width:none!important;
+  margin:0!important;
+}
+.bingo-mode .total-amount-ball{
+  grid-column:3!important;
+  justify-self:start!important;
+}
+@media(max-width:1100px){
+  .bingo-mode .call-stage{grid-template-columns:120px max-content 122px!important;column-gap:6px!important}
+  .bingo-mode .latest-call{width:120px!important;min-width:120px!important}
+  .bingo-mode .recent-panel{max-width:calc(100vw - 280px)!important}
+}
+@media(max-width:850px){
+  .bingo-mode .call-stage{grid-template-columns:100px max-content 104px!important;column-gap:4px!important}
+  .bingo-mode .latest-call{width:100px!important;min-width:100px!important}
+  .bingo-mode .recent-panel{max-width:calc(100vw - 220px)!important}
+}
