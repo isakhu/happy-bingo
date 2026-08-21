@@ -42,8 +42,9 @@
         counter.innerHTML = '<span>TOTAL CALLED</span><strong>0/75</strong>'
         latestCall.appendChild(counter)
       }
-      const total = app.querySelectorAll('.recent-calls .recent-ball').length
-      const called = Math.min(75, total)
+      const boardCounterText = app.querySelector('.board-heading strong')?.textContent || ''
+      const match = boardCounterText.match(/(\d+)\s*\/\s*75/)
+      const called = match ? Math.min(75, Number(match[1])) : 0
       const counterValue = counter.querySelector('strong')
       if (counterValue) counterValue.textContent = `${called}/75`
     }
