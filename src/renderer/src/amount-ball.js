@@ -20,18 +20,15 @@
     if (!ball) {
       ball = document.createElement('div')
       ball.className = 'total-amount-ball'
-      ball.innerHTML = '<span>TOTAL</span><strong>0 BR</strong>'
+      ball.innerHTML = '<span>TOTAL</span><strong>0 br</strong>'
       stage.appendChild(ball)
     }
 
     const value = ball.querySelector('strong')
-    const nextText = `${format(amount)} BR`
+    const nextText = `${format(amount)} br`
     if (value && value.textContent !== nextText) value.textContent = nextText
   }
 
-  // Do not observe characterData or continuously mutate the DOM from a
-  // MutationObserver. That combination can create an infinite mutation loop
-  // and make Electron appear to stop accepting mouse clicks after START GAME.
   const timer = window.setInterval(sync, 700)
   sync()
   window.addEventListener('beforeunload', () => window.clearInterval(timer), { once: true })
