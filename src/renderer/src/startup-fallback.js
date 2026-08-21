@@ -1,6 +1,9 @@
-// Startup safety and voice fallback.
-// Keeps the customer's 10,000,000 Birr starting balance intact and prevents one
-// unavailable voice asset from blocking the customer from starting a game.
+// Startup safety only.
+// IMPORTANT: the object exposed by Electron contextBridge is immutable in the
+// renderer. Do not monkey-patch window.happyBingo here; doing so can throw and
+// prevent React from mounting, which leaves the native Electron background
+// visible as a blank blue screen after authentication.
+
 const legacyTotal = Number(localStorage.getItem('happy-bingo-total-money') || '0')
 if (legacyTotal === 1000000) localStorage.setItem('happy-bingo-total-money', '0')
 
@@ -11,75 +14,8 @@ if (legacyBalance === 1000000) {
 }
 
 const cut = Number(localStorage.getItem('happy-bingo-cut') || '')
-if (!Number.isFinite(cut) || cut < 0 || cut > 100) localStorage.setItem('happy-bingo-cut', '20')
-
-const SILENT_WAV = (() => {
-  const sampleRate = 8000
-  const seconds = 0.12
-  const samples = Math.max(1, Math.floor(sampleRate * seconds))
-  const bytesPerSample = 2
-  const dataSize = samples * bytesPerSample
-  const buffer = new ArrayBuffer(44 + dataSize)
-  const view = new DataView(buffer)
-  const write = (offset, text) => { for (let i = 0; i < text.length; i += 1) view.setUint8(offset + i, text.charCodeAt(i)) }
-  write(0, 'RIFF')
-  view.setUint32(4, 36 + dataSize, true)
-  write(8, 'WAVE')
-  write(12, 'fmt ')
-  view.setUint32(16, 16, true)
-  view.setUint16(20, 1, true)
-  view.setUint16(22, 1, true)
-  view.setUint32(24, sampleRate, true)
-  view.setUint32(28, sampleRate * bytesPerSample, true)
-  view.setUint16(32, bytesPerSample, true)
-  view.setUint16(34, 16, true)
-  write(36, 'data')
-  view.setUint32(40, dataSize, true)
-  const bytes = new Uint8Array(buffer)
-  let binary = ''
-  for (const byte of bytes) binary += String.fromCharCode(byte)
-  return `data:audio/wav;base64,${btoa(binary)}`
-})()
-
-function patchVoiceBridge() {
-  const bridge = window.happyBingo
-  if (!bridge || bridge.__happyBingoVoiceFallbackPatched) return Boolean(bridge)
-
-  if (typeof bridge.voiceHealth === 'function') {
-    const originalHealth = bridge.voiceHealth.bind(bridge)
-    bridge.voiceHealth = async () => {
-      try {
-        const result = await originalHealth()
-        if (localStorage.getItem('happy-bingo-voice') === 'off') return { ...(result || {}), available: 79, total: 79, files: result?.files || [] }
-        if (result && Number.isFinite(result.total) && Number.isFinite(result.available)) return result
-        return { available: 0, total: 79, files: [] }
-      } catch {
-        if (localStorage.getItem('happy-bingo-voice') === 'off') return { available: 79, total: 79, files: [] }
-        return { available: 0, total: 79, files: [] }
-      }
-    }
-  }
-
-  if (typeof bridge.playVoice === 'function') {
-    const originalPlayVoice = bridge.playVoice.bind(bridge)
-    bridge.playVoice = async (file) => {
-      try {
-        const result = await originalPlayVoice(file)
-        return result || SILENT_WAV
-      } catch {
-        return SILENT_WAV
-      }
-    }
-  }
-
-  Object.defineProperty(bridge, '__happyBingoVoiceFallbackPatched', { value: true, enumerable: false, configurable: false })
-  return true
-}
-
-if (!patchVoiceBridge()) {
-  window.setTimeout(patchVoiceBridge, 0)
-  window.setTimeout(patchVoiceBridge, 100)
-  window.setTimeout(patchVoiceBridge, 500)
+if (!Number.isFinite(cut) || cut < 0 || cut > 100) {
+  localStorage.setItem('happy-bingo-cut', '20')
 }
 
 export {}
