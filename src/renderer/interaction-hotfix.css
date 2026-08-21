@@ -1,0 +1,42 @@
+/* FINAL INTERACTION LAYER — visual polish must never block real controls. */
+.bingo-mode .topbar.game-topbar,
+.bingo-mode .bottom-bar,
+.bingo-mode .top-actions,
+.bingo-mode .bottom-actions,
+.bingo-mode .top-button,
+.bingo-mode .bottom-actions .action,
+.bingo-mode .check-backdrop,
+.bingo-mode .check-modal,
+.bingo-mode .check-modal button,
+.bingo-mode .check-modal input,
+.bingo-mode .card-inspector button,
+.bingo-mode .card-inspector input,
+.selection-mode .topbar,
+.selection-mode .top-actions,
+.selection-mode .top-button,
+.selection-mode .selection-screen,
+.selection-mode .cartella-grid,
+.selection-mode .cartella,
+.selection-mode .start-button,
+.selection-mode .clear-selection-button {
+  position: relative !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+.bingo-mode .topbar.game-topbar .brand,
+.bingo-mode .topbar.game-topbar .brand::before,
+.bingo-mode .topbar.game-topbar .brand::after,
+.bingo-mode .board-shell::before,
+.bingo-mode .total-amount-ball {
+  pointer-events: none !important;
+}
+
+.bingo-mode .board-shell,
+.bingo-mode .board-grid,
+.bingo-mode .call-stage,
+.bingo-mode .recent-panel,
+.bingo-mode .game-metrics,
+.bingo-mode .game-metric {
+  pointer-events: none !important;
+}
