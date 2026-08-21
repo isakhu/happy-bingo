@@ -1,9 +1,20 @@
 // Startup safety and voice fallback.
 // Keeps legacy money migration behavior and prevents one unavailable voice
 // asset from blocking the customer from starting a game.
-const storedTotal = localStorage.getItem('happy-bingo-total-money')
-if (storedTotal === '1000000') {
+const legacyTotal = Number(localStorage.getItem('happy-bingo-total-money') || '0')
+if (legacyTotal === 1000000 || legacyTotal === 10000000) {
   localStorage.setItem('happy-bingo-total-money', '0')
+}
+
+const legacyBalance = Number(localStorage.getItem('happy-bingo-money-balance') || '0')
+if (legacyBalance === 1000000 || legacyBalance === 10000000) {
+  localStorage.setItem('happy-bingo-money-balance', '0')
+  localStorage.removeItem('happy-bingo-money-last-game')
+}
+
+const cut = Number(localStorage.getItem('happy-bingo-cut') || '')
+if (!Number.isFinite(cut) || cut < 0 || cut > 100) {
+  localStorage.setItem('happy-bingo-cut', '20')
 }
 
 const SILENT_WAV = (() => {
@@ -43,12 +54,16 @@ function patchVoiceBridge() {
     bridge.voiceHealth = async () => {
       try {
         const result = await originalHealth()
-        if (result && Number.isFinite(result.total)) {
-          return { ...result, available: result.total }
+        if (localStorage.getItem('happy-bingo-voice') === 'off') {
+          return { ...(result || {}), available: 79, total: 79, files: result?.files || [] }
         }
-        return result
+        if (result && Number.isFinite(result.total) && Number.isFinite(result.available)) {
+          return result
+        }
+        return { available: 0, total: 79, files: [] }
       } catch {
-        return { available: 79, total: 79, files: [] }
+        if (localStorage.getItem('happy-bingo-voice') === 'off') return { available: 79, total: 79, files: [] }
+        return { available: 0, total: 79, files: [] }
       }
     }
   }
