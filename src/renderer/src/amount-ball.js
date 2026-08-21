@@ -33,6 +33,10 @@
     const nextText = `${format(possibleWin)} Br`
     if (value && value.textContent !== nextText) value.textContent = nextText
 
+    const boardCounterText = app.querySelector('.board-heading strong')?.textContent || ''
+    const match = boardCounterText.match(/(\d+)\s*\/\s*75/)
+    const called = match ? Math.min(75, Number(match[1])) : 0
+
     const latestCall = stage.querySelector('.latest-call')
     if (latestCall) {
       let counter = latestCall.querySelector('.total-called-box')
@@ -42,11 +46,21 @@
         counter.innerHTML = '<span>TOTAL CALLED</span><strong>0/75</strong>'
         latestCall.appendChild(counter)
       }
-      const boardCounterText = app.querySelector('.board-heading strong')?.textContent || ''
-      const match = boardCounterText.match(/(\d+)\s*\/\s*75/)
-      const called = match ? Math.min(75, Number(match[1])) : 0
       const counterValue = counter.querySelector('strong')
       if (counterValue) counterValue.textContent = `${called}/75`
+    }
+
+    const actions = app.querySelector('.top-actions')
+    if (actions) {
+      let topCounter = actions.querySelector('.top-total-called')
+      if (!topCounter) {
+        topCounter = document.createElement('div')
+        topCounter.className = 'top-total-called'
+        topCounter.innerHTML = '<strong>0/75</strong>'
+        actions.insertBefore(topCounter, actions.firstChild)
+      }
+      const topValue = topCounter.querySelector('strong')
+      if (topValue) topValue.textContent = `${called}/75`
     }
   }
 
