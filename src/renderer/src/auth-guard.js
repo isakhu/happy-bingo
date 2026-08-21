@@ -1,12 +1,5 @@
 let unlocked = sessionStorage.getItem('happy-bingo-authenticated') === '1'
 
-function forceDarkShell() {
-  document.documentElement.style.background = '#071a3a'
-  document.body.style.background = '#071a3a'
-  const root = document.querySelector('#root')
-  if (root) root.style.background = '#071a3a'
-}
-
 function waitForAuthApi(timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const started = Date.now()
@@ -19,18 +12,14 @@ function waitForAuthApi(timeoutMs = 10000) {
   })
 }
 
-function inputStyle() {
-  return 'display:block;width:100%;margin-top:10px;padding:14px 16px;border-radius:9px;border:2px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box;font-size:18px;font-weight:700;outline:none;opacity:1;visibility:visible;'
-}
-
 function buildGate(needsSetup) {
   const existing = document.querySelector('#happy-bingo-auth-gate')
   if (existing) existing.remove()
   const gate = document.createElement('div')
   gate.id = 'happy-bingo-auth-gate'
-  gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,Helvetica,sans-serif;opacity:1;visibility:visible;'
+  gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,Helvetica,sans-serif;'
   const panel = document.createElement('div')
-  panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#101c26;border:2px solid #1e88e5;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;opacity:1;visibility:visible;'
+  panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#07152B;border:2px solid #0066FF;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;'
   const brand = document.createElement('div')
   brand.textContent = 'HAPPY BINGO'
   brand.style.cssText = 'font-size:28px;font-weight:1000;letter-spacing:2px;'
@@ -38,7 +27,7 @@ function buildGate(needsSetup) {
   title.textContent = needsSetup ? 'FIRST-TIME SETUP' : 'ENTER PASSWORD'
   title.style.cssText = 'margin:18px 0 8px;'
   const description = document.createElement('p')
-  description.textContent = needsSetup ? 'Enter the default password, then create your own password. Your new password will be required each time the app opens.' : 'Enter the password created for this computer.'
+  description.textContent = needsSetup ? 'Enter the default password, then create your own password.' : 'Enter the password created for this computer.'
   description.style.cssText = 'color:#aebfcc;font-size:13px;line-height:1.5;'
   const error = document.createElement('div')
   error.id = 'hb-auth-error'
@@ -49,20 +38,16 @@ function buildGate(needsSetup) {
     el.type = 'password'
     el.placeholder = placeholder
     el.autocomplete = autocomplete
-    el.style.cssText = inputStyle()
+    el.style.cssText = 'display:block;width:100%;margin-top:10px;padding:14px 16px;border-radius:9px;border:2px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box;font-size:18px;font-weight:700;outline:none;'
     return el
   }
-  const inputs = needsSetup ? [
-    makeInput('hb-default', 'Default password', 'off'),
-    makeInput('hb-new', 'Create new password', 'new-password'),
-    makeInput('hb-confirm', 'Confirm new password', 'new-password'),
-  ] : [makeInput('hb-password', 'Password', 'current-password')]
+  const inputs = needsSetup ? [makeInput('hb-default','Default password','off'),makeInput('hb-new','Create new password','new-password'),makeInput('hb-confirm','Confirm new password','new-password')] : [makeInput('hb-password','Password','current-password')]
   const submit = document.createElement('button')
   submit.id = 'hb-auth-submit'
   submit.type = 'button'
   submit.textContent = needsSetup ? 'CREATE PASSWORD' : 'UNLOCK'
-  submit.style.cssText = 'display:block;width:100%;margin-top:8px;padding:14px;border:0;border-radius:9px;background:#1e88e5;color:#fff;font-weight:1000;font-size:16px;cursor:pointer;'
-  panel.append(brand, title, description, ...inputs, error, submit)
+  submit.style.cssText = 'display:block;width:100%;margin-top:18px;padding:14px;border:0;border-radius:9px;background:#0066FF;color:#fff;font-weight:1000;font-size:16px;cursor:pointer;'
+  panel.append(brand,title,description,...inputs,error,submit)
   gate.appendChild(panel)
   document.body.appendChild(gate)
   window.setTimeout(() => inputs[0]?.focus(), 0)
@@ -70,7 +55,6 @@ function buildGate(needsSetup) {
 }
 
 async function startAuth() {
-  forceDarkShell()
   if (unlocked) return
   try {
     const auth = await waitForAuthApi()
@@ -83,18 +67,18 @@ async function startAuth() {
       submit.disabled = true
       try {
         const result = needsSetup
-          ? await auth.setup(gate.querySelector('#hb-default')?.value || '', gate.querySelector('#hb-new')?.value || '', gate.querySelector('#hb-confirm')?.value || '')
+          ? await auth.setup(gate.querySelector('#hb-default')?.value || '',gate.querySelector('#hb-new')?.value || '',gate.querySelector('#hb-confirm')?.value || '')
           : await auth.unlock(gate.querySelector('#hb-password')?.value || '')
         if (!result?.ok) {
           error.textContent = result?.error || 'Authentication failed.'
           submit.disabled = false
           return
         }
-        sessionStorage.setItem('happy-bingo-authenticated', '1')
+        sessionStorage.setItem('happy-bingo-authenticated','1')
         unlocked = true
-        forceDarkShell()
-        // Recreate the renderer cleanly so React boots from a known authenticated state.
-        window.location.reload()
+        gate.remove()
+        // Do not reload. React is already running underneath the gate,
+        // so removing the gate transitions directly to the normal app.
       } catch (e) {
         error.textContent = 'Authentication could not be completed.'
         submit.disabled = false
@@ -102,19 +86,17 @@ async function startAuth() {
       }
     }
     submit.addEventListener('click', () => void handleSubmit())
-    gate.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && !submit.disabled) void handleSubmit()
-    })
+    gate.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !submit.disabled) void handleSubmit() })
   } catch (error) {
     console.error(error)
     const root = document.querySelector('#root')
-    if (root) {
-      root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#071a3a;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup error</h2><p style="color:#aebfcc;max-width:460px;line-height:1.5">The offline authentication service did not start. Please retry the application.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#1e88e5;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
-      root.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
-    }
+    if (root) root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup error</h2><p style="color:#aebfcc;max-width:460px;line-height:1.5">The offline authentication service did not start. Please retry the application.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#0066FF;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
+    root.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
   }
 }
 
 const bootAuth = () => void startAuth()
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootAuth, { once: true })
 else bootAuth()
+
+export {}
