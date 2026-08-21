@@ -1,0 +1,41 @@
+/* Compact recent-call strip: maximum six close circular Bingo balls. */
+.bingo-mode .recent-panel{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.bingo-mode .recent-calls{
+  display:flex!important;
+  flex:0 0 auto!important;
+  width:max-content!important;
+  max-width:100%!important;
+  justify-content:flex-start!important;
+  align-items:center!important;
+  gap:4px!important;
+  overflow:hidden!important;
+}
+.bingo-mode .recent-ball{
+  width:58px!important;
+  height:58px!important;
+  min-width:58px!important;
+  max-width:58px!important;
+  flex:0 0 58px!important;
+  aspect-ratio:1/1!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  align-content:center!important;
+  padding:0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  line-height:1!important;
+}
+.bingo-mode .recent-ball span{display:none!important}
+.bingo-mode .recent-ball:nth-child(n+7){display:none!important}
+@media(max-width:1100px){
+  .bingo-mode .recent-calls{gap:3px!important}
+  .bingo-mode .recent-ball{width:52px!important;height:52px!important;min-width:52px!important;max-width:52px!important;flex-basis:52px!important}
+}
+@media(max-width:850px){
+  .bingo-mode .recent-calls{gap:2px!important}
+  .bingo-mode .recent-ball{width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important;flex-basis:46px!important}
+}
