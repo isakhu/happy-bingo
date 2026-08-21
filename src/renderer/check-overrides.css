@@ -1,129 +1,27 @@
 /* Cartella CHECK — 60% overall window, with 10% header / 75% board / 15% actions inside */
 .card-inspector{
-  position:fixed!important;
-  left:50%!important;
-  top:50%!important;
-  right:auto!important;
-  bottom:auto!important;
-  transform:translate(-50%,-50%)!important;
-  width:60vw!important;
-  height:60vh!important;
-  max-width:60vw!important;
-  max-height:60vh!important;
-  min-width:0!important;
-  min-height:0!important;
-  box-sizing:border-box!important;
-  display:grid!important;
-  grid-template-rows:10% 75% 15%!important;
-  grid-template-columns:1fr!important;
-  align-items:center!important;
-  justify-items:center!important;
-  padding:0!important;
-  margin:0!important;
-  overflow:hidden!important;
-  background:#f3f8fc!important;
-  border:8px solid #d7ad22!important;
-  border-radius:18px!important;
-  box-shadow:0 24px 70px rgba(0,0,0,.35),0 0 0 100vmax rgba(4,13,26,.55)!important;
-  color:#111!important;
-  z-index:200!important;
+  position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;
+  width:60vw!important;height:60vh!important;max-width:60vw!important;max-height:60vh!important;min-width:0!important;min-height:0!important;
+  box-sizing:border-box!important;display:grid!important;grid-template-rows:10% 75% 15%!important;grid-template-columns:1fr!important;align-items:center!important;justify-items:center!important;
+  padding:0!important;margin:0!important;overflow:hidden!important;background:#f3f8fc!important;border:8px solid #d7ad22!important;border-radius:18px!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.35),0 0 0 100vmax rgba(4,13,26,.55)!important;color:#111!important;z-index:200!important;
 }
-/* 10% of the 60% checking window */
-.card-inspector .inspector-head{
-  grid-column:1!important;
-  grid-row:1!important;
-  width:100%!important;
-  height:100%!important;
-  box-sizing:border-box!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  margin:0!important;
-  padding:0 12px!important;
-  background:#d7ad22!important;
-  border-radius:0!important;
-  text-align:center!important;
-}
-.card-inspector .inspector-head > button{display:none!important}
-.card-inspector .inspector-head small{display:none!important}
-.card-inspector .inspector-head h2{
-  margin:0!important;
-  color:#fff!important;
-  font-family:Arial,Helvetica,sans-serif!important;
-  font-size:clamp(14px,2vw,28px)!important;
-  font-weight:1000!important;
-  letter-spacing:1.5px!important;
-}
-/* 75% of the 60% checking window */
+.card-inspector .inspector-head{grid-column:1!important;grid-row:1!important;width:100%!important;height:100%!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:0 12px!important;background:#d7ad22!important;border-radius:0!important;text-align:center!important}
+.card-inspector .inspector-head > button{display:none!important}.card-inspector .inspector-head small{display:none!important}
+.card-inspector .inspector-head h2{margin:0!important;color:#fff!important;font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(14px,2vw,28px)!important;font-weight:1000!important;letter-spacing:1.5px!important}
+/* Keep the 75% vertical board area, but use much more of the available horizontal space. */
 .card-inspector .inspector-grid{
-  grid-row:2!important;
-  grid-column:1!important;
-  width:min(54vh,56vw)!important;
-  height:min(54vh,56vw)!important;
-  max-width:100%!important;
-  max-height:100%!important;
-  aspect-ratio:1/1!important;
-  box-sizing:border-box!important;
-  display:grid!important;
-  grid-template-columns:repeat(5,minmax(0,1fr))!important;
-  grid-template-rows:repeat(5,minmax(0,1fr))!important;
-  gap:1px!important;
-  padding:0!important;
-  margin:0!important;
-  background:#cfd5da!important;
-  border:3px solid #cfd5da!important;
-  overflow:hidden!important;
+  grid-row:2!important;grid-column:1!important;width:48vw!important;height:54vh!important;max-width:92%!important;max-height:94%!important;aspect-ratio:auto!important;
+  box-sizing:border-box!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;
+  gap:1px!important;padding:0!important;margin:0!important;background:#cfd5da!important;border:3px solid #cfd5da!important;overflow:hidden!important;
 }
-.card-inspector .inspector-cell{
-  width:100%!important;
-  height:100%!important;
-  min-width:0!important;
-  min-height:0!important;
-  aspect-ratio:auto!important;
-  display:grid!important;
-  place-items:center!important;
-  box-sizing:border-box!important;
-  background:#fff!important;
-  color:#111!important;
-  border:0!important;
-  border-radius:0!important;
-  font-family:Georgia,'Times New Roman',serif!important;
-  font-size:clamp(14px,2.2vw,32px)!important;
-  font-weight:700!important;
-  text-shadow:none!important;
-  box-shadow:none!important;
-  transform:none!important;
-  overflow:hidden!important;
-}
-.card-inspector .inspector-cell.marked{background:#35a853!important;color:#000!important}
-.card-inspector .inspector-cell.winning{background:#159447!important;color:#000!important;box-shadow:inset 0 0 0 3px #0b6f32!important}
-/* 15% of the 60% checking window */
+.card-inspector .inspector-cell{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:auto!important;display:grid!important;place-items:center!important;box-sizing:border-box!important;
+  background:#fff!important;color:#111!important;border:0!important;border-radius:0!important;font-family:Georgia,'Times New Roman',serif!important;font-size:clamp(14px,2.2vw,32px)!important;font-weight:700!important;
+  text-shadow:none!important;box-shadow:none!important;transform:none!important;overflow:hidden!important}
+.card-inspector .inspector-cell.marked{background:#35a853!important;color:#000!important}.card-inspector .inspector-cell.winning{background:#159447!important;color:#000!important;box-shadow:inset 0 0 0 3px #0b6f32!important}
 .card-inspector .winning-line-label{display:none!important}
-.card-inspector .inspector-close,.card-inspector .lock-failed-button{
-  grid-row:3!important;
-  min-height:36px!important;
-  height:52%!important;
-  max-height:54px!important;
-  margin:0!important;
-  border:0!important;
-  border-radius:9px!important;
-  box-sizing:border-box!important;
-  color:#fff!important;
-  font-family:Arial,Helvetica,sans-serif!important;
-  font-size:clamp(11px,1.1vw,16px)!important;
-  font-weight:1000!important;
-  cursor:pointer!important;
-  align-self:center!important;
-}
-.card-inspector .inspector-close{background:#0066ff!important;width:min(180px,23vw)!important;justify-self:center!important;grid-column:1!important}
-.card-inspector .lock-failed-button{background:#d9534f!important;width:min(180px,23vw)!important;justify-self:center!important;grid-column:1!important}
-.card-inspector:has(.lock-failed-button){grid-template-columns:1fr 1fr!important}
-.card-inspector:has(.lock-failed-button) .inspector-head,.card-inspector:has(.lock-failed-button) .inspector-grid{grid-column:1/-1!important}
-.card-inspector:has(.lock-failed-button) .lock-failed-button{grid-column:2!important;justify-self:start!important;margin-left:5px!important}
-.card-inspector:has(.lock-failed-button) .inspector-close{grid-column:1!important;justify-self:end!important;margin-right:5px!important}
-@media(max-width:700px){
-  .card-inspector{width:60vw!important;height:60vh!important;border-width:6px!important}
-  .card-inspector .inspector-grid{width:min(54vh,56vw)!important;height:min(54vh,56vw)!important}
-  .card-inspector .inspector-cell{font-size:clamp(11px,2.8vw,22px)!important}
-  .card-inspector .inspector-close,.card-inspector .lock-failed-button{width:min(25vw,140px)!important;min-height:30px!important}
-}
+.card-inspector .inspector-close,.card-inspector .lock-failed-button{grid-row:3!important;min-height:36px!important;height:52%!important;max-height:54px!important;margin:0!important;border:0!important;border-radius:9px!important;box-sizing:border-box!important;color:#fff!important;font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(11px,1.1vw,16px)!important;font-weight:1000!important;cursor:pointer!important;align-self:center!important}
+.card-inspector .inspector-close{background:#0066ff!important;width:min(180px,23vw)!important;justify-self:center!important;grid-column:1!important}.card-inspector .lock-failed-button{background:#d9534f!important;width:min(180px,23vw)!important;justify-self:center!important;grid-column:1!important}
+.card-inspector:has(.lock-failed-button){grid-template-columns:1fr 1fr!important}.card-inspector:has(.lock-failed-button) .inspector-head,.card-inspector:has(.lock-failed-button) .inspector-grid{grid-column:1/-1!important}
+.card-inspector:has(.lock-failed-button) .lock-failed-button{grid-column:2!important;justify-self:start!important;margin-left:5px!important}.card-inspector:has(.lock-failed-button) .inspector-close{grid-column:1!important;justify-self:end!important;margin-right:5px!important}
+@media(max-width:700px){.card-inspector{width:60vw!important;height:60vh!important;border-width:6px!important}.card-inspector .inspector-grid{width:48vw!important;height:54vh!important;max-width:92%!important}.card-inspector .inspector-cell{font-size:clamp(11px,2.8vw,22px)!important}.card-inspector .inspector-close,.card-inspector .lock-failed-button{width:min(25vw,140px)!important;min-height:30px!important}}
