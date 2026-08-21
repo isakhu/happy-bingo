@@ -14,6 +14,9 @@
   row-gap:2px!important;
   background:linear-gradient(180deg,#081a31 0%,#061326 100%)!important;
   border-bottom:1px solid #21496f!important;
+  position:relative!important;
+  z-index:20!important;
+  pointer-events:auto!important;
 }
 .bingo-mode .topbar.game-topbar .brand{
   grid-area:brand!important;
@@ -36,6 +39,11 @@
   position:relative!important;
   overflow:hidden!important;
   text-shadow:0 2px 4px #000!important;
+  pointer-events:none!important;
+}
+.bingo-mode .topbar.game-topbar .brand::before,
+.bingo-mode .topbar.game-topbar .brand::after{
+  pointer-events:none!important;
 }
 .bingo-mode .topbar.game-topbar .brand::before{
   content:'✦'!important;
@@ -69,6 +77,9 @@
   gap:10px!important;
   align-items:stretch!important;
   justify-self:stretch!important;
+  position:relative!important;
+  z-index:21!important;
+  pointer-events:auto!important;
 }
 .bingo-mode .game-metric{
   min-width:0!important;
@@ -78,28 +89,12 @@
   background:linear-gradient(180deg,#0c2440,#071a2f)!important;
   box-shadow:inset 0 1px 0 #ffffff10,0 4px 10px #0005!important;
   text-align:center!important;
+  pointer-events:auto!important;
 }
-.bingo-mode .game-metric span{
-  font-size:clamp(9px,.7vw,12px)!important;
-  letter-spacing:1px!important;
-  color:#79c5ff!important;
-  font-weight:1000!important;
-}
-.bingo-mode .game-metric strong{
-  font-size:clamp(16px,1.45vw,24px)!important;
-  color:#ffd83d!important;
-  font-weight:1000!important;
-  text-shadow:2px 2px 0 #000,0 0 10px #000!important;
-  white-space:nowrap!important;
-}
-.bingo-mode .top-actions{
-  grid-area:actions!important;
-  align-self:stretch!important;
-  justify-self:end!important;
-  display:flex!important;
-  align-items:center!important;
-}
-.bingo-mode .top-actions .top-button{min-width:118px!important;height:46px!important}
+.bingo-mode .game-metric span{font-size:clamp(9px,.7vw,12px)!important;letter-spacing:1px!important;color:#79c5ff!important;font-weight:1000!important;pointer-events:none!important}
+.bingo-mode .game-metric strong{font-size:clamp(16px,1.45vw,24px)!important;color:#ffd83d!important;font-weight:1000!important;text-shadow:2px 2px 0 #000,0 0 10px #000!important;white-space:nowrap!important;pointer-events:none!important}
+.bingo-mode .top-actions{grid-area:actions!important;align-self:stretch!important;justify-self:end!important;display:flex!important;align-items:center!important;position:relative!important;z-index:30!important;pointer-events:auto!important}
+.bingo-mode .top-actions .top-button{min-width:118px!important;height:46px!important;position:relative!important;z-index:31!important;pointer-events:auto!important;cursor:pointer!important}
 .bingo-mode .bingo-main{height:calc(100vh - 128px)!important}
 @media(max-width:900px){
   .bingo-mode .topbar.game-topbar{min-height:118px!important;height:118px!important;grid-template-rows:42px 52px!important}
