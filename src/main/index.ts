@@ -8,6 +8,7 @@ type Card={id:number;values:number[]}
 type AuthRecord={salt:string;hash:string}
 const DEFAULT_PASSWORD='48261937'
 const AUDIO_SCHEME='hb-audio'
+const LETTER_RANGES:[[number,number],[number,number],[number,number],[number,number],[number,number]]=[[1,15],[16,30],[31,45],[46,60],[61,75]]
 const NUMBER_VOICES=Array.from({length:15},(_,i)=>`b${i+1}.mp3`).concat(Array.from({length:15},(_,i)=>`i${i+16}.mp3`),Array.from({length:15},(_,i)=>`n${i+31}.mp3`),Array.from({length:15},(_,i)=>`g${i+46}.mp3`),Array.from({length:15},(_,i)=>`o${i+61}.mp3`))
 const SYSTEM_VOICES=['Goodbingo.mp3','cartellawu.mp3','chewatawu.mp3','pause.mp3']
 const ALLOWED_VOICES=new Set([...SYSTEM_VOICES,...NUMBER_VOICES])
@@ -17,9 +18,13 @@ protocol.registerSchemesAsPrivileged([{scheme:AUDIO_SCHEME,privileges:{standard:
 function load(win:BrowserWindow){const url=process.env.ELECTRON_RENDERER_URL;if(url)win.loadURL(url);else win.loadFile(join(__dirname,'../renderer/index.html'))}
 function createWindow(){const win=new BrowserWindow({width:1400,height:900,minWidth:1100,minHeight:700,title:'Happy Bingo',backgroundColor:'#071a3a',autoHideMenuBar:false,webPreferences:{preload:join(__dirname,'../preload/index.mjs'),contextIsolation:true,nodeIntegration:false,sandbox:false}});win.maximize();load(win)}
 
+function validCard(card:Card){if(!card||!Number.isInteger(card.id)||card.id<1||card.id>100||!Array.isArray(card.values)||card.values.length!==25||card.values[12]!==0)return false;for(let col=0;col<5;col++){const [min,max]=LETTER_RANGES[col],seen=new Set<number>();for(let row=0;row<5;row++){const i=row*5+col;if(i===12)continue;const n=card.values[i];if(!Number.isInteger(n)||n<min||n>max||seen.has(n))return false;seen.add(n)}}return true}
+function validSet(cards:unknown):cards is Card[]{if(!Array.isArray(cards)||cards.length!==100)return false;const ids=new Set<number>();for(const card of cards as Card[]){if(!validCard(card)||ids.has(card.id))return false;ids.add(card.id)}return ids.size===100}
+function fallbackCards(){return validSet(CUSTOMER_CARDS as Card[])?CUSTOMER_CARDS as Card[]:[]}
+
 async function ensureVoices(){const sourceDirs=[join(app.getAppPath(),'audio','voices'),join(process.resourcesPath,'audio','voices'),join(process.cwd(),'audio','voices')];const targetDir=join(app.getPath('userData'),'voices');await mkdir(targetDir,{recursive:true});for(const file of ALLOWED_VOICES){const target=join(targetDir,file);let ok=false;for(const source of sourceDirs){try{await copyFile(join(source,file),target);ok=true;break}catch{}}if(!ok){try{await readFile(target)}catch{console.error(`Missing voice: ${file}`)}}}return targetDir}
 async function getVoiceData(file:string){const canonical=VOICE_BY_KEY.get(String(file).toLowerCase());if(!canonical)throw new Error(`Voice file not allowed: ${file}`);const dir=await ensureVoices();const data=await readFile(join(dir,canonical));return `data:audio/mpeg;base64,${data.toString('base64')}`}
-async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return{setId:'HB-CUSTOMER-100',createdAt:'2026-08-19',cards:CUSTOMER_CARDS as Card[]};for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&Array.isArray(raw.cards)&&raw.cards.length===100)return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}catch{}}return{setId:'HB-CUSTOMER-100',createdAt:'2026-08-19',cards:CUSTOMER_CARDS as Card[]}}
+async function getInstalledSet(){const dir=join(app.getPath('userData'),'cartella-sets');await mkdir(dir,{recursive:true});const files=(await readdir(dir)).filter(f=>f.toLowerCase().endsWith('.hbc')).sort();if(!files.length)return{setId:'HB-CUSTOMER-100',createdAt:'2026-08-19',cards:fallbackCards()};for(const file of files){try{const raw=JSON.parse(await readFile(join(dir,file),'utf8'));if(raw?.format==='HAPPY_BINGO_CARTELLA_SET_V1'&&validSet(raw.cards))return{setId:String(raw.setId||file.replace(/\.hbc$/i,'')),createdAt:raw.createdAt||'',cards:raw.cards as Card[]}}catch{}}return{setId:'HB-CUSTOMER-100',createdAt:'2026-08-19',cards:fallbackCards()}}
 
 function authDir(){return join(app.getPath('appData'),'Happy Bingo')}
 function authFile(){return join(authDir(),'auth.json')}
