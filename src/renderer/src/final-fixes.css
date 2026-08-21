@@ -1,5 +1,14 @@
 /* Final UI fixes: settings, board, inspection, and customer-facing cleanup. */
 
+/* Global interaction guard: decorative layers must never capture mouse/touch input. */
+.app-shell::before,.app-shell::after{pointer-events:none!important;}
+.app-shell,.app-shell *{pointer-events:auto;}
+.topbar,.selection-screen,.bingo-main{position:relative;z-index:10!important;pointer-events:auto!important;}
+.topbar *,.selection-screen *,.bingo-main *{pointer-events:auto!important;}
+button,input,select,textarea{pointer-events:auto!important;cursor:pointer;}
+.settings-modal,.settings-modal *,.modal-backdrop,.modal-backdrop *{pointer-events:auto!important;}
+.modal-backdrop,.check-backdrop,.winner-overlay{z-index:1000!important;pointer-events:auto!important;}
+
 /* Approved Bingo board: FIVE horizontal rows. B=1-15, I=16-30, N=31-45, G=46-60, O=61-75. */
 .board-grid{display:grid!important;grid-template-columns:42px repeat(15,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:6px!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;}
 .board-column{display:contents!important;}
@@ -13,7 +22,7 @@
 .marquee-ball span{font-size:16px!important;}
 .marquee-ball strong{font-size:38px!important;text-shadow:2px 3px 0 #000!important;}
 .pause-action{position:relative!important;z-index:50!important;pointer-events:auto!important;min-width:120px!important;}
-.bottom-actions{position:relative!important;z-index:50!important;}
+.bottom-actions{position:relative!important;z-index:50!important;pointer-events:auto!important;}
 .action{position:relative!important;z-index:51!important;pointer-events:auto!important;}
 
 /* Settings foundation */
@@ -21,7 +30,7 @@
 .settings-redesigned .settings-redesign-shell{display:flex!important;width:100%!important;height:100%!important;min-height:0!important;}
 .settings-redesigned .settings-sidebar-real{width:220px!important;flex:0 0 220px!important;background:#040D1A!important;padding:20px 14px!important;border-right:1px solid #173154!important;display:flex!important;flex-direction:column!important;gap:10px!important;}
 .settings-redesigned .settings-sidebar-heading{font-size:10px!important;letter-spacing:1.6px!important;color:#8A99AD!important;font-weight:1000!important;padding:4px 10px 10px!important;}
-.settings-redesigned .settings-tab-real{width:100%!important;border:1px solid #1A2E4C!important;background:#07152B!important;color:#8A99AD!important;border-radius:10px!important;padding:13px 14px!important;display:flex!important;align-items:center!important;gap:12px!important;text-align:left!important;font-size:11px!important;font-weight:1000!important;letter-spacing:.6px!important;}
+.settings-redesigned .settings-tab-real{width:100%!important;border:1px solid #1A2E4C!important;background:#07152B!important;color:#8A99AD!important;border-radius:10px!important;padding:13px 14px!important;display:flex!important;align-items:center!important;gap:12px!important;text-align:left!important;font-size:11px!important;font-weight:1000!important;cursor:pointer!important;}
 .settings-redesigned .settings-tab-real span{width:22px!important;text-align:center!important;font-size:16px!important;}
 .settings-redesigned .settings-tab-real.active{background:#0066FF!important;border-color:#0066FF!important;color:#fff!important;box-shadow:0 8px 24px #0066ff44!important;}
 .settings-redesigned .settings-main-real{flex:1!important;min-width:0!important;min-height:0!important;padding:24px 28px 18px!important;display:flex!important;flex-direction:column!important;background:#07152B!important;}
@@ -62,28 +71,7 @@
 
 .selection-mode .ready-pill,.selection-mode .set-info,.selection-mode .selection-panel-head span,.selection-mode .selection-screen:after{display:none!important}
 
-@media(max-width:900px){
-  .settings-redesigned{height:92vh!important}
-  .settings-redesigned .settings-sidebar-real{width:185px!important;flex-basis:185px!important}
-  .settings-redesigned .settings-two-col-real{grid-template-columns:1fr!important}
-  .settings-redesigned .settings-right-real{border-left:0!important;border-top:1px solid rgba(71,85,105,.45)!important;padding:20px 0 0!important;margin-top:8px!important}
-  .settings-redesigned .settings-left-real{padding-right:0!important}
-}
-@media(max-width:700px){
-  .settings-redesigned .settings-redesign-shell{flex-direction:column!important}
-  .settings-redesigned .settings-sidebar-real{width:100%!important;flex:0 0 auto!important;flex-direction:row!important;overflow:auto!important;padding:8px!important;border-right:0!important;border-bottom:1px solid #173154!important}
-  .settings-redesigned .settings-sidebar-heading{display:none!important}
-  .settings-redesigned .settings-tab-real{white-space:nowrap!important;width:auto!important;padding:10px 12px!important}
-  .settings-redesigned .settings-main-real{padding:14px 16px 12px!important}
-  .settings-redesigned .settings-field-real{grid-template-columns:1fr 120px!important;gap:10px!important}
-  .settings-redesigned .settings-footer-real span{display:none!important}
-}
-@media(max-height:760px){
-  .settings-redesigned .settings-main-real{padding-top:16px!important}
-  .settings-redesigned .settings-field-real{margin-bottom:13px!important}
-  .settings-redesigned .settings-slider-real{margin-bottom:20px!important}
-  .settings-redesigned .settings-voice-real{margin-top:14px!important}
-  .settings-redesigned .settings-footer-real{padding-top:10px!important;margin-top:8px!important}
-}.clear-selection-button{display:block;margin-top:8px;border:1px solid #e53935;border-radius:7px;background:#2a2020;color:#fff;padding:6px 9px;font-size:8px;font-weight:1000;letter-spacing:.4px;cursor:pointer}
-.clear-selection-button:hover:not(:disabled){background:#e53935}
-.clear-selection-button:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:900px){.settings-redesigned{height:92vh!important}.settings-redesigned .settings-sidebar-real{width:185px!important;flex-basis:185px!important}.settings-redesigned .settings-two-col-real{grid-template-columns:1fr!important}.settings-redesigned .settings-right-real{border-left:0!important;border-top:1px solid rgba(71,85,105,.45)!important;padding:20px 0 0!important;margin-top:8px!important}.settings-redesigned .settings-left-real{padding-right:0!important}}
+@media(max-width:700px){.settings-redesigned .settings-redesign-shell{flex-direction:column!important}.settings-redesigned .settings-sidebar-real{width:100%!important;flex:0 0 auto!important;flex-direction:row!important;overflow:auto!important;padding:8px!important;border-right:0!important;border-bottom:1px solid #173154!important}.settings-redesigned .settings-sidebar-heading{display:none!important}.settings-redesigned .settings-tab-real{white-space:nowrap!important;width:auto!important;padding:10px 12px!important}.settings-redesigned .settings-main-real{padding:14px 16px 12px!important}.settings-redesigned .settings-field-real{grid-template-columns:1fr 120px!important;gap:10px!important}.settings-redesigned .settings-footer-real span{display:none!important}}
+@media(max-height:760px){.settings-redesigned .settings-main-real{padding-top:16px!important}.settings-redesigned .settings-field-real{margin-bottom:13px!important}.settings-redesigned .settings-slider-real{margin-bottom:20px!important}.settings-redesigned .settings-voice-real{margin-top:14px!important}.settings-redesigned .settings-footer-real{padding-top:10px!important;margin-top:8px!important}}
+.clear-selection-button{display:block;margin-top:8px;border:1px solid #e53935;border-radius:7px;background:#2a2020;color:#fff;padding:6px 9px;font-size:8px;font-weight:1000;letter-spacing:.4px;cursor:pointer}.clear-selection-button:hover:not(:disabled){background:#e53935}.clear-selection-button:disabled{opacity:.35;cursor:not-allowed}
