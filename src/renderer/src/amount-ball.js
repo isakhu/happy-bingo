@@ -14,15 +14,19 @@
     const players = metrics.find(x => x.querySelector('span')?.textContent?.trim() === 'NUMBER OF PLAYERS')
     if (!bet || !players) return
 
+    // Possible win = active players × bet amount, before manager cut.
     const amount = parseAmount(bet.querySelector('strong')?.textContent) * parseAmount(players.querySelector('strong')?.textContent)
     let ball = stage.querySelector('.total-amount-ball')
 
     if (!ball) {
       ball = document.createElement('div')
       ball.className = 'total-amount-ball'
-      ball.innerHTML = '<span>TOTAL</span><strong>0 Br</strong>'
+      ball.innerHTML = '<span>POSSIBLE WIN</span><strong>0 Br</strong>'
       stage.appendChild(ball)
     }
+
+    const label = ball.querySelector('span')
+    if (label) label.textContent = 'POSSIBLE WIN'
 
     const value = ball.querySelector('strong')
     const nextText = `${format(amount)} Br`
