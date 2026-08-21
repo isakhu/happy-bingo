@@ -1,0 +1,10 @@
+/* Ensure visual layers never steal clicks from the real controls. */
+#root,.app-shell{position:relative;z-index:1;pointer-events:auto!important}
+.selection-screen,.selection-panel,.selection-sidebar,.selection-title,.topbar,.top-actions,.bottom-bar,.bottom-actions,.bingo-main,.board-shell,.call-stage{pointer-events:auto!important}
+.cartella,.start-button,.top-button,.action,.clear-selection-button,.check-backdrop button,.check-modal button,.settings-black button,.settings-black input,.settings-black select,.settings-black label{position:relative;z-index:100!important;pointer-events:auto!important;cursor:pointer!important}
+/* Decorative pseudo-elements must never become an invisible click target. */
+.app-shell *::before,.app-shell *::after{pointer-events:none}
+/* Explicitly preserve modal/backdrop interaction. */
+.check-backdrop,.check-modal,.check-modal *{pointer-events:auto!important}
+/* Full-screen utility is independently clickable. */
+#happy-bingo-authoritative-fullscreen{pointer-events:auto!important;z-index:5001!important}
