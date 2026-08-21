@@ -27,8 +27,28 @@ jobs:
           if (-not (Test-Path "out/renderer/index.html")) { throw "Missing out/renderer/index.html" }
           if (-not (Test-Path "audio/voices")) { throw "Missing audio/voices directory" }
           $voices = Get-ChildItem "audio/voices" -Filter *.mp3 -File
-          if ($voices.Count -lt 79) { throw "Expected at least 79 MP3 voices, found $($voices.Count)" }
-          Write-Host "Verified customer app and $($voices.Count) MP3 voice files."
+          if ($voices.Count -ne 79) { throw "Expected exactly 79 MP3 voices (75 numbers + 4 system voices), found $($voices.Count)" }
+          foreach ($required in @('Goodbingo.mp3','cartellawu.mp3','chewatawu.mp3','pause.mp3','b1.mp3','i16.mp3','n31.mp3','g46.mp3','o61.mp3')) {
+            if (-not (Test-Path "audio/voices/$required")) { throw "Missing required voice $required" }
+          }
+          $cards = Get-Content "src/main/customer-cards.ts" -Raw
+          $cardMatches = [regex]::Matches($cards, '\{id:\d+,values:\[')
+          if ($cardMatches.Count -ne 100) { throw "Expected exactly 100 bundled customer cards, found $($cardMatches.Count)" }
+          Write-Host "Verified 100 customer cards and exactly 79 voice files."
+      - name: Verify release safety rules
+        shell: pwsh
+        run: |
+          $html = Get-Content "out/renderer/index.html" -Raw
+          $startupCss = Get-Content "src/renderer/startup-theme-fix.css" -Raw
+          $selectionSummary = Get-Content "src/renderer/src/selection-summary.js" -Raw
+          $fallback = Get-Content "src/renderer/src/startup-fallback.js" -Raw
+          $package = Get-Content "package.json" -Raw
+          if ($html -notmatch "startup-theme-fix\.css") { throw "Startup theme guard is not included in renderer HTML" }
+          if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing" }
+          if ($selectionSummary -match 'STARTING_MONEY\s*=\s*10000000' -or $selectionSummary -match 'STARTING_MONEY\s*=\s*1000000') { throw "Legacy money seed remains in selection-summary.js" }
+          if ($fallback -match "happy-bingo-total-money'.*10000000" -or $fallback -match "happy-bingo-money-balance'.*10000000") { throw "Legacy 10 million seed remains in startup fallback" }
+          if ($package -notmatch '"audio/\*\*/\*"') { throw "Packaged build is not configured to include audio assets" }
+          Write-Host "Verified startup protection, money migration rules, and packaged audio configuration."
       - name: Verify authentication wiring
         shell: pwsh
         run: |
