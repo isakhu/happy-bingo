@@ -1,0 +1,27 @@
+/* Final main-screen metric arrangement. Visual-only; no JS/state/IPC changes. */
+
+.bingo-mode #happy-bingo-money-button{display:none!important}
+
+.bingo-mode .game-metrics{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:18px!important;
+  flex-wrap:nowrap!important;
+}
+
+.bingo-mode .game-metrics .game-metric{
+  order:initial!important;
+}
+
+.bingo-mode .game-metrics .game-metric:nth-child(1){order:1!important}
+.bingo-mode .game-metrics .game-metric:nth-child(3){order:2!important}
+.bingo-mode .game-metrics .game-metric:nth-child(2){order:3!important}
+
+/* Keep TOTAL CALLED and PAY OUT in their dedicated game areas. */
+.bingo-mode .game-metrics .game-metric:nth-child(4),
+.bingo-mode .game-metrics .game-metric:nth-child(5){display:none!important}
+
+@media(max-width:900px){
+  .bingo-mode .game-metrics{gap:10px!important}
+}
