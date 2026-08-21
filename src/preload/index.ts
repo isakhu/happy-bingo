@@ -14,14 +14,12 @@ contextBridge.exposeInMainWorld('happyBingo', {
   voiceHealth: async () => {
     try {
       const result = await ipcRenderer.invoke('voice-health')
-      if (result && Number.isFinite(result.total)) {
-        // Voice health is informational only. Never block a game because one
-        // bundled audio asset was not copied correctly into the packaged app.
-        return { ...result, available: result.total }
+      if (result && Number.isFinite(result.total) && Number.isFinite(result.available)) {
+        return result
       }
-      return result
+      return { available: 0, total: 79, files: [] }
     } catch {
-      return { available: 79, total: 79, files: [] }
+      return { available: 0, total: 79, files: [] }
     }
   },
   getInstalledSet: () => ipcRenderer.invoke('get-installed-set'),
