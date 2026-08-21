@@ -3,15 +3,24 @@
   const TOTAL_MONEY_ID = 'happy-bingo-total-money-made'
   const MONEY_BALANCE_KEY = 'happy-bingo-money-balance'
   const MONEY_LAST_GAME_KEY = 'happy-bingo-money-last-game'
+  const MONEY_VERSION_KEY = 'happy-bingo-money-balance-version'
+  const MONEY_VERSION = '2'
   const STARTING_MONEY = 10000000
 
   function getMoneyBalance() {
+    const version = localStorage.getItem(MONEY_VERSION_KEY)
+    if (version !== MONEY_VERSION) {
+      localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
+      localStorage.setItem(MONEY_VERSION_KEY, MONEY_VERSION)
+      localStorage.removeItem(MONEY_LAST_GAME_KEY)
+    }
+
     const stored = Number(localStorage.getItem(MONEY_BALANCE_KEY))
     if (!Number.isFinite(stored) || stored < 0) {
       localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
       return STARTING_MONEY
     }
-    return stored
+    return Math.round(stored)
   }
 
   function applyCompletedGameRevenue() {
@@ -76,7 +85,7 @@
     total.innerHTML = `<span style="font-size:11px;letter-spacing:.5px;opacity:.85;">TOTAL CALLED</span><strong style="font-size:20px;line-height:1;">${count}</strong>`
   }
 
-  function installTotalMoneyMade() {
+  function installTotalMoneyBalance() {
     const settings = document.querySelector('.settings-main-real')
     if (!settings) return
 
@@ -108,14 +117,14 @@
     if (!input) return
 
     applyCompletedGameRevenue()
-    const total = getMoneyBalance()
-    input.value = Math.round(total).toLocaleString()
+    input.value = getMoneyBalance().toLocaleString()
   }
 
   function install() {
+    getMoneyBalance()
     applyCompletedGameRevenue()
     installTotalCalled()
-    installTotalMoneyMade()
+    installTotalMoneyBalance()
   }
 
   getMoneyBalance()
