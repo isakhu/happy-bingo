@@ -20,12 +20,12 @@
     if (!ball) {
       ball = document.createElement('div')
       ball.className = 'total-amount-ball'
-      ball.innerHTML = '<span>TOTAL</span><strong>0 br</strong>'
+      ball.innerHTML = '<span>TOTAL</span><strong>0 Br</strong>'
       stage.appendChild(ball)
     }
 
     const value = ball.querySelector('strong')
-    const nextText = `${format(amount)} br`
+    const nextText = `${format(amount)} Br`
     if (value && value.textContent !== nextText) value.textContent = nextText
   }
 
