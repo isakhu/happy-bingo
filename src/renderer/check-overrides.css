@@ -1,39 +1,151 @@
-/* Cartella CHECK view — final compact mockup */
+/* Cartella CHECK — exact 10% header / 75% board / 15% actions layout */
 .card-inspector{
-  position:fixed!important; left:50%!important; top:50%!important; right:auto!important; bottom:auto!important;
-  transform:translate(-50%,-50%)!important; width:min(700px,82vw)!important; height:auto!important;
-  max-height:none!important; overflow:visible!important; box-sizing:border-box!important; z-index:120!important;
-  background:#f3f8fc!important; border:10px solid #d7ad22!important; border-radius:18px!important;
-  padding:18px!important; box-shadow:0 24px 70px rgba(0,0,0,.35),0 0 0 100vmax rgba(4,13,26,.55)!important; color:#111!important;
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-rows:10vh 75vh 15vh!important;
+  grid-template-columns:1fr!important;
+  align-items:center!important;
+  justify-items:center!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+  background:#f3f8fc!important;
+  border:10px solid #d7ad22!important;
+  border-radius:0!important;
+  box-shadow:inset 0 0 0 1px #b88e09,0 0 0 100vmax rgba(4,13,26,.55)!important;
+  color:#111!important;
+  z-index:200!important;
 }
-.card-inspector .inspector-head{background:#d7ad22!important;border-radius:8px!important;padding:8px 12px!important;margin-bottom:12px!important;text-align:center!important}
-/* The mockup only has the Cartella number above the board. */
+/* 10% top area: only Cartella number */
+.card-inspector .inspector-head{
+  grid-row:1!important;
+  width:100%!important;
+  height:100%!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:0!important;
+  padding:0 18px!important;
+  background:#d7ad22!important;
+  border-radius:0!important;
+  text-align:center!important;
+}
+.card-inspector .inspector-head > button{
+  display:none!important;
+}
 .card-inspector .inspector-head small{display:none!important}
-.card-inspector .inspector-head h2{font-size:24px!important;color:#fff!important;letter-spacing:1.5px!important;margin:0!important;font-weight:1000!important}
-.card-inspector .inspector-grid{width:100%!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:1px!important;background:#cfd5da!important;border:1px solid #cfd5da!important;overflow:hidden!important}
-.card-inspector .inspector-cell{width:auto!important;min-width:0!important;height:auto!important;aspect-ratio:1/1!important;display:grid!important;place-items:center!important;background:#fff!important;color:#111!important;border:0!important;border-radius:0!important;font-family:Georgia,'Times New Roman',serif!important;font-size:clamp(18px,3vw,34px)!important;font-weight:700!important;text-shadow:none!important;box-shadow:none!important;transform:none!important;overflow:hidden!important}
-.card-inspector .inspector-cell.marked{background:#35a853!important;color:#000!important;border:0!important;box-shadow:none!important;text-shadow:none!important}
-.card-inspector .inspector-cell.winning{background:#159447!important;color:#000!important;border:0!important;box-shadow:inset 0 0 0 3px #0b6f32!important;transform:none!important}
-/* No extra status block above/below the board. */
-.card-inspector .winning-line-label{margin-top:8px!important;background:#fff!important;border:2px solid #35a853!important;color:#111!important;border-radius:8px!important;padding:7px!important;font-size:12px!important;font-weight:900!important;text-align:center!important;box-shadow:none!important}
-.card-inspector .winning-line-label::before{content:none!important}
-.card-inspector::after{display:none!important;content:none!important}
-/* CLOSE + BLOCK share one row, matching the approved mockup. */
-.card-inspector .inspector-close,.card-inspector .lock-failed-button{
-  display:inline-block!important; vertical-align:top!important; width:calc(50% - 7px)!important; min-height:44px!important;
-  margin-top:10px!important; margin-left:0!important; margin-right:0!important; border-radius:8px!important;
-  font-weight:900!important; cursor:pointer!important; box-sizing:border-box!important;
+.card-inspector .inspector-head h2{
+  margin:0!important;
+  color:#fff!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:clamp(20px,3vw,36px)!important;
+  font-weight:1000!important;
+  letter-spacing:2px!important;
 }
-.card-inspector .inspector-close{background:#0066ff!important;color:#fff!important;border:0!important;margin-right:10px!important}
-.card-inspector .lock-failed-button{background:#d9534f!important;color:#fff!important;border:0!important}
-.check-backdrop{position:fixed!important;inset:0!important;display:grid!important;place-items:center!important;background:rgba(4,13,26,.48)!important;z-index:110!important}
-.check-modal{width:min(520px,72vw)!important;max-height:none!important;overflow:hidden!important;border-radius:16px!important;background:#f7fbff!important;border:6px solid #d7ad22!important;box-shadow:0 24px 70px rgba(0,0,0,.35)!important;color:#111!important}
-.check-head{background:#d7ad22!important;color:#fff!important}.check-head strong{color:#fff!important;font-size:18px!important}.check-head button{color:#fff!important}.check-body{padding:22px!important}.check-body label{color:#1c3650!important;font-weight:900!important}.check-body input{background:#fff!important;color:#111!important;border:2px solid #bfc8d0!important}.check-body > button{background:#0066ff!important;color:#fff!important}
+/* 75% middle area: the complete 5x5 board */
+.card-inspector .inspector-grid{
+  grid-row:2!important;
+  width:min(75vh,82vw)!important;
+  height:min(75vh,82vw)!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  grid-template-rows:repeat(5,minmax(0,1fr))!important;
+  gap:1px!important;
+  padding:0!important;
+  margin:0!important;
+  background:#cfd5da!important;
+  border:3px solid #cfd5da!important;
+  overflow:hidden!important;
+}
+.card-inspector .inspector-cell{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  display:grid!important;
+  place-items:center!important;
+  box-sizing:border-box!important;
+  background:#fff!important;
+  color:#111!important;
+  border:0!important;
+  border-radius:0!important;
+  font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(18px,3.2vw,44px)!important;
+  font-weight:700!important;
+  text-shadow:none!important;
+  box-shadow:none!important;
+  transform:none!important;
+  overflow:hidden!important;
+}
+.card-inspector .inspector-cell.marked{
+  background:#35a853!important;
+  color:#000!important;
+}
+.card-inspector .inspector-cell.winning{
+  background:#159447!important;
+  color:#000!important;
+  box-shadow:inset 0 0 0 4px #0b6f32!important;
+}
+/* 15% bottom area: action buttons only */
+.card-inspector .winning-line-label{
+  display:none!important;
+}
+.card-inspector .inspector-close,
+.card-inspector .lock-failed-button{
+  grid-row:3!important;
+  display:block!important;
+  align-self:center!important;
+  width:min(360px,40vw)!important;
+  min-height:52px!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:10px!important;
+  box-sizing:border-box!important;
+  color:#fff!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:clamp(14px,1.4vw,20px)!important;
+  font-weight:1000!important;
+  cursor:pointer!important;
+}
+.card-inspector .inspector-close{
+  background:#0066ff!important;
+  justify-self:center!important;
+}
+.card-inspector .lock-failed-button{
+  background:#d9534f!important;
+  justify-self:center!important;
+}
+/* Put both buttons side-by-side in the 15% footer when BLOCK exists. */
+.card-inspector .lock-failed-button + .inspector-close{
+  grid-column:1!important;
+  justify-self:end!important;
+  margin-right:8px!important;
+}
+.card-inspector .lock-failed-button{
+  grid-column:2!important;
+  justify-self:start!important;
+  margin-left:8px!important;
+}
+/* Make the two footer columns explicit without affecting the 75% board. */
+.card-inspector:has(.lock-failed-button){
+  grid-template-columns:1fr 1fr!important;
+}
+.card-inspector:has(.lock-failed-button) .inspector-head,
+.card-inspector:has(.lock-failed-button) .inspector-grid{grid-column:1/-1!important}
+
 @media(max-width:700px){
-  .card-inspector{width:92vw!important;border-width:7px!important;padding:10px!important}
-  .card-inspector .inspector-head h2{font-size:18px!important}
-  .card-inspector .inspector-cell{font-size:clamp(14px,4vw,25px)!important}
-  .card-inspector .inspector-close,.card-inspector .lock-failed-button{width:calc(50% - 5px)!important}
-  .card-inspector .inspector-close{margin-right:6px!important}
-  .check-modal{width:88vw!important}
+  .card-inspector{border-width:6px!important}
+  .card-inspector .inspector-grid{width:min(75vh,92vw)!important;height:min(75vh,92vw)!important}
+  .card-inspector .inspector-cell{font-size:clamp(14px,4vw,28px)!important}
+  .card-inspector .inspector-close,.card-inspector .lock-failed-button{width:min(44vw,250px)!important;min-height:44px!important}
 }
