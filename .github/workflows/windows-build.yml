@@ -41,19 +41,17 @@ jobs:
           $html = Get-Content "out/renderer/index.html" -Raw
           $startupCss = Get-Content "src/renderer/startup-theme-fix.css" -Raw
           $selectionSummary = Get-Content "src/renderer/src/selection-summary.js" -Raw
-          $fallback = Get-Content "src/renderer/src/startup-fallback.js" -Raw
           $mainTsx = Get-Content "src/renderer/src/main.tsx" -Raw
           $preload = Get-Content "src/preload/index.ts" -Raw
           $package = Get-Content "package.json" -Raw
           if ($html -notmatch "startup-theme-fix\.css") { throw "Startup theme guard is not included in renderer HTML" }
           if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing" }
-          if ($selectionSummary -notmatch 'STARTING_MONEY\s*=\s*0') { throw "New-company starting money is not zero" }
-          if ($selectionSummary -match 'STARTING_MONEY\s*=\s*10000000' -or $selectionSummary -match 'STARTING_MONEY\s*=\s*1000000') { throw "Legacy money seed remains in selection-summary.js" }
-          if ($fallback -match "happy-bingo-total-money'.*10000000" -or $fallback -match "happy-bingo-money-balance'.*10000000") { throw "Legacy 10 million seed remains in startup fallback" }
+          if ($selectionSummary -notmatch 'STARTING_MONEY\s*=\s*10000000') { throw "Company starting balance is not 10,000,000 Birr" }
+          if ($selectionSummary -notmatch "RESET_SEEDS" -or $selectionSummary -notmatch "10000000") { throw "10 million starting-balance migration rule is missing" }
           if ($mainTsx -notmatch 'clear-selection-button' -or $mainTsx -notmatch 'START GAME' -or $mainTsx -notmatch 'onClick=\{\(\)=>setSettingsOpen\(true\)\}') { throw "Clear All / Start Game / Settings controls are missing" }
           if ($preload -match 'available: result\.total' -or $preload -match 'available: 79, total: 79') { throw "Voice health bridge is masking missing audio files" }
           if ($package -notmatch '"audio/\*\*/\*"') { throw "Packaged build is not configured to include audio assets" }
-          Write-Host "Verified dark startup, zero starting balance, selection controls, settings/start controls, truthful sound health, and audio packaging."
+          Write-Host "Verified dark startup, 10 million starting balance, selection controls, settings/start controls, truthful sound health, and audio packaging."
       - name: Verify authentication wiring
         shell: pwsh
         run: |
