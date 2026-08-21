@@ -1,0 +1,39 @@
+name: Apply Cross Bingo pattern
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.head_commit.message != 'Add Cross Bingo pattern'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update winning patterns
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/renderer/src/main.tsx')
+          s = p.read_text(encoding='utf-8')
+          old = "function winningPatterns(card:Card){const marked=card.values.map((n,i)=>i===12||calledSet.has(n));const defs:{label:string;indexes:number[]}[]=[];for(let r=0;r<5;r++)defs.push({label:`Horizontal row ${r+1}`,indexes:Array.from({length:5},(_,c)=>r*5+c)});for(let c=0;c<5;c++)defs.push({label:`Vertical column ${c+1}`,indexes:Array.from({length:5},(_,r)=>r*5+c)});defs.push({label:'Diagonal ↘',indexes:[0,6,12,18,24]},{label:'Diagonal ↙',indexes:[4,8,12,16,20]},{label:'Four corners',indexes:[0,4,20,24]});return defs.filter(x=>x.indexes.every(i=>marked[i]))}"
+          new = "function winningPatterns(card:Card){const marked=card.values.map((n,i)=>i===12||calledSet.has(n));const defs:{label:string;indexes:number[]}[]=[];for(let r=0;r<5;r++)defs.push({label:`Horizontal row ${r+1}`,indexes:Array.from({length:5},(_,c)=>r*5+c)});for(let c=0;c<5;c++)defs.push({label:`Vertical column ${c+1}`,indexes:Array.from({length:5},(_,r)=>r*5+c)});defs.push({label:'Diagonal ↘',indexes:[0,6,12,18,24]},{label:'Diagonal ↙',indexes:[4,8,12,16,20]},{label:'Four corners',indexes:[0,4,20,24]},{label:'Cross',indexes:[0,1,2,3,4,7,12,17,22]});return defs.filter(x=>x.indexes.every(i=>marked[i]))}"
+          if old not in s:
+              raise SystemExit('Expected winningPatterns function was not found; aborting without changes.')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Remove one-time workflow
+        shell: bash
+        run: rm .github/workflows/apply-cross-pattern.yml
+      - name: Commit change
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/renderer/src/main.tsx .github/workflows/apply-cross-pattern.yml
+          git commit -m "Add Cross Bingo pattern"
+          git push
