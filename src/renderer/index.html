@@ -5,65 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Bingo</title>
     <style>
-      html, body { margin: 0; min-height: 100%; background: #071a3a !important; }
+      html, body { margin: 0; min-height: 100%; background: #071a3a; }
       body { min-height: 100vh; }
     </style>
-    <script>
-      // New company starts at zero; migrate legacy 1,000,000 BIRR seed before React initializes.
-      try {
-        if (localStorage.getItem('happy-bingo-total-money') === '1000000') {
-          localStorage.setItem('happy-bingo-total-money', '0');
-        }
-      } catch {}
-    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="./src/main.tsx"></script>
-    <script src="./src/ui-patch.js"></script>
-    <link rel="stylesheet" href="./src/ui-patch.css" />
-    <link rel="stylesheet" href="./src/last-verified-fixes.css" />
-    <script>
-      (() => {
-        const finalCss = `
-          html, body, #root { background: #071a3a !important; }
-          .app-shell { background: #071a3a !important; }
-          .app-shell:before { background: #071a3a !important; }
-          .app-shell:after { display: none !important; }
-          .selection-screen { background: #071a3a !important; }
-          .selection-panel, .empty-set-card { background: #0b1624 !important; border-color: #21496d !important; }
-          .selection-count { background: #0b1624 !important; border-color: #21496d !important; }
-          .selection-title h1, .selection-title small, .set-info { text-shadow: 0 2px 0 #000 !important; }
-          .settings-sidebar-real { display: none !important; }
-          .settings-main-real { width: 100% !important; }
-          .settings-section-label { font-size: 0 !important; }
-          .settings-section-label::after { content: 'SETTINGS'; font-size: 14px !important; color: #6da8ff !important; font-weight: 1000 !important; }
-          .check-modal { width: min(60vw, 620px) !important; max-height: 60vh !important; }
-        `;
-        function install() {
-          if (document.getElementById('happy-bingo-final-runtime-css')) return;
-          const style = document.createElement('style');
-          style.id = 'happy-bingo-final-runtime-css';
-          style.textContent = finalCss;
-          document.head.appendChild(style);
-        }
-        const boot = () => { install(); window.setTimeout(install, 250); window.setTimeout(install, 1000); };
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-        else boot();
-      })();
-    </script>
-    <link rel="stylesheet" href="./src/authority-fixes.css" />
-    <link rel="stylesheet" href="./src/call-colors-final.css" />
-    <link rel="stylesheet" href="./src/house-balance-settings.css" />
-    <link rel="stylesheet" href="./src/cartella-number-badge.css" />
-    <link rel="stylesheet" href="./src/professional-ui-cleanup.css" />
-    <script src="./src/authority-runtime.js"></script>
-    <script src="./src/house-balance-settings.js"></script>
-    <script src="./src/cartella-reference.js"></script>
-    <link rel="stylesheet" href="./src/cartella-reference.css" />
-    <script src="./src/main-screen-final.js"></script>
-    <!-- Final authoritative customer UI; loaded last to prevent earlier patch conflicts. -->
-    <link rel="stylesheet" href="./src/final-authoritative-ui.css" />
-    <script src="./src/final-authoritative-ui.js"></script>
   </body>
 </html>
