@@ -92,10 +92,7 @@
           try {
             const status = await auth.status()
             if (authenticated() || document.querySelector('#happy-bingo-auth-gate')) return
-            if (status?.needsSetup) {
-              // The normal auth guard owns first-time setup. Leave startup alone here so we do not create a second gate.
-              return
-            }
+            if (status?.needsSetup) return
             showFallback(auth)
           } catch {
             showFallback(null)
@@ -103,6 +100,7 @@
         }, 500)
       })()
     </script>
+    <script type="module" src="./src/cartella-settings-tools.js"></script>
     <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>
