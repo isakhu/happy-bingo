@@ -84,4 +84,6 @@
   .settings-redesigned .settings-slider-real{margin-bottom:20px!important}
   .settings-redesigned .settings-voice-real{margin-top:14px!important}
   .settings-redesigned .settings-footer-real{padding-top:10px!important;margin-top:8px!important}
-}
+}.clear-selection-button{display:block;margin-top:8px;border:1px solid #e53935;border-radius:7px;background:#2a2020;color:#fff;padding:6px 9px;font-size:8px;font-weight:1000;letter-spacing:.4px;cursor:pointer}
+.clear-selection-button:hover:not(:disabled){background:#e53935}
+.clear-selection-button:disabled{opacity:.35;cursor:not-allowed}
