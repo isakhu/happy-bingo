@@ -1,30 +1,43 @@
 (() => {
   const TOTAL_CALLED_ID = 'happy-bingo-total-called-below-recent'
-  const TOTAL_MONEY_ID = 'happy-bingo-total-money-made'
+  const REVENUE_ID = 'happy-bingo-total-revenue'
+  const BALANCE_ID = 'happy-bingo-current-balance'
+  const STARTING_ID = 'happy-bingo-starting-balance'
   const MONEY_BALANCE_KEY = 'happy-bingo-money-balance'
+  const MONEY_REVENUE_KEY = 'happy-bingo-total-revenue-value'
   const MONEY_LAST_GAME_KEY = 'happy-bingo-money-last-game'
   const MONEY_VERSION_KEY = 'happy-bingo-money-balance-version'
-  const MONEY_VERSION = '4'
+  const MONEY_VERSION = '5'
   const STARTING_MONEY = 10000000
-  const RESET_SEEDS = new Set([0, 1000000, 10000000])
 
   function getMoneyBalance() {
-    const storedBeforeMigration = Number(localStorage.getItem(MONEY_BALANCE_KEY))
+    const stored = Number(localStorage.getItem(MONEY_BALANCE_KEY))
     const version = localStorage.getItem(MONEY_VERSION_KEY)
     if (version !== MONEY_VERSION) {
-      if (RESET_SEEDS.has(storedBeforeMigration) || !Number.isFinite(storedBeforeMigration) || storedBeforeMigration < 0) {
+      if (!Number.isFinite(stored) || stored < 0 || stored === 1000000) {
+        localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
+      } else if (stored === 0 && Number(localStorage.getItem(MONEY_REVENUE_KEY) || '0') === 0) {
         localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
       }
       localStorage.setItem(MONEY_VERSION_KEY, MONEY_VERSION)
       localStorage.removeItem(MONEY_LAST_GAME_KEY)
     }
 
-    const stored = Number(localStorage.getItem(MONEY_BALANCE_KEY))
-    if (!Number.isFinite(stored) || stored < 0) {
+    const current = Number(localStorage.getItem(MONEY_BALANCE_KEY))
+    if (!Number.isFinite(current) || current < 0) {
       localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
       return STARTING_MONEY
     }
-    return Math.round(stored)
+    return Math.round(current)
+  }
+
+  function getRevenue() {
+    const value = Number(localStorage.getItem(MONEY_REVENUE_KEY) || '0')
+    if (!Number.isFinite(value) || value < 0) {
+      localStorage.setItem(MONEY_REVENUE_KEY, '0')
+      return 0
+    }
+    return Math.round(value)
   }
 
   function applyCompletedGameRevenue() {
@@ -34,16 +47,14 @@
     if (!match) return
 
     const gameId = localStorage.getItem('happy-bingo-game-id') || ''
-    if (!gameId) return
-
-    const lastGame = localStorage.getItem(MONEY_LAST_GAME_KEY)
-    if (lastGame === gameId) return
+    if (!gameId || localStorage.getItem(MONEY_LAST_GAME_KEY) === gameId) return
 
     const revenue = Number(match[1].replace(/,/g, ''))
     if (!Number.isFinite(revenue) || revenue <= 0) return
 
-    const next = getMoneyBalance() + Math.round(revenue)
-    localStorage.setItem(MONEY_BALANCE_KEY, String(next))
+    const rounded = Math.round(revenue)
+    localStorage.setItem(MONEY_BALANCE_KEY, String(getMoneyBalance() + rounded))
+    localStorage.setItem(MONEY_REVENUE_KEY, String(getRevenue() + rounded))
     localStorage.setItem(MONEY_LAST_GAME_KEY, gameId)
   }
 
@@ -65,11 +76,7 @@
     if (!total) {
       total = document.createElement('div')
       total.id = TOTAL_CALLED_ID
-      total.style.cssText = [
-        'display:flex','align-items:center','justify-content:center','gap:12px','margin-top:14px',
-        'padding:10px 16px','border-radius:10px','background:#071a3a','border:1px solid rgba(0,102,255,.35)',
-        'box-sizing:border-box','width:100%','color:#fff','font-weight:800',
-      ].join(';')
+      total.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;padding:10px 16px;border-radius:10px;background:#071a3a;border:1px solid rgba(0,102,255,.35);box-sizing:border-box;width:100%;color:#fff;font-weight:800;'
       recentPanel.appendChild(total)
     }
 
@@ -79,42 +86,44 @@
     total.innerHTML = `<span style="font-size:11px;letter-spacing:.5px;opacity:.85;">TOTAL CALLED</span><strong style="font-size:20px;line-height:1;">${count}</strong>`
   }
 
+  function field(parent, id, label, value) {
+    let node = document.getElementById(id)
+    if (!node) {
+      node = document.createElement('div')
+      node.id = id
+      node.className = 'settings-field-real'
+      node.innerHTML = `<label>${label}</label><input readonly />`
+      parent.appendChild(node)
+    }
+    const input = node.querySelector('input')
+    if (input) input.value = value.toLocaleString()
+  }
+
   function installTotalMoneyBalance() {
     const settings = document.querySelector('.settings-main-real')
     if (!settings) return
-    const tab = settings.querySelector('.settings-section-label')
-    const isGeneral = tab?.textContent?.trim().toUpperCase() === 'GENERAL'
-    const existing = document.getElementById(TOTAL_MONEY_ID)
-    if (!isGeneral) { existing?.remove(); return }
+    const isGeneral = settings.querySelector('.settings-section-label')?.textContent?.trim().toUpperCase() === 'GENERAL'
+    if (!isGeneral) return
 
     const left = settings.querySelector('.settings-left-real')
     if (!left) return
-    let field = existing
-    if (!field) {
-      field = document.createElement('div')
-      field.id = TOTAL_MONEY_ID
-      field.className = 'settings-field-real'
-      field.innerHTML = '<label>Total Money (Birr)</label><input readonly />'
-      const fields = left.querySelectorAll('.settings-field-real')
-      const playerField = fields[fields.length - 1]
-      if (playerField) playerField.insertAdjacentElement('afterend', field)
-      else left.appendChild(field)
-    }
 
-    const input = field.querySelector('input')
-    if (!input) return
     applyCompletedGameRevenue()
-    input.value = getMoneyBalance().toLocaleString()
+    field(left, STARTING_ID, 'Starting Balance (Birr)', STARTING_MONEY)
+    field(left, REVENUE_ID, 'Total Revenue (Birr)', getRevenue())
+    field(left, BALANCE_ID, 'Current Balance (Birr)', getMoneyBalance())
   }
 
   function install() {
     getMoneyBalance()
+    getRevenue()
     applyCompletedGameRevenue()
     installTotalCalled()
     installTotalMoneyBalance()
   }
 
   getMoneyBalance()
+  getRevenue()
   const observer = new MutationObserver(install)
   observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true })
   document.addEventListener('DOMContentLoaded', install)
