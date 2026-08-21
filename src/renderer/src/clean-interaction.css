@@ -1,0 +1,109 @@
+/* FINAL CLEAN INTERACTION LAYER
+   Do not intercept events in JavaScript. Decorative containers never own clicks;
+   real controls explicitly restore hit-testing. */
+
+/* Prevent app background/pseudo layers from becoming hit targets. */
+.app-shell::before,
+.app-shell::after,
+.app-shell.selection-mode::before,
+.app-shell.selection-mode::after,
+.app-shell.bingo-mode::before,
+.app-shell.bingo-mode::after,
+.brand::before,
+.brand::after,
+.board-shell::before,
+.total-amount-ball::before,
+.total-amount-ball::after {
+  pointer-events: none !important;
+}
+
+/* Normal selection screen: only real controls receive the pointer. */
+.selection-mode,
+.selection-mode .selection-screen,
+.selection-mode .selection-panel,
+.selection-mode .selection-title,
+.selection-mode .selection-count,
+.selection-mode .selection-sidebar,
+.selection-mode .selection-info-card {
+  pointer-events: none !important;
+}
+
+.selection-mode .topbar,
+.selection-mode button,
+.selection-mode input,
+.selection-mode select,
+.selection-mode textarea,
+.selection-mode a,
+.selection-mode [role="button"] {
+  pointer-events: auto !important;
+}
+
+.selection-mode .cartella-grid,
+.selection-mode .cartella,
+.selection-mode .clear-selection-button,
+.selection-mode .start-button,
+.selection-mode .top-button {
+  position: relative !important;
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
+
+/* When a cartella is selected, its transform must not create a blocking layer. */
+.selection-mode .cartella.selected {
+  position: relative !important;
+  z-index: 101 !important;
+  pointer-events: auto !important;
+}
+
+/* Game screen: board/display is visual-only; controls remain fully interactive. */
+.bingo-mode,
+.bingo-mode .bingo-main,
+.bingo-mode .board-shell,
+.bingo-mode .board-grid,
+.bingo-mode .call-stage,
+.bingo-mode .recent-panel,
+.bingo-mode .game-metrics,
+.bingo-mode .game-metric,
+.bingo-mode .game-status,
+.bingo-mode .brand {
+  pointer-events: none !important;
+}
+
+.bingo-mode .topbar,
+.bingo-mode .top-actions,
+.bingo-mode .top-button,
+.bingo-mode .bottom-bar,
+.bingo-mode .bottom-actions,
+.bingo-mode .bottom-actions button,
+.bingo-mode button,
+.bingo-mode input,
+.bingo-mode select,
+.bingo-mode textarea,
+.bingo-mode a,
+.bingo-mode [role="button"] {
+  pointer-events: auto !important;
+}
+
+/* Modal/inspection/winner layers: the layer itself blocks the game behind it,
+   but the controls inside remain clickable. */
+.modal-backdrop,
+.check-backdrop,
+.card-inspector,
+.winner-overlay {
+  pointer-events: auto !important;
+}
+
+.modal-backdrop button,
+.modal-backdrop input,
+.modal-backdrop select,
+.modal-backdrop textarea,
+.check-backdrop button,
+.check-backdrop input,
+.check-backdrop select,
+.check-backdrop textarea,
+.card-inspector button,
+.winner-overlay button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10001 !important;
+}
