@@ -1,4 +1,4 @@
-/* Cartella CHECK — exact 10% header / 75% board / 15% actions layout */
+/* Cartella CHECK — full-screen 10% header / 75% board / 15% actions */
 .card-inspector{
   position:fixed!important;
   inset:0!important;
@@ -14,14 +14,15 @@
   margin:0!important;
   overflow:hidden!important;
   background:#f3f8fc!important;
-  border:10px solid #d7ad22!important;
+  border:0!important;
   border-radius:0!important;
-  box-shadow:inset 0 0 0 1px #b88e09,0 0 0 100vmax rgba(4,13,26,.55)!important;
+  box-shadow:inset 0 0 0 10px #d7ad22, inset 0 0 0 12px #b88e09, 0 0 0 100vmax rgba(4,13,26,.55)!important;
   color:#111!important;
   z-index:200!important;
 }
-/* 10% top area: only Cartella number */
+/* 10% top: only Cartella number */
 .card-inspector .inspector-head{
+  grid-column:1!important;
   grid-row:1!important;
   width:100%!important;
   height:100%!important;
@@ -35,9 +36,7 @@
   border-radius:0!important;
   text-align:center!important;
 }
-.card-inspector .inspector-head > button{
-  display:none!important;
-}
+.card-inspector .inspector-head > button{display:none!important}
 .card-inspector .inspector-head small{display:none!important}
 .card-inspector .inspector-head h2{
   margin:0!important;
@@ -47,13 +46,14 @@
   font-weight:1000!important;
   letter-spacing:2px!important;
 }
-/* 75% middle area: the complete 5x5 board */
+/* 75% middle: make the board use the full available width and height while remaining square */
 .card-inspector .inspector-grid{
   grid-row:2!important;
-  width:min(75vh,82vw)!important;
-  height:min(75vh,82vw)!important;
-  max-width:100%!important;
-  max-height:100%!important;
+  grid-column:1!important;
+  width:min(75vw,75vh)!important;
+  height:min(75vw,75vh)!important;
+  max-width:92vw!important;
+  max-height:75vh!important;
   aspect-ratio:1/1!important;
   box-sizing:border-box!important;
   display:grid!important;
@@ -87,25 +87,12 @@
   transform:none!important;
   overflow:hidden!important;
 }
-.card-inspector .inspector-cell.marked{
-  background:#35a853!important;
-  color:#000!important;
-}
-.card-inspector .inspector-cell.winning{
-  background:#159447!important;
-  color:#000!important;
-  box-shadow:inset 0 0 0 4px #0b6f32!important;
-}
-/* 15% bottom area: action buttons only */
-.card-inspector .winning-line-label{
-  display:none!important;
-}
-.card-inspector .inspector-close,
-.card-inspector .lock-failed-button{
+.card-inspector .inspector-cell.marked{background:#35a853!important;color:#000!important}
+.card-inspector .inspector-cell.winning{background:#159447!important;color:#000!important;box-shadow:inset 0 0 0 4px #0b6f32!important}
+/* 15% bottom: buttons only */
+.card-inspector .winning-line-label{display:none!important}
+.card-inspector .inspector-close,.card-inspector .lock-failed-button{
   grid-row:3!important;
-  display:block!important;
-  align-self:center!important;
-  width:min(360px,40vw)!important;
   min-height:52px!important;
   margin:0!important;
   border:0!important;
@@ -116,36 +103,17 @@
   font-size:clamp(14px,1.4vw,20px)!important;
   font-weight:1000!important;
   cursor:pointer!important;
+  align-self:center!important;
 }
-.card-inspector .inspector-close{
-  background:#0066ff!important;
-  justify-self:center!important;
-}
-.card-inspector .lock-failed-button{
-  background:#d9534f!important;
-  justify-self:center!important;
-}
-/* Put both buttons side-by-side in the 15% footer when BLOCK exists. */
-.card-inspector .lock-failed-button + .inspector-close{
-  grid-column:1!important;
-  justify-self:end!important;
-  margin-right:8px!important;
-}
-.card-inspector .lock-failed-button{
-  grid-column:2!important;
-  justify-self:start!important;
-  margin-left:8px!important;
-}
-/* Make the two footer columns explicit without affecting the 75% board. */
-.card-inspector:has(.lock-failed-button){
-  grid-template-columns:1fr 1fr!important;
-}
-.card-inspector:has(.lock-failed-button) .inspector-head,
-.card-inspector:has(.lock-failed-button) .inspector-grid{grid-column:1/-1!important}
-
+.card-inspector .inspector-close{background:#0066ff!important;width:min(320px,38vw)!important;justify-self:center!important;grid-column:1!important}
+.card-inspector .lock-failed-button{background:#d9534f!important;width:min(320px,38vw)!important;justify-self:center!important;grid-column:1!important}
+.card-inspector:has(.lock-failed-button){grid-template-columns:1fr 1fr!important}
+.card-inspector:has(.lock-failed-button) .inspector-head,.card-inspector:has(.lock-failed-button) .inspector-grid{grid-column:1/-1!important}
+.card-inspector:has(.lock-failed-button) .lock-failed-button{grid-column:2!important;justify-self:start!important;margin-left:8px!important}
+.card-inspector:has(.lock-failed-button) .inspector-close{grid-column:1!important;justify-self:end!important;margin-right:8px!important}
 @media(max-width:700px){
-  .card-inspector{border-width:6px!important}
-  .card-inspector .inspector-grid{width:min(75vh,92vw)!important;height:min(75vh,92vw)!important}
+  .card-inspector{box-shadow:inset 0 0 0 6px #d7ad22,inset 0 0 0 8px #b88e09,0 0 0 100vmax rgba(4,13,26,.55)!important}
+  .card-inspector .inspector-grid{width:min(75vw,75vh)!important;height:min(75vw,75vh)!important}
   .card-inspector .inspector-cell{font-size:clamp(14px,4vw,28px)!important}
   .card-inspector .inspector-close,.card-inspector .lock-failed-button{width:min(44vw,250px)!important;min-height:44px!important}
 }
