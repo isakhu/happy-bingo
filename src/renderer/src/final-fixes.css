@@ -24,12 +24,33 @@
 /* Professional 75-ball Bingo board: distinct B/I/N/G/O column colors. */
 .bingo-mode .board-shell{background:#07152b!important;border:2px solid #263f55!important;box-shadow:0 10px 30px #0008,0 0 0 1px #3a5266!important}
 .bingo-mode .board-grid{gap:8px!important}
-.bingo-mode .letter-badge{border-radius:12px!important;color:#fff!important;font-weight:1000!important;font-size:clamp(20px,2.3vw,34px)!important;text-shadow:0 2px 3px #0006!important;box-shadow:0 5px 12px #0004!important;border:2px solid transparent!important}
-.bingo-mode .board-column:nth-child(1) .letter-badge{background:#1976d2!important;border-color:#63b3ff!important}
-.bingo-mode .board-column:nth-child(2) .letter-badge{background:#d83b3b!important;border-color:#ff7b7b!important}
-.bingo-mode .board-column:nth-child(3) .letter-badge{background:#f2c94c!important;border-color:#ffe99a!important;color:#111!important;text-shadow:0 1px 2px #fff8!important}
-.bingo-mode .board-column:nth-child(4) .letter-badge{background:#27a653!important;border-color:#70e68e!important}
-.bingo-mode .board-column:nth-child(5) .letter-badge{background:#f39c12!important;border-color:#ffd27a!important;color:#111!important;text-shadow:0 1px 2px #fff8!important}
+
+/* True Bingo balls: the badge itself is a centered square that becomes a perfect circle. */
+.bingo-mode .board-column .letter-badge{
+  box-sizing:border-box!important;
+  width:min(100%,clamp(46px,4.2vw,82px))!important;
+  height:min(100%,clamp(46px,4.2vw,82px))!important;
+  aspect-ratio:1/1!important;
+  justify-self:center!important;
+  align-self:center!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:50%!important;
+  color:#fff!important;
+  font-weight:1000!important;
+  font-size:clamp(20px,2.3vw,34px)!important;
+  text-shadow:0 2px 3px #0008!important;
+  border:4px solid rgba(255,255,255,.88)!important;
+  box-shadow:inset 0 5px 10px #ffffff33,0 7px 14px #0008,0 0 0 2px #ffffff22!important;
+  overflow:hidden!important;
+  line-height:1!important;
+}
+.bingo-mode .board-column:nth-child(1) .letter-badge{background:linear-gradient(145deg,#5aa9ff,#1976d2)!important}
+.bingo-mode .board-column:nth-child(2) .letter-badge{background:linear-gradient(145deg,#ff7777,#d83b3b)!important}
+.bingo-mode .board-column:nth-child(3) .letter-badge{background:linear-gradient(145deg,#ffe889,#f2c94c)!important;color:#111!important;text-shadow:0 1px 2px #fff9!important}
+.bingo-mode .board-column:nth-child(4) .letter-badge{background:linear-gradient(145deg,#63d889,#27a653)!important}
+.bingo-mode .board-column:nth-child(5) .letter-badge{background:linear-gradient(145deg,#ffc766,#f39c12)!important;color:#111!important;text-shadow:0 1px 2px #fff9!important}
+
 .bingo-mode .number-cell{background:#f7fafc!important;color:#17212a!important;border:2px solid #d0d8df!important;border-radius:10px!important;box-shadow:inset 0 0 0 1px #fff,0 2px 5px #0002!important;font-weight:1000!important}
 .bingo-mode .board-column:nth-child(1) .number-cell{border-top-color:#6ab7ff!important;border-bottom-color:#6ab7ff!important}
 .bingo-mode .board-column:nth-child(2) .number-cell{border-top-color:#ff8c8c!important;border-bottom-color:#ff8c8c!important}
