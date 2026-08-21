@@ -1,6 +1,38 @@
 (() => {
   const TOTAL_CALLED_ID = 'happy-bingo-total-called-below-recent'
   const TOTAL_MONEY_ID = 'happy-bingo-total-money-made'
+  const MONEY_BALANCE_KEY = 'happy-bingo-money-balance'
+  const MONEY_LAST_GAME_KEY = 'happy-bingo-money-last-game'
+  const STARTING_MONEY = 10000000
+
+  function getMoneyBalance() {
+    const stored = Number(localStorage.getItem(MONEY_BALANCE_KEY))
+    if (!Number.isFinite(stored) || stored < 0) {
+      localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
+      return STARTING_MONEY
+    }
+    return stored
+  }
+
+  function applyCompletedGameRevenue() {
+    const toast = document.querySelector('.toast')
+    const text = toast?.textContent || ''
+    const match = text.match(/COMPANY REVENUE \+([\d,]+(?:\.\d+)?)\s*BIRR/i)
+    if (!match) return
+
+    const gameId = localStorage.getItem('happy-bingo-game-id') || ''
+    if (!gameId) return
+
+    const lastGame = localStorage.getItem(MONEY_LAST_GAME_KEY)
+    if (lastGame === gameId) return
+
+    const revenue = Number(match[1].replace(/,/g, ''))
+    if (!Number.isFinite(revenue) || revenue <= 0) return
+
+    const next = Math.max(0, getMoneyBalance() - Math.round(revenue))
+    localStorage.setItem(MONEY_BALANCE_KEY, String(next))
+    localStorage.setItem(MONEY_LAST_GAME_KEY, gameId)
+  }
 
   function installTotalCalled() {
     const gameMetrics = document.querySelector('.game-metrics')
@@ -65,7 +97,7 @@
       field = document.createElement('div')
       field.id = TOTAL_MONEY_ID
       field.className = 'settings-field-real'
-      field.innerHTML = '<label>Total Money Made (Birr)</label><input readonly />'
+      field.innerHTML = '<label>Total Money (Birr)</label><input readonly />'
       const fields = left.querySelectorAll('.settings-field-real')
       const playerField = fields[fields.length - 1]
       if (playerField) playerField.insertAdjacentElement('afterend', field)
@@ -75,14 +107,18 @@
     const input = field.querySelector('input')
     if (!input) return
 
-    const total = Number(localStorage.getItem('happy-bingo-bingo-made') || '0')
-    input.value = Math.round(Number.isFinite(total) ? total : 0).toLocaleString()
+    applyCompletedGameRevenue()
+    const total = getMoneyBalance()
+    input.value = Math.round(total).toLocaleString()
   }
 
   function install() {
+    applyCompletedGameRevenue()
     installTotalCalled()
     installTotalMoneyMade()
   }
+
+  getMoneyBalance()
 
   const observer = new MutationObserver(install)
   observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true })
