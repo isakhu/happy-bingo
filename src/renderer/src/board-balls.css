@@ -1,0 +1,15 @@
+/* Professional circular B-I-N-G-O header balls */
+.bingo-mode .letter-badge{
+  width:clamp(44px,4vw,68px)!important;height:clamp(44px,4vw,68px)!important;aspect-ratio:1/1!important;
+  justify-self:center!important;align-self:center!important;border-radius:50%!important;display:grid!important;place-items:center!important;
+  box-sizing:border-box!important;color:#fff!important;font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(20px,2vw,34px)!important;
+  font-weight:1000!important;line-height:1!important;border:4px solid rgba(255,255,255,.92)!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.28),inset 0 2px 3px rgba(255,255,255,.32)!important;
+  text-shadow:0 2px 3px rgba(0,0,0,.35)!important;overflow:visible!important;
+}
+.bingo-mode .letter-badge.b{background:linear-gradient(145deg,#3b8cff,#0757d9)!important;box-shadow:0 5px 14px rgba(0,88,220,.38),inset 0 2px 3px rgba(255,255,255,.35)!important}
+.bingo-mode .letter-badge.i{background:linear-gradient(145deg,#ff5b65,#c7192b)!important;box-shadow:0 5px 14px rgba(190,20,40,.36),inset 0 2px 3px rgba(255,255,255,.35)!important}
+.bingo-mode .letter-badge.n{background:linear-gradient(145deg,#ffe15a,#e2a900)!important;color:#111!important;text-shadow:0 1px 2px rgba(255,255,255,.55)!important;box-shadow:0 5px 14px rgba(210,160,0,.35),inset 0 2px 3px rgba(255,255,255,.4)!important}
+.bingo-mode .letter-badge.g{background:linear-gradient(145deg,#57d86a,#15963b)!important;box-shadow:0 5px 14px rgba(20,145,55,.35),inset 0 2px 3px rgba(255,255,255,.35)!important}
+.bingo-mode .letter-badge.o{background:linear-gradient(145deg,#ffb34f,#ed6b00)!important;box-shadow:0 5px 14px rgba(235,105,0,.35),inset 0 2px 3px rgba(255,255,255,.35)!important}
+@media(max-width:900px){.bingo-mode .letter-badge{width:clamp(38px,5vw,56px)!important;height:clamp(38px,5vw,56px)!important;font-size:clamp(18px,2.4vw,28px)!important}}
