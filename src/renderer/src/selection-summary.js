@@ -70,7 +70,8 @@
     }
     const match = document.querySelector('.board-heading strong')?.textContent?.match(/(\d+)\s*\/\s*75\s*CALLED/i)
     const count = match ? Number(match[1]) : 0
-    total.innerHTML = `<span style="font-size:11px;letter-spacing:.5px;opacity:.85;">TOTAL CALLED</span><strong style="font-size:20px;line-height:1;">${count}</strong>`
+    const value = `<span style="font-size:11px;letter-spacing:.5px;opacity:.85;">TOTAL CALLED</span><strong style="font-size:20px;line-height:1;">${count}</strong>`
+    if (total.innerHTML !== value) total.innerHTML = value
   }
 
   function field(parent, id, label, value) {
@@ -83,7 +84,10 @@
       parent.appendChild(node)
     }
     const input = node.querySelector('input')
-    if (input) input.value = value.toLocaleString()
+    if (input) {
+      const next = value.toLocaleString()
+      if (input.value !== next) input.value = next
+    }
   }
 
   function installTotalMoneyBalance() {
@@ -98,12 +102,29 @@
     field(left, BALANCE_ID, 'Current Balance (Birr)', getMoneyBalance())
   }
 
+  let installing = false
   function install() {
-    getMoneyBalance(); getRevenue(); applyCompletedGameRevenue(); installTotalCalled(); installTotalMoneyBalance()
+    if (installing) return
+    installing = true
+    try {
+      getMoneyBalance()
+      getRevenue()
+      applyCompletedGameRevenue()
+      installTotalCalled()
+      installTotalMoneyBalance()
+    } finally {
+      installing = false
+    }
   }
-  getMoneyBalance(); getRevenue()
-  const observer = new MutationObserver(install)
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true })
+
+  getMoneyBalance()
+  getRevenue()
+
+  // IMPORTANT: observe structural DOM changes only. Observing attributes/characterData
+  // here caused a feedback loop: install() changes the DOM, which triggered install()
+  // again continuously and eventually made the whole UI stop accepting clicks.
+  const observer = new MutationObserver(() => install())
+  observer.observe(document.body, { childList: true, subtree: true })
   document.addEventListener('DOMContentLoaded', install)
-  window.setInterval(install, 500)
+  window.setInterval(install, 1500)
 })()
