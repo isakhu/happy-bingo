@@ -1,14 +1,14 @@
-/* Exact Happy Bingo header layout: logo on its own row, metrics underneath. */
+/* Exact Happy Bingo header layout: logo row, then large metric labels with boxed values. */
 .bingo-mode .game-topbar{
   display:grid!important;
   grid-template-columns:1fr auto 1fr!important;
   grid-template-rows:auto auto!important;
   align-items:center!important;
   column-gap:14px!important;
-  row-gap:4px!important;
+  row-gap:5px!important;
   height:auto!important;
-  min-height:112px!important;
-  padding:8px 22px!important;
+  min-height:122px!important;
+  padding:8px 22px 10px!important;
   position:relative!important;
   z-index:200!important;
 }
@@ -26,9 +26,9 @@
   grid-row:2!important;
   justify-self:center!important;
   display:flex!important;
-  align-items:center!important;
+  align-items:flex-start!important;
   justify-content:center!important;
-  gap:18px!important;
+  gap:28px!important;
   flex-wrap:nowrap!important;
   width:auto!important;
   min-width:0!important;
@@ -42,8 +42,39 @@
   z-index:220!important;
 }
 .bingo-mode .game-topbar .game-metric{
-  min-width:150px!important;
+  min-width:180px!important;
   text-align:center!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:5px!important;
+}
+.bingo-mode .game-topbar .game-metric span{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.1!important;
+  font-weight:1000!important;
+  letter-spacing:1.2px!important;
+  color:#ffd83a!important;
+  text-shadow:0 2px 0 #000!important;
+}
+.bingo-mode .game-topbar .game-metric strong{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:150px!important;
+  min-height:42px!important;
+  padding:7px 14px!important;
+  border-radius:10px!important;
+  border:2px solid #ffd83a!important;
+  background:#151d25!important;
+  color:#fff!important;
+  font-size:22px!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  letter-spacing:.6px!important;
+  text-shadow:0 2px 0 #000!important;
+  box-shadow:0 0 10px #ffd83a33,inset 0 0 10px #0008!important;
 }
 /* Keep only the three metrics requested in the mockup. */
 .bingo-mode .game-topbar .game-metric:nth-child(4),
@@ -54,18 +85,24 @@
 .bingo-mode .game-topbar .game-metric:nth-child(1){order:1!important}
 .bingo-mode .game-topbar .game-metric:nth-child(2){order:3!important}
 .bingo-mode .game-topbar .game-metric:nth-child(3){order:2!important}
-/* Rename visible label without changing the React/data logic. */
+/* Rename visible label without changing React/data logic. */
 .bingo-mode .game-topbar .game-metric:nth-child(3) span{font-size:0!important}
-.bingo-mode .game-topbar .game-metric:nth-child(3) span::after{content:'PLAYER NO';font-size:8px!important;letter-spacing:1px!important}
+.bingo-mode .game-topbar .game-metric:nth-child(3) span::after{
+  content:'PLAYER NO';
+  font-size:13px!important;
+  letter-spacing:1.2px!important;
+  font-weight:1000!important;
+}
 @media(max-width:900px){
-  .bingo-mode .game-topbar{min-height:104px!important;padding:7px 12px!important;column-gap:8px!important}
-  .bingo-mode .game-topbar .game-metrics{gap:8px!important}
-  .bingo-mode .game-topbar .game-metric{min-width:110px!important}
-  .bingo-mode .game-topbar .top-actions{grid-column:3!important;grid-row:1!important}
+  .bingo-mode .game-topbar{min-height:114px!important;padding:7px 12px 9px!important}
+  .bingo-mode .game-topbar .game-metrics{gap:12px!important;width:100%!important}
+  .bingo-mode .game-topbar .game-metric{min-width:0!important;flex:1 1 0!important}
+  .bingo-mode .game-topbar .game-metric strong{min-width:0!important;width:100%!important;font-size:18px!important}
+  .bingo-mode .game-topbar .game-metric span,.bingo-mode .game-topbar .game-metric:nth-child(3) span::after{font-size:11px!important}
 }
 @media(max-width:650px){
-  .bingo-mode .game-topbar{min-height:96px!important;padding:6px 8px!important}
-  .bingo-mode .game-topbar .game-metrics{gap:4px!important;width:100%!important;justify-content:space-between!important}
-  .bingo-mode .game-topbar .game-metric{min-width:0!important;flex:1 1 0!important}
-  .bingo-mode .game-topbar .brand{transform:scale(.9)!important;transform-origin:center!important}
+  .bingo-mode .game-topbar{min-height:104px!important;padding:6px 8px 8px!important}
+  .bingo-mode .game-topbar .game-metrics{gap:5px!important}
+  .bingo-mode .game-topbar .game-metric span,.bingo-mode .game-topbar .game-metric:nth-child(3) span::after{font-size:9px!important;letter-spacing:.7px!important}
+  .bingo-mode .game-topbar .game-metric strong{min-height:34px!important;padding:5px 6px!important;font-size:15px!important;border-radius:8px!important}
 }
