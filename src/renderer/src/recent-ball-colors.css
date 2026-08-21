@@ -1,0 +1,7 @@
+/* Recent called balls use the same color family as their B/I/N/G/O board columns. */
+.bingo-mode .recent-ball.b{background:linear-gradient(145deg,#ff6f6f,#d83b3b)!important;color:#fff!important;border:3px solid #ffb1b1!important;box-shadow:0 0 14px #d83b3b99!important}
+.bingo-mode .recent-ball.i{background:linear-gradient(145deg,#54e8ff,#087da8)!important;color:#fff!important;border:3px solid #a3f3ff!important;box-shadow:0 0 14px #13bfe899!important}
+.bingo-mode .recent-ball.n{background:linear-gradient(145deg,#ffe781,#f2c94c)!important;color:#111!important;border:3px solid #fff0a8!important;box-shadow:0 0 14px #f2c94c99!important;text-shadow:none!important}
+.bingo-mode .recent-ball.g{background:linear-gradient(145deg,#db6cff,#7020a8)!important;color:#fff!important;border:3px solid #f0b6ff!important;box-shadow:0 0 14px #7020a899!important}
+.bingo-mode .recent-ball.o{background:linear-gradient(145deg,#61d788,#27a653)!important;color:#fff!important;border:3px solid #a0f4b8!important;box-shadow:0 0 14px #27a65399!important}
+.bingo-mode .recent-ball.latest{transform:scale(1.05)!important}
