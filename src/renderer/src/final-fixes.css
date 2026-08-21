@@ -25,11 +25,11 @@
 .bingo-mode .board-shell{background:#07152b!important;border:2px solid #263f55!important;box-shadow:0 10px 30px #0008,0 0 0 1px #3a5266!important}
 .bingo-mode .board-grid{gap:8px!important}
 
-/* True Bingo balls: the badge itself is a centered square that becomes a perfect circle. */
+/* True Bingo balls: enlarged, centered, perfectly circular. */
 .bingo-mode .board-column .letter-badge{
   box-sizing:border-box!important;
-  width:min(100%,clamp(46px,4.2vw,82px))!important;
-  height:min(100%,clamp(46px,4.2vw,82px))!important;
+  width:min(100%,clamp(60px,5.5vw,104px))!important;
+  height:min(100%,clamp(60px,5.5vw,104px))!important;
   aspect-ratio:1/1!important;
   justify-self:center!important;
   align-self:center!important;
@@ -38,10 +38,10 @@
   border-radius:50%!important;
   color:#fff!important;
   font-weight:1000!important;
-  font-size:clamp(20px,2.3vw,34px)!important;
+  font-size:clamp(26px,3vw,42px)!important;
   text-shadow:0 2px 3px #0008!important;
-  border:4px solid rgba(255,255,255,.88)!important;
-  box-shadow:inset 0 5px 10px #ffffff33,0 7px 14px #0008,0 0 0 2px #ffffff22!important;
+  border:5px solid rgba(255,255,255,.9)!important;
+  box-shadow:inset 0 6px 12px #ffffff33,0 8px 18px #0008,0 0 0 2px #ffffff22!important;
   overflow:hidden!important;
   line-height:1!important;
 }
