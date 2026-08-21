@@ -53,7 +53,7 @@
 .bingo-mode .game-metric span{font-size:clamp(11px,.9vw,15px)!important;letter-spacing:1.2px!important}
 .bingo-mode .game-metric strong{font-size:clamp(18px,1.55vw,26px)!important;line-height:1.15!important}
 .bingo-mode .game-metrics{gap:14px!important}
-@media(max-width:1100px){
+.bingo-mode .total-called-box{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;margin-top:10px!important;min-width:112px!important;padding:7px 12px!important;border:2px solid #ffd83a!important;border-radius:9px!important;background:#151d25!important;box-shadow:0 0 8px #ffd83a33,inset 0 0 8px #0008!important;color:#fff!important;font-family:Arial,Helvetica,sans-serif!important;text-align:center!important;pointer-events:none!important;box-sizing:border-box!important}.bingo-mode .total-called-box span{display:block!important;color:#ffd83a!important;font-size:11px!important;line-height:1!important;font-weight:1000!important;letter-spacing:1px!important;text-shadow:0 2px 0 #000!important}.bingo-mode .total-called-box strong{display:block!important;color:#fff!important;font-size:22px!important;line-height:1!important;font-weight:1000!important;letter-spacing:.5px!important;text-shadow:0 2px 0 #000!important}@media(max-width:1100px){
   .bingo-mode .call-stage{grid-template-columns:128px minmax(0,1fr) 122px!important;gap:8px!important;padding:5px 6px!important}
   .bingo-mode .total-amount-ball{width:104px!important;height:104px!important;flex-basis:104px!important}
   .bingo-mode .total-amount-ball strong{max-width:90px!important;font-size:clamp(15px,1.45vw,21px)!important}
@@ -64,4 +64,7 @@
   .bingo-mode .total-amount-ball{width:88px!important;height:88px!important;flex-basis:88px!important;border-width:3px!important}
   .bingo-mode .total-amount-ball span{font-size:11px!important}
   .bingo-mode .total-amount-ball strong{max-width:78px!important;font-size:15px!important}
+  .bingo-mode .total-called-box{margin-top:7px!important;min-width:92px!important;padding:5px 8px!important}
+  .bingo-mode .total-called-box span{font-size:9px!important}
+  .bingo-mode .total-called-box strong{font-size:18px!important}
 }
