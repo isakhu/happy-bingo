@@ -1,0 +1,70 @@
+/* Final pointer ownership layer.
+   Decorative/layout elements never own mouse input.
+   Real controls always do. */
+
+.selection-mode .selection-screen,
+.selection-mode .selection-screen * {
+  pointer-events: none !important;
+}
+
+.selection-mode .topbar,
+.selection-mode .topbar * {
+  pointer-events: auto !important;
+}
+
+.selection-mode .selection-screen button,
+.selection-mode .selection-screen button *,
+.selection-mode .selection-screen input,
+.selection-mode .selection-screen select,
+.selection-mode .selection-screen textarea {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.selection-mode .modal-backdrop,
+.selection-mode .modal-backdrop * {
+  pointer-events: auto !important;
+}
+
+.selection-mode .modal-backdrop button,
+.selection-mode .modal-backdrop input,
+.selection-mode .modal-backdrop select,
+.selection-mode .modal-backdrop textarea {
+  cursor: pointer !important;
+}
+
+.bingo-mode .bingo-main,
+.bingo-mode .bingo-main * {
+  pointer-events: none !important;
+}
+
+.bingo-mode .topbar,
+.bingo-mode .topbar * {
+  pointer-events: auto !important;
+}
+
+.bingo-mode .bottom-actions,
+.bingo-mode .bottom-actions * {
+  pointer-events: auto !important;
+}
+
+.bingo-mode .check-backdrop,
+.bingo-mode .check-backdrop * ,
+.bingo-mode .card-inspector,
+.bingo-mode .card-inspector * ,
+.bingo-mode .winner-overlay,
+.bingo-mode .winner-overlay * {
+  pointer-events: auto !important;
+}
+
+.bingo-mode button,
+.bingo-mode button * ,
+.bingo-mode input,
+.bingo-mode select,
+.bingo-mode textarea {
+  cursor: pointer !important;
+}
+
+.toast {
+  pointer-events: none !important;
+}
