@@ -4,13 +4,17 @@
   const MONEY_BALANCE_KEY = 'happy-bingo-money-balance'
   const MONEY_LAST_GAME_KEY = 'happy-bingo-money-last-game'
   const MONEY_VERSION_KEY = 'happy-bingo-money-balance-version'
-  const MONEY_VERSION = '2'
-  const STARTING_MONEY = 10000000
+  const MONEY_VERSION = '3'
+  const STARTING_MONEY = 0
+  const LEGACY_SEEDS = new Set([1000000, 10000000])
 
   function getMoneyBalance() {
+    const storedBeforeMigration = Number(localStorage.getItem(MONEY_BALANCE_KEY))
     const version = localStorage.getItem(MONEY_VERSION_KEY)
     if (version !== MONEY_VERSION) {
-      localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
+      if (LEGACY_SEEDS.has(storedBeforeMigration) || !Number.isFinite(storedBeforeMigration) || storedBeforeMigration < 0) {
+        localStorage.setItem(MONEY_BALANCE_KEY, String(STARTING_MONEY))
+      }
       localStorage.setItem(MONEY_VERSION_KEY, MONEY_VERSION)
       localStorage.removeItem(MONEY_LAST_GAME_KEY)
     }
@@ -38,7 +42,7 @@
     const revenue = Number(match[1].replace(/,/g, ''))
     if (!Number.isFinite(revenue) || revenue <= 0) return
 
-    const next = Math.max(0, getMoneyBalance() - Math.round(revenue))
+    const next = getMoneyBalance() + Math.round(revenue)
     localStorage.setItem(MONEY_BALANCE_KEY, String(next))
     localStorage.setItem(MONEY_LAST_GAME_KEY, gameId)
   }
