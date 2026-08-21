@@ -38,14 +38,17 @@ jobs:
       - name: Verify release safety rules
         shell: pwsh
         run: |
-          $html = Get-Content "out/renderer/index.html" -Raw
+          $sourceHtml = Get-Content "src/renderer/index.html" -Raw
           $startupCss = Get-Content "src/renderer/startup-theme-fix.css" -Raw
           $selectionSummary = Get-Content "src/renderer/src/selection-summary.js" -Raw
           $mainTsx = Get-Content "src/renderer/src/main.tsx" -Raw
           $preload = Get-Content "src/preload/index.ts" -Raw
           $package = Get-Content "package.json" -Raw
-          if ($html -notmatch "startup-theme-fix\.css") { throw "Startup theme guard is not included in renderer HTML" }
-          if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing" }
+          if ($sourceHtml -notmatch "startup-theme-fix\.css") { throw "Startup theme guard is not referenced by renderer source HTML" }
+          if (-not (Test-Path "out/renderer/startup-theme-fix.css")) { throw "Startup theme guard CSS was not copied into production renderer output" }
+          $builtStartupCss = Get-Content "out/renderer/startup-theme-fix.css" -Raw
+          if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing from source CSS" }
+          if ($builtStartupCss -notmatch "#071a3a" -or $builtStartupCss -notmatch "\.app-shell::before" -or $builtStartupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing from production CSS" }
           if ($selectionSummary -notmatch 'STARTING_MONEY\s*=\s*10000000') { throw "Company starting balance is not 10,000,000 Birr" }
           if ($selectionSummary -notmatch "RESET_SEEDS" -or $selectionSummary -notmatch "10000000") { throw "10 million starting-balance migration rule is missing" }
           if ($mainTsx -notmatch 'clear-selection-button' -or $mainTsx -notmatch 'START GAME' -or $mainTsx -notmatch 'onClick=\{\(\)=>setSettingsOpen\(true\)\}') { throw "Clear All / Start Game / Settings controls are missing" }
