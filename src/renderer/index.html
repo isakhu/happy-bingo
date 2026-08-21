@@ -22,6 +22,11 @@
     <script type="module" src="./src/main.tsx"></script>
     <script>
       window.addEventListener('DOMContentLoaded', () => {
+        const compact = document.createElement('link')
+        compact.rel = 'stylesheet'
+        compact.href = './src/recent-calls-compact.css'
+        document.head.appendChild(compact)
+
         const link = document.createElement('link')
         link.rel = 'stylesheet'
         link.href = './src/pointer-ownership.css'
