@@ -1,0 +1,9 @@
+/* Keep the Happy Bingo logo above the game metrics. */
+.bingo-mode .game-topbar{display:grid!important;grid-template-columns:minmax(180px,1fr) auto!important;grid-template-rows:auto auto!important;align-items:center!important;column-gap:18px!important;row-gap:6px!important;height:auto!important;min-height:92px!important;padding:8px 22px!important}
+.bingo-mode .game-topbar .brand{grid-column:1!important;grid-row:1!important;align-self:center!important;justify-self:start!important}
+.bingo-mode .game-topbar .game-metrics{grid-column:1!important;grid-row:2!important;justify-self:start!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:nowrap!important;width:100%!important}
+.bingo-mode .game-topbar .top-actions{grid-column:2!important;grid-row:1 / span 2!important;align-self:center!important;justify-self:end!important}
+.bingo-mode .game-topbar .game-metric{min-width:120px!important}
+.bingo-mode .game-topbar .game-metric.prize-metric{min-width:110px!important}
+.bingo-mode .game-topbar .brand{position:relative!important;z-index:5!important;pointer-events:none!important}
+@media(max-width:900px){.bingo-mode .game-topbar{grid-template-columns:1fr auto!important;min-height:86px!important;padding:7px 14px!important}.bingo-mode .game-topbar .game-metrics{gap:6px!important}.bingo-mode .game-topbar .game-metric{min-width:96px!important}.bingo-mode .game-topbar .top-actions{grid-column:2!important}}
