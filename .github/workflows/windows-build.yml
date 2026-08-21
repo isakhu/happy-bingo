@@ -3,7 +3,7 @@ name: Build Happy Bingo for Windows
 on:
   workflow_dispatch:
   push:
-    branches: [main, fix/accounting-cartella-settings-merge]
+    branches: [main]
 
 jobs:
   build-customer-app:
@@ -41,13 +41,13 @@ jobs:
           $sourceHtml = Get-Content "src/renderer/index.html" -Raw
           $startupCss = Get-Content "src/renderer/startup-theme-fix.css" -Raw
           $selectionSummary = Get-Content "src/renderer/src/selection-summary.js" -Raw
-          $cartellaTools = Get-Content "src/renderer/src/cartella-settings-tools.js" -Raw
+          $cartellaTools = Get-Content "src/renderer/cartella-settings-clear.js" -Raw
           $mainTsx = Get-Content "src/renderer/src/main.tsx" -Raw
           $preload = Get-Content "src/preload/index.ts" -Raw
           $package = Get-Content "package.json" -Raw
           if ($sourceHtml -notmatch "startup-theme-fix\.css") { throw "Source renderer HTML does not include startup theme guard" }
           if ($sourceHtml -notmatch "happy-bingo-auth-gate" -or $sourceHtml -notmatch "ENTER PASSWORD") { throw "Production HTML authentication fallback is missing" }
-          if ($sourceHtml -notmatch "cartella-settings-tools\.js") { throw "Cartella Settings tools are not loaded by production HTML" }
+          if ($sourceHtml -notmatch "cartella-settings-clear\.js") { throw "Cartella Settings clear tool is not loaded by production HTML" }
           if ($startupCss -notmatch "#071a3a" -or $startupCss -notmatch "\.app-shell::before" -or $startupCss -notmatch "\.app-shell::after") { throw "Startup dark-shell safety rules are missing from source CSS" }
           $builtCssFiles = Get-ChildItem "out/renderer/assets/*.css" -File -ErrorAction SilentlyContinue
           if (-not $builtCssFiles) { throw "Built renderer CSS is missing" }
