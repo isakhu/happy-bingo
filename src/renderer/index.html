@@ -4,102 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Bingo</title>
-    <style>
-      html, body { margin: 0; min-height: 100%; background: #071a3a; }
-      body { min-height: 100vh; }
-    </style>
     <link rel="stylesheet" href="./startup-theme-fix.css" />
-    <!-- auth-guard startup fallback: keeps production startup from becoming a blank blue screen -->
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      (() => {
-        const authenticated = () => sessionStorage.getItem('happy-bingo-authenticated') === '1'
-        const waitForBridge = (timeoutMs = 10000) => new Promise((resolve) => {
-          const start = Date.now()
-          const poll = () => {
-            if (window.happyBingoAuth) return resolve(window.happyBingoAuth)
-            if (Date.now() - start >= timeoutMs) return resolve(null)
-            window.setTimeout(poll, 50)
-          }
-          poll()
-        })
-        const inputStyle = 'display:block;width:100%;margin-top:10px;padding:14px 16px;border-radius:9px;border:2px solid #42657d;background:#08131d;color:#fff;box-sizing:border-box;font-size:18px;font-weight:700;outline:none;'
-        const showFallback = (auth) => {
-          if (authenticated() || document.querySelector('#happy-bingo-auth-gate')) return
-          const gate = document.createElement('div')
-          gate.id = 'happy-bingo-auth-gate'
-          gate.style.cssText = 'position:fixed;inset:0;z-index:999999;display:grid;place-items:center;background:#08131d;color:#fff;font-family:Arial,Helvetica,sans-serif;opacity:1;visibility:visible;'
-          const panel = document.createElement('div')
-          panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#101c26;border:2px solid #1e88e5;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;'
-          const brand = document.createElement('div')
-          brand.textContent = 'HAPPY BINGO'
-          brand.style.cssText = 'font-size:28px;font-weight:1000;letter-spacing:2px;'
-          const title = document.createElement('h2')
-          title.textContent = auth ? 'ENTER PASSWORD' : 'STARTUP ERROR'
-          title.style.cssText = 'margin:18px 0 8px;'
-          const description = document.createElement('p')
-          description.textContent = auth ? 'Enter the password created for this computer.' : 'The authentication service did not start. Retry to reopen the application.'
-          description.style.cssText = 'color:#aebfcc;font-size:13px;line-height:1.5;'
-          const error = document.createElement('div')
-          error.style.cssText = 'min-height:22px;margin-top:10px;color:#ff737b;font-size:12px;font-weight:700;'
-          const submit = document.createElement('button')
-          submit.type = 'button'
-          submit.textContent = auth ? 'UNLOCK' : 'RETRY'
-          submit.style.cssText = 'display:block;width:100%;margin-top:18px;padding:14px;border:0;border-radius:9px;background:#1e88e5;color:#fff;font-weight:1000;font-size:16px;cursor:pointer;'
-          if (auth) {
-            const input = document.createElement('input')
-            input.type = 'password'
-            input.placeholder = 'Password'
-            input.autocomplete = 'current-password'
-            input.style.cssText = inputStyle
-            const submitLogin = async () => {
-              error.textContent = ''
-              submit.disabled = true
-              try {
-                const result = await auth.unlock(input.value || '')
-                if (!result?.ok) {
-                  error.textContent = result?.error || 'Incorrect password.'
-                  submit.disabled = false
-                  return
-                }
-                sessionStorage.setItem('happy-bingo-authenticated', '1')
-                window.location.reload()
-              } catch {
-                error.textContent = 'Authentication could not be completed.'
-                submit.disabled = false
-              }
-            }
-            submit.addEventListener('click', () => void submitLogin())
-            input.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !submit.disabled) void submitLogin() })
-            panel.append(brand, title, description, input, error, submit)
-            gate.appendChild(panel)
-            document.body.appendChild(gate)
-            window.setTimeout(() => input.focus(), 0)
-            return
-          }
-          submit.addEventListener('click', () => window.location.reload())
-          panel.append(brand, title, description, error, submit)
-          gate.appendChild(panel)
-          document.body.appendChild(gate)
-        }
-        window.setTimeout(async () => {
-          if (authenticated() || document.querySelector('#happy-bingo-auth-gate')) return
-          const auth = await waitForBridge()
-          if (authenticated() || document.querySelector('#happy-bingo-auth-gate')) return
-          if (!auth) { showFallback(null); return }
-          try {
-            const status = await auth.status()
-            if (authenticated() || document.querySelector('#happy-bingo-auth-gate')) return
-            if (status?.needsSetup) return
-            showFallback(auth)
-          } catch {
-            showFallback(null)
-          }
-        }, 500)
-      })()
-    </script>
     <script type="module" src="./cartella-settings-clear.js"></script>
     <script type="module" src="./src/main.tsx"></script>
   </body>
