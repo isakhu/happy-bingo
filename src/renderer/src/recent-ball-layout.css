@@ -1,0 +1,8 @@
+/* Recent called-number row: show at most six compact circular balls. */
+.bingo-mode .recent-panel{min-width:0!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:flex-start!important}
+.bingo-mode .recent-calls{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:6px!important;width:max-content!important;max-width:100%!important;overflow:hidden!important}
+.bingo-mode .recent-ball{width:64px!important;height:64px!important;min-width:64px!important;max-width:64px!important;flex:0 0 64px!important;aspect-ratio:1/1!important;border-radius:50%!important;display:grid!important;place-items:center!important;align-content:center!important;padding:0!important;margin:0!important;line-height:1!important;box-sizing:border-box!important}
+.bingo-mode .recent-ball span{display:none!important}
+.bingo-mode .recent-ball:nth-child(n+7){display:none!important}
+@media(max-width:1100px){.bingo-mode .recent-calls{gap:5px!important}.bingo-mode .recent-ball{width:56px!important;height:56px!important;min-width:56px!important;max-width:56px!important}}
+@media(max-width:850px){.bingo-mode .recent-calls{gap:4px!important}.bingo-mode .recent-ball{width:48px!important;height:48px!important;min-width:48px!important;max-width:48px!important}}
