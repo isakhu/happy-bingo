@@ -1,0 +1,70 @@
+/* Release-safe top header: TOTAL CALLED is the only game metric. */
+.bingo-mode .game-topbar .game-metrics .game-metric {
+  display: none !important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric.total-called-metric {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 118px !important;
+  width: 118px !important;
+  gap: 4px !important;
+  order: 0 !important;
+  position: static !important;
+  pointer-events: none !important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric.total-called-metric > span {
+  display: block !important;
+  color: #FFE600 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  letter-spacing: 1px !important;
+  white-space: nowrap !important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric.total-called-metric > strong {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 118px !important;
+  min-width: 118px !important;
+  min-height: 38px !important;
+  padding: 6px 8px !important;
+  box-sizing: border-box !important;
+  border-radius: 9px !important;
+  background: #000 !important;
+  border: 2px solid #FFE600 !important;
+  color: #FFF !important;
+  font-size: 18px !important;
+  font-weight: 1000 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-shadow: 0 2px 0 #000 !important;
+}
+
+@media (max-width: 1200px) {
+  .bingo-mode .game-topbar .game-metric.total-called-metric,
+  .bingo-mode .game-topbar .game-metric.total-called-metric > strong {
+    width: 96px !important;
+    min-width: 96px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .bingo-mode .game-topbar .game-metric.total-called-metric,
+  .bingo-mode .game-topbar .game-metric.total-called-metric > strong {
+    width: 76px !important;
+    min-width: 76px !important;
+  }
+  .bingo-mode .game-topbar .game-metric.total-called-metric > span {
+    font-size: 9px !important;
+  }
+  .bingo-mode .game-topbar .game-metric.total-called-metric > strong {
+    min-height: 32px !important;
+    font-size: 15px !important;
+  }
+}
