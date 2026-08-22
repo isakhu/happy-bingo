@@ -50,6 +50,25 @@
     <script type="module" src="./src/manager-cut-fixed.js"></script>
     <script type="module" src="./src/main.tsx"></script>
     <script>
+      // Production guard: do not rely on CSS load order for the two packaging-sensitive layouts.
+      const enforceProductionLayout = () => {
+        document.querySelectorAll('.bingo-mode .recent-ball').forEach((node, index) => {
+          node.style.setProperty('display', index < 6 ? 'grid' : 'none', 'important')
+        })
+        const inspector = document.querySelector('.card-inspector')
+        if (inspector) {
+          inspector.style.setProperty('position', 'fixed', 'important')
+          inspector.style.setProperty('left', '50%', 'important')
+          inspector.style.setProperty('top', '50%', 'important')
+          inspector.style.setProperty('right', 'auto', 'important')
+          inspector.style.setProperty('bottom', 'auto', 'important')
+          inspector.style.setProperty('transform', 'translate(-50%, -50%)', 'important')
+        }
+      }
+      new MutationObserver(enforceProductionLayout).observe(document.body, { childList: true, subtree: true })
+      window.addEventListener('DOMContentLoaded', enforceProductionLayout, { once: true })
+    </script>
+    <script>
       window.addEventListener('DOMContentLoaded', () => {
         const styles = [
           './src/recent-calls-compact.css',
