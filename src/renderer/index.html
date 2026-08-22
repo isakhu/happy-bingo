@@ -65,6 +65,13 @@
         headerLayout.rel = 'stylesheet'
         headerLayout.href = './src/header-layout-final.css'
         document.head.appendChild(headerLayout)
+
+        /* Metrics authority MUST load last so no legacy/header stylesheet can
+           reorder, revive, or hide the top metrics afterward. */
+        const metricsAuthority = document.createElement('link')
+        metricsAuthority.rel = 'stylesheet'
+        metricsAuthority.href = './src/metrics-final-authority.css'
+        document.head.appendChild(metricsAuthority)
       }, { once: true })
     </script>
   </body>
