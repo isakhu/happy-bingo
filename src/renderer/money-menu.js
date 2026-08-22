@@ -1,4 +1,5 @@
-/* Additive MONEY control for the Cartella Selection screen. Reuses the existing offline revenue ledger. */
+/* MONEY control for the Cartella Selection screen only.
+   The Bingo game header owns its layout and must never contain MONEY. */
 (() => {
   const buttonId = 'happy-bingo-money-button'
   const overlayId = 'happy-bingo-money-overlay'
@@ -18,6 +19,10 @@
 
   function closeOverlay() {
     document.getElementById(overlayId)?.remove()
+  }
+
+  function removeGameButton() {
+    document.getElementById(buttonId)?.remove()
   }
 
   function openOverlay() {
@@ -56,7 +61,15 @@
 
   function sync() {
     const selectionMode = document.querySelector('.selection-mode')
-    const actions = selectionMode?.querySelector('.top-actions')
+    const bingoMode = document.querySelector('.bingo-mode')
+
+    // MONEY is selection-screen-only. Remove it immediately when gameplay starts.
+    if (bingoMode || !selectionMode) {
+      removeGameButton()
+      return
+    }
+
+    const actions = selectionMode.querySelector('.top-actions')
     if (!actions) return
     if (!document.getElementById(buttonId)) {
       const settings = actions.querySelector('.top-button')
