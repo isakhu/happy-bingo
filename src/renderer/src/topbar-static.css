@@ -1,9 +1,116 @@
-/* Static release header. No JavaScript observers. */
-.bingo-mode .game-topbar .game-metrics .game-metric{display:none!important}
-.bingo-mode .game-topbar .game-metrics{display:flex!important;align-items:center!important;gap:8px!important;margin-left:auto!important;width:auto!important;min-width:0!important}
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4){display:flex!important;position:static!important;order:0!important;width:auto!important;min-width:0!important;align-items:center!important;justify-content:center!important;pointer-events:none!important}
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>span{display:none!important}
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong{display:block!important;width:auto!important;min-width:0!important;min-height:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#fff!important;font-size:18px!important;line-height:1!important;font-weight:1000!important;letter-spacing:.3px!important;text-shadow:0 2px 0 #000!important;white-space:nowrap!important}
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong::after{content:'/75';}
-.bingo-mode .game-topbar .top-actions{margin-left:0!important}
-@media(max-width:900px){.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong{font-size:15px!important}}
+/* Single authoritative game-header presentation layer.
+   React owns the live called.length value; CSS only positions the one retained metric. */
+.bingo-mode .game-topbar {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto auto!important;
+  align-items:center!important;
+  gap:12px!important;
+  min-height:70px!important;
+  height:70px!important;
+  padding:6px 18px!important;
+  overflow:visible!important;
+}
+
+.bingo-mode .game-topbar .brand {
+  grid-column:1!important;
+  grid-row:1!important;
+  justify-self:start!important;
+}
+
+.bingo-mode .game-topbar .game-metrics {
+  grid-column:2!important;
+  grid-row:1!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:0!important;
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+/* The React value for TOTAL CALLED is the fourth and only retained metric node. */
+.bingo-mode .game-topbar .game-metrics .game-metric {
+  display:none!important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4) {
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  min-width:58px!important;
+  margin:0!important;
+  padding:0!important;
+  pointer-events:none!important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>span {
+  display:none!important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong {
+  display:block!important;
+  width:auto!important;
+  min-width:58px!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:4px 8px!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#FFE600!important;
+  font-size:20px!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  letter-spacing:.3px!important;
+  text-shadow:0 2px 0 #000!important;
+  white-space:nowrap!important;
+}
+
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong::after {
+  content:'/75';
+}
+
+.bingo-mode .game-topbar .top-actions {
+  grid-column:3!important;
+  grid-row:1!important;
+  justify-self:end!important;
+  align-self:center!important;
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  z-index:130!important;
+}
+
+.bingo-mode .game-topbar .top-actions .top-button {
+  width:112px!important;
+  min-width:112px!important;
+  height:46px!important;
+  white-space:nowrap!important;
+  z-index:131!important;
+}
+
+@media(max-width:900px){
+  .bingo-mode .game-topbar {
+    grid-template-columns:minmax(0,1fr) auto auto!important;
+    gap:6px!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+  .bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong {
+    min-width:50px!important;
+    font-size:17px!important;
+    padding-left:4px!important;
+    padding-right:4px!important;
+  }
+  .bingo-mode .game-topbar .top-actions .top-button {
+    width:88px!important;
+    min-width:88px!important;
+    height:40px!important;
+    font-size:12px!important;
+  }
+}
