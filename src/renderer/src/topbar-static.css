@@ -1,4 +1,6 @@
 /* Authoritative game topbar. React owns all live values. */
+.bingo-mode #happy-bingo-money-button{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
 .bingo-mode .topbar.game-topbar {
   display: grid !important;
   grid-template-columns: minmax(170px, auto) minmax(0, 1fr) auto !important;
