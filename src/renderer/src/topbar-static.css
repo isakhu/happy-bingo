@@ -1,5 +1,5 @@
-/* Single authoritative game-header presentation layer.
-   React owns the live called.length value; CSS only positions the one retained metric. */
+/* One authoritative header layer.
+   React owns the live called.length value; this file only positions it. */
 .bingo-mode .game-topbar {
   display:grid!important;
   grid-template-columns:minmax(0,1fr) auto auto!important;
@@ -17,51 +17,17 @@
   justify-self:start!important;
 }
 
-.bingo-mode .game-topbar .game-metrics {
+.bingo-mode .game-topbar .game-header-count {
   grid-column:2!important;
   grid-row:1!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:flex-end!important;
-  gap:0!important;
-  width:auto!important;
-  min-width:0!important;
-  margin:0!important;
-  padding:0!important;
-}
-
-/* The React value for TOTAL CALLED is the fourth and only retained metric node. */
-.bingo-mode .game-topbar .game-metrics .game-metric {
-  display:none!important;
-}
-
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4) {
+  justify-self:end!important;
+  align-self:center!important;
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
-  width:auto!important;
   min-width:58px!important;
-  margin:0!important;
-  padding:0!important;
-  pointer-events:none!important;
-}
-
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>span {
-  display:none!important;
-}
-
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong {
-  display:block!important;
-  width:auto!important;
-  min-width:58px!important;
-  min-height:0!important;
-  margin:0!important;
   padding:4px 8px!important;
   box-sizing:border-box!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
   color:#FFE600!important;
   font-size:20px!important;
   line-height:1!important;
@@ -69,10 +35,7 @@
   letter-spacing:.3px!important;
   text-shadow:0 2px 0 #000!important;
   white-space:nowrap!important;
-}
-
-.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong::after {
-  content:'/75';
+  pointer-events:none!important;
 }
 
 .bingo-mode .game-topbar .top-actions {
@@ -101,7 +64,7 @@
     padding-left:10px!important;
     padding-right:10px!important;
   }
-  .bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong {
+  .bingo-mode .game-topbar .game-header-count {
     min-width:50px!important;
     font-size:17px!important;
     padding-left:4px!important;
