@@ -1,0 +1,61 @@
+/* Display-only AMOUNT box. It never captures clicks. */
+.bingo-mode .call-stage {
+  grid-template-columns: 190px minmax(0, 1fr) 180px !important;
+}
+
+.bingo-mode .amount-display {
+  align-self: center !important;
+  justify-self: end !important;
+  width: 170px !important;
+  min-height: 62px !important;
+  padding: 7px 12px !important;
+  border: 3px solid #ff3f9f !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  box-shadow: 0 0 12px rgba(255,63,159,.28) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  z-index: 1 !important;
+}
+
+.bingo-mode .amount-display span {
+  color: #111 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: 1px !important;
+}
+
+.bingo-mode .amount-display strong {
+  color: #ffe600 !important;
+  font-size: clamp(18px, 2vw, 28px) !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  text-shadow: 2px 2px 0 #d71920, -1px -1px 0 #d71920, 1px -1px 0 #d71920, -1px 1px 0 #d71920 !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 1050px) {
+  .bingo-mode .call-stage {
+    grid-template-columns: 145px minmax(0, 1fr) 140px !important;
+  }
+
+  .bingo-mode .amount-display {
+    width: 132px !important;
+    min-height: 54px !important;
+    padding: 6px 8px !important;
+  }
+
+  .bingo-mode .amount-display span {
+    font-size: 9px !important;
+  }
+
+  .bingo-mode .amount-display strong {
+    font-size: 20px !important;
+  }
+}
