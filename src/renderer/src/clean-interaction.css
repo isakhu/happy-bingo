@@ -188,3 +188,143 @@
     font-size: 18px !important;
   }
 }
+
+/* FINAL HEADER FIX
+   Keep the three main metrics in the center, keep TOTAL CALLED live beside
+   SETTINGS, and remove only PAY OUT from the top header. */
+.bingo-mode .topbar.game-topbar {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(190px,auto) minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: 16px !important;
+  min-height: 92px !important;
+  height: 92px !important;
+  padding: 10px 18px !important;
+  overflow: visible !important;
+  z-index: 100 !important;
+}
+
+/* Exactly three centered main metrics. */
+.bingo-mode .topbar.game-topbar .game-metrics {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  align-items: center !important;
+  justify-items: stretch !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric {
+  display: flex !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  order: initial !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+}
+
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(1) { order: 1 !important; }
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(3) { order: 2 !important; }
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(2) { order: 3 !important; }
+
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) {
+  display: flex !important;
+  position: absolute !important;
+  right: 138px !important;
+  top: 10px !important;
+  width: 122px !important;
+  min-width: 122px !important;
+  height: 72px !important;
+  z-index: 120 !important;
+  pointer-events: none !important;
+}
+
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(5) {
+  display: none !important;
+}
+
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) > span,
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) > strong {
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) > strong {
+  min-height: 36px !important;
+  padding: 6px 8px !important;
+  font-size: 18px !important;
+}
+
+/* SETTINGS stays at the far right and is never covered by TOTAL CALLED. */
+.bingo-mode .topbar.game-topbar .top-actions {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  justify-self: end !important;
+  align-self: center !important;
+  width: 112px !important;
+  min-width: 112px !important;
+  z-index: 130 !important;
+}
+
+.bingo-mode .topbar.game-topbar .top-actions .top-button {
+  width: 112px !important;
+  min-width: 112px !important;
+  height: 46px !important;
+  white-space: nowrap !important;
+  z-index: 131 !important;
+}
+
+/* At narrower desktop sizes, shrink the three main boxes rather than hiding them. */
+@media(max-width:1200px) {
+  .bingo-mode .topbar.game-topbar {
+    grid-template-columns: minmax(150px,auto) minmax(0,1fr) 104px !important;
+    gap: 8px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .bingo-mode .topbar.game-topbar .game-metrics { gap: 6px !important; }
+  .bingo-mode .topbar.game-topbar .game-metrics .game-metric > strong {
+    min-width: 0 !important;
+    padding: 6px 7px !important;
+    font-size: 17px !important;
+  }
+  .bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) {
+    right: 112px !important;
+    width: 100px !important;
+    min-width: 100px !important;
+  }
+  .bingo-mode .topbar.game-topbar .top-actions,
+  .bingo-mode .topbar.game-topbar .top-actions .top-button {
+    width: 96px !important;
+    min-width: 96px !important;
+  }
+}
+
+@media(max-width:900px) {
+  .bingo-mode .topbar.game-topbar {
+    min-height: 104px !important;
+    height: 104px !important;
+    grid-template-columns: 120px minmax(0,1fr) 88px !important;
+  }
+  .bingo-mode .topbar.game-topbar .game-metrics .game-metric > span { font-size: 9px !important; }
+  .bingo-mode .topbar.game-topbar .game-metrics .game-metric > strong { font-size: 14px !important; }
+  .bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) {
+    right: 94px !important;
+    top: 7px !important;
+    width: 82px !important;
+    min-width: 82px !important;
+    height: 58px !important;
+  }
+  .bingo-mode .topbar.game-topbar .game-metrics .game-metric:nth-child(4) > strong { font-size: 14px !important; min-height: 30px !important; }
+  .bingo-mode .topbar.game-topbar .top-actions,
+  .bingo-mode .topbar.game-topbar .top-actions .top-button { width: 84px !important; min-width: 84px !important; }
+}
