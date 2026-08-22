@@ -1,0 +1,168 @@
+/* HAPPY BINGO — FINAL METRICS AUTHORITY
+   This stylesheet is intentionally loaded last from index.html.
+   It controls ONLY the top game metrics. No game logic, payout math,
+   calling/voice, board, or settings behavior is changed here. */
+
+.bingo-mode .game-topbar .game-metrics {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  flex-wrap: nowrap !important;
+  gap: 14px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* Explicit DOM order from main.tsx:
+   1 GAME ID, 2 BET AMOUNT, 3 NUMBER OF PLAYERS, 4 TOTAL CALLED, 5 PAY OUT.
+   Final visual order:
+   GAME ID | TOTAL PLAYERS | BET AMOUNT | TOTAL CALLED | SETTINGS */
+.bingo-mode .game-topbar .game-metric:nth-child(1) { order: 1 !important; display: flex !important; }
+.bingo-mode .game-topbar .game-metric:nth-child(3) { order: 2 !important; display: flex !important; }
+.bingo-mode .game-topbar .game-metric:nth-child(2) { order: 3 !important; display: flex !important; }
+.bingo-mode .game-topbar .game-metric:nth-child(4) { order: 4 !important; display: flex !important; }
+.bingo-mode .game-topbar .game-metric:nth-child(5) { display: none !important; }
+
+.bingo-mode .game-topbar .game-metric {
+  position: relative !important;
+  flex: 0 1 auto !important;
+  min-width: 150px !important;
+  width: auto !important;
+  max-width: 190px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 5px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Labels */
+.bingo-mode .game-topbar .game-metric > span {
+  display: block !important;
+  width: auto !important;
+  color: #FFE600 !important;
+  font-size: 11px !important;
+  line-height: 1.05 !important;
+  font-weight: 1000 !important;
+  letter-spacing: 1.1px !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  text-shadow: 0 2px 0 #000 !important;
+}
+
+/* The source label remains NUMBER OF PLAYERS for logic/accessibility,
+   but the visible metric name is the requested TOTAL PLAYERS. */
+.bingo-mode .game-topbar .game-metric:nth-child(3) > span {
+  font-size: 0 !important;
+}
+.bingo-mode .game-topbar .game-metric:nth-child(3) > span::after {
+  content: 'TOTAL PLAYERS' !important;
+  display: inline !important;
+  font-size: 11px !important;
+}
+
+/* Values */
+.bingo-mode .game-topbar .game-metric > strong {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  width: 150px !important;
+  min-width: 150px !important;
+  min-height: 38px !important;
+  padding: 6px 10px !important;
+  border-radius: 9px !important;
+  background: #000 !important;
+  border: 2px solid #FFE600 !important;
+  color: #FFF !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+  font-weight: 1000 !important;
+  letter-spacing: .4px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  text-shadow: 0 2px 0 #000 !important;
+  box-shadow: 0 0 8px #FFE60033, inset 0 0 8px #000 !important;
+}
+
+/* TOTAL CALLED is a real live metric and must sit immediately before SETTINGS. */
+.bingo-mode .game-topbar .game-metric:nth-child(4) {
+  min-width: 118px !important;
+  max-width: 118px !important;
+}
+.bingo-mode .game-topbar .game-metric:nth-child(4) > strong {
+  width: 118px !important;
+  min-width: 118px !important;
+  font-size: 18px !important;
+}
+
+/* Keep settings at the far right and prevent overlap. */
+.bingo-mode .game-topbar .top-actions {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  width: 112px !important;
+  min-width: 112px !important;
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.bingo-mode .game-topbar .top-actions .top-button {
+  width: 112px !important;
+  min-width: 112px !important;
+  height: 46px !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 1200px) {
+  .bingo-mode .game-topbar .game-metrics { gap: 7px !important; }
+  .bingo-mode .game-topbar .game-metric { min-width: 120px !important; }
+  .bingo-mode .game-topbar .game-metric > strong {
+    width: 120px !important;
+    min-width: 120px !important;
+    font-size: 17px !important;
+  }
+  .bingo-mode .game-topbar .game-metric:nth-child(4),
+  .bingo-mode .game-topbar .game-metric:nth-child(4) > strong {
+    width: 96px !important;
+    min-width: 96px !important;
+  }
+  .bingo-mode .game-topbar .top-actions,
+  .bingo-mode .game-topbar .top-actions .top-button {
+    width: 96px !important;
+    min-width: 96px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .bingo-mode .game-topbar .game-metrics { gap: 5px !important; }
+  .bingo-mode .game-topbar .game-metric { min-width: 92px !important; }
+  .bingo-mode .game-topbar .game-metric > span,
+  .bingo-mode .game-topbar .game-metric:nth-child(3) > span::after {
+    font-size: 9px !important;
+  }
+  .bingo-mode .game-topbar .game-metric > strong {
+    width: 92px !important;
+    min-width: 92px !important;
+    min-height: 32px !important;
+    padding: 5px 6px !important;
+    font-size: 15px !important;
+  }
+  .bingo-mode .game-topbar .game-metric:nth-child(4),
+  .bingo-mode .game-topbar .game-metric:nth-child(4) > strong {
+    width: 76px !important;
+    min-width: 76px !important;
+  }
+  .bingo-mode .game-topbar .top-actions,
+  .bingo-mode .game-topbar .top-actions .top-button {
+    width: 82px !important;
+    min-width: 82px !important;
+  }
+}
