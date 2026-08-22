@@ -36,10 +36,10 @@ jobs:
             if (-not (Test-Path "audio/voices/$required")) { throw "Missing required voice $required" }
           }
           $cards = Get-Content "src/main/customer-cards.ts" -Raw
-          $cardMatches = [regex]::Matches($cards, '\\{id:\\d+,values:\\[')
+          $cardMatches = [regex]::Matches($cards, '\{id:\d+,values:\[')
           if ($cardMatches.Count -ne 100) { throw "Expected exactly 100 bundled customer cards, found $($cardMatches.Count)" }
           $package = Get-Content "package.json" -Raw
-          if ($package -notmatch '"audio/\\*\\*/\\*"') { throw "Packaged build is not configured to include audio assets" }
+          if ($package -notmatch 'audio/\*\*/\*') { throw "Packaged build is not configured to include audio assets" }
           Write-Host "Verified compiled app outputs, 100 customer cards, 79 voice files, required voices, and audio packaging."
 
       - name: Build customer Windows installer
