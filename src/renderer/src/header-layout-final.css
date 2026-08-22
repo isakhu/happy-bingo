@@ -1,4 +1,52 @@
-/* Compact game header: logo at top-left, metrics centered, restore vertical space for game controls. */
-.bingo-mode .game-topbar{display:grid!important;grid-template-columns:190px 1fr 120px!important;grid-template-rows:1fr!important;align-items:center!important;column-gap:12px!important;height:84px!important;min-height:84px!important;padding:6px 18px!important;position:relative!important;z-index:200!important}.bingo-mode .game-topbar .brand{grid-column:1!important;grid-row:1!important;justify-self:start!important;align-self:start!important;position:relative!important;z-index:210!important;pointer-events:none!important;transform-origin:left top!important;transform:scale(.82)!important}.bingo-mode .game-topbar .game-metrics{grid-column:2!important;grid-row:1!important;justify-self:center!important;align-self:center!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;gap:18px!important;flex-wrap:nowrap!important;width:auto!important;min-width:0!important}.bingo-mode .game-topbar .top-actions{grid-column:3!important;grid-row:1!important;align-self:center!important;justify-self:end!important;position:relative!important;z-index:220!important}.bingo-mode .game-topbar .game-metric{min-width:155px!important;text-align:center!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:3px!important}.bingo-mode .game-topbar .game-metric span{display:block!important;font-size:11px!important;line-height:1.05!important;font-weight:1000!important;letter-spacing:1px!important;color:#ffd83a!important;text-shadow:0 2px 0 #000!important}.bingo-mode .game-topbar .game-metric strong{display:flex!important;align-items:center!important;justify-content:center!important;min-width:132px!important;min-height:34px!important;padding:5px 10px!important;border-radius:8px!important;border:2px solid #ffd83a!important;background:#151d25!important;color:#fff!important;font-size:19px!important;line-height:1!important;font-weight:1000!important;letter-spacing:.5px!important;text-shadow:0 2px 0 #000!important;box-shadow:0 0 8px #ffd83a33,inset 0 0 8px #0008!important}.bingo-mode .game-topbar .game-metric:nth-child(4),.bingo-mode .game-topbar .game-metric.prize-metric{display:none!important}.bingo-mode .game-topbar .game-metric:nth-child(1){order:1!important}.bingo-mode .game-topbar .game-metric:nth-child(2){order:3!important}.bingo-mode .game-topbar .game-metric:nth-child(3){order:2!important}.bingo-mode .game-topbar .game-metric:nth-child(3) span{font-size:0!important}.bingo-mode .game-topbar .game-metric:nth-child(3) span::after{content:'TOTAL PLAYER';font-size:11px!important;letter-spacing:1px!important;font-weight:1000!important}
+/* Header layout support layer. Metric styling is intentionally owned only by topbar-static.css. */
+.bingo-mode .game-topbar{
+  display:grid!important;
+  grid-template-columns:190px 1fr 120px!important;
+  grid-template-rows:1fr!important;
+  align-items:center!important;
+  column-gap:12px!important;
+  height:84px!important;
+  min-height:84px!important;
+  padding:6px 18px!important;
+  position:relative!important;
+  z-index:200!important;
+}
+.bingo-mode .game-topbar .brand{
+  grid-column:1!important;
+  grid-row:1!important;
+  justify-self:start!important;
+  align-self:start!important;
+  position:relative!important;
+  z-index:210!important;
+  pointer-events:none!important;
+  transform-origin:left top!important;
+  transform:scale(.82)!important;
+}
+.bingo-mode .game-topbar .top-actions{
+  grid-column:3!important;
+  grid-row:1!important;
+  align-self:center!important;
+  justify-self:end!important;
+  position:relative!important;
+  z-index:220!important;
+}
+
 /* Large, colorful professional NOW CALLED Bingo ball. */
-.bingo-mode .latest-call{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important}.bingo-mode .marquee-ball{width:108px!important;height:108px!important;min-width:108px!important;flex:0 0 108px!important;border-radius:50%!important;background:radial-gradient(circle at 34% 26%,#ffffff 0%,#fff8d6 9%,#ffda3a 28%,#ff9d1a 52%,#e83f39 78%,#9b1d3b 100%)!important;border:5px solid #fff8c7!important;box-shadow:0 0 0 4px #3b2636,0 0 18px #ffd43b,0 0 38px #ff7a3a88,0 0 62px #d63b5f55!important;display:grid!important;place-items:center!important;align-content:center!important;gap:2px!important;color:#111!important;overflow:hidden!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;text-shadow:0 2px 2px #ffffff99!important}.bingo-mode .marquee-ball span{font-size:24px!important;line-height:1!important;font-weight:1000!important;color:#111!important}.bingo-mode .marquee-ball strong{font-size:42px!important;line-height:1!important;font-weight:1000!important;color:#111!important;letter-spacing:-1px!important}@media(max-width:1050px){.bingo-mode .game-topbar{grid-template-columns:150px 1fr 100px!important;height:80px!important;min-height:80px!important;padding:6px 12px!important}.bingo-mode .game-topbar .game-metrics{gap:9px!important}.bingo-mode .game-topbar .game-metric{min-width:110px!important}.bingo-mode .game-topbar .game-metric strong{min-width:100px!important;font-size:16px!important}.bingo-mode .marquee-ball{width:94px!important;height:94px!important;min-width:94px!important;flex-basis:94px!important}.bingo-mode .marquee-ball span{font-size:21px!important}.bingo-mode .marquee-ball strong{font-size:36px!important}}@media(max-width:720px){.bingo-mode .game-topbar{grid-template-columns:110px 1fr 82px!important;height:76px!important;min-height:76px!important;padding:5px 8px!important}.bingo-mode .game-topbar .brand{transform:scale(.65)!important}.bingo-mode .game-topbar .game-metrics{gap:5px!important}.bingo-mode .game-topbar .game-metric{min-width:0!important;flex:1 1 0!important}.bingo-mode .game-topbar .game-metric span,.bingo-mode .game-topbar .game-metric:nth-child(3) span::after{font-size:8px!important;letter-spacing:.6px!important}.bingo-mode .game-topbar .game-metric strong{min-width:0!important;width:100%!important;min-height:30px!important;padding:4px 5px!important;font-size:14px!important;border-radius:7px!important}.bingo-mode .marquee-ball{width:82px!important;height:82px!important;min-width:82px!important;flex-basis:82px!important;border-width:4px!important}.bingo-mode .marquee-ball span{font-size:18px!important}.bingo-mode .marquee-ball strong{font-size:30px!important}}
+.bingo-mode .latest-call{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px!important}
+.bingo-mode .marquee-ball{width:108px!important;height:108px!important;min-width:108px!important;flex:0 0 108px!important;border-radius:50%!important;background:radial-gradient(circle at 34% 26%,#ffffff 0%,#fff8d6 9%,#ffda3a 28%,#ff9d1a 52%,#e83f39 78%,#9b1d3b 100%)!important;border:5px solid #fff8c7!important;box-shadow:0 0 0 4px #3b2636,0 0 18px #ffd43b,0 0 38px #ff7a3a88,0 0 62px #d63b5f55!important;display:grid!important;place-items:center!important;align-content:center!important;gap:2px!important;color:#111!important;overflow:hidden!important;text-align:center!important;font-family:Arial,Helvetica,sans-serif!important;text-shadow:0 2px 2px #ffffff99!important}
+.bingo-mode .marquee-ball span{font-size:24px!important;line-height:1!important;font-weight:1000!important;color:#111!important}
+.bingo-mode .marquee-ball strong{font-size:42px!important;line-height:1!important;font-weight:1000!important;color:#111!important;letter-spacing:-1px!important}
+
+@media(max-width:1050px){
+  .bingo-mode .game-topbar{grid-template-columns:150px 1fr 100px!important;height:80px!important;min-height:80px!important;padding:6px 12px!important}
+  .bingo-mode .marquee-ball{width:94px!important;height:94px!important;min-width:94px!important;flex-basis:94px!important}
+  .bingo-mode .marquee-ball span{font-size:21px!important}
+  .bingo-mode .marquee-ball strong{font-size:36px!important}
+}
+@media(max-width:720px){
+  .bingo-mode .game-topbar{grid-template-columns:110px 1fr 82px!important;height:76px!important;min-height:76px!important;padding:5px 8px!important}
+  .bingo-mode .game-topbar .brand{transform:scale(.65)!important}
+  .bingo-mode .marquee-ball{width:82px!important;height:82px!important;min-width:82px!important;flex-basis:82px!important;border-width:4px!important}
+  .bingo-mode .marquee-ball span{font-size:18px!important}
+  .bingo-mode .marquee-ball strong{font-size:30px!important}
+}
