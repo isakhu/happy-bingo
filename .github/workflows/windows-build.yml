@@ -23,12 +23,30 @@ jobs:
       - name: Build customer app renderer, main and preload
         run: npm run build
 
+      - name: Verify production renderer and packaged assets
+        shell: pwsh
+        run: |
+          $renderer = "out/renderer"
+          if (-not (Test-Path "$renderer/index.html")) { throw "Missing out/renderer/index.html" }
+          if (-not (Test-Path "out/main/index.js")) { throw "Missing out/main/index.js" }
+          if (-not (Test-Path "out/preload/index.mjs")) { throw "Missing out/preload/index.mjs" }
+
+          $html = Get-Content "$renderer/index.html" -Raw
+          foreach ($marker in @('happy-bingo-final-six-recent-calls','happy-bingo-production-cartella-check')) {
+            if ($html -notmatch [regex]::Escape($marker)) { throw "Production renderer is missing required layout guard: $marker" }
+          }
+
+          $refs = [regex]::Matches($html, '(?:href|src)="(\./[^"]+)"') | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
+          foreach ($ref in $refs) {
+            $relative = $ref.Substring(2)
+            $target = Join-Path $renderer $relative
+            if (-not (Test-Path $target)) { throw "Broken packaged renderer asset reference: $ref" }
+          }
+          Write-Host "Verified all local renderer href/src references exist inside the production renderer output."
+
       - name: Verify customer app inputs
         shell: pwsh
         run: |
-          if (-not (Test-Path "out/main/index.js")) { throw "Missing out/main/index.js" }
-          if (-not (Test-Path "out/preload/index.mjs")) { throw "Missing out/preload/index.mjs" }
-          if (-not (Test-Path "out/renderer/index.html")) { throw "Missing out/renderer/index.html" }
           if (-not (Test-Path "audio/voices")) { throw "Missing audio/voices directory" }
           $voices = Get-ChildItem "audio/voices" -Filter *.mp3 -File
           if ($voices.Count -ne 79) { throw "Expected exactly 79 MP3 voices (75 numbers + 4 system voices), found $($voices.Count)" }
@@ -40,7 +58,7 @@ jobs:
           if ($cardMatches.Count -ne 100) { throw "Expected exactly 100 bundled customer cards, found $($cardMatches.Count)" }
           $package = Get-Content "package.json" -Raw
           if ($package -notmatch 'audio/\*\*/\*') { throw "Packaged build is not configured to include audio assets" }
-          Write-Host "Verified compiled app outputs, 100 customer cards, 79 voice files, required voices, and audio packaging."
+          Write-Host "Verified 100 customer cards, 79 voice files, required voices, and audio packaging."
 
       - name: Build customer Windows installer
         run: npx electron-builder --win --publish never
