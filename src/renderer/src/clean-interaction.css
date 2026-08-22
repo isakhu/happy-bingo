@@ -57,8 +57,6 @@
 .bingo-mode .board-grid,
 .bingo-mode .call-stage,
 .bingo-mode .recent-panel,
-.bingo-mode .game-metrics,
-.bingo-mode .game-metric,
 .bingo-mode .game-status,
 .bingo-mode .brand {
   pointer-events: none !important;
