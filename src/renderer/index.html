@@ -24,54 +24,27 @@
     <script type="module" src="./money-menu.js"></script>
     <script type="module" src="./src/amount-ball.js"></script>
     <script type="module" src="./src/main.tsx"></script>
+    <script type="module" src="./src/topbar-release-cleanup.js"></script>
     <script>
       window.addEventListener('DOMContentLoaded', () => {
-        const compact = document.createElement('link')
-        compact.rel = 'stylesheet'
-        compact.href = './src/recent-calls-compact.css'
-        document.head.appendChild(compact)
-
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = './src/pointer-ownership.css'
-        document.head.appendChild(link)
-
-        const nearCurrent = document.createElement('link')
-        nearCurrent.rel = 'stylesheet'
-        nearCurrent.href = './src/recent-near-current.css'
-        document.head.appendChild(nearCurrent)
-
-        const totalAmount = document.createElement('link')
-        totalAmount.rel = 'stylesheet'
-        totalAmount.href = './src/total-amount-white-fixed.css'
-        document.head.appendChild(totalAmount)
-
-        const settingsInteraction = document.createElement('link')
-        settingsInteraction.rel = 'stylesheet'
-        settingsInteraction.href = './src/settings-interaction-final.css'
-        document.head.appendChild(settingsInteraction)
-
-        const gameInteraction = document.createElement('link')
-        gameInteraction.rel = 'stylesheet'
-        gameInteraction.href = './src/final-game-interaction.css'
-        document.head.appendChild(gameInteraction)
-
-        const logo = document.createElement('link')
-        logo.rel = 'stylesheet'
-        logo.href = './src/happy-bingo-logo-final.css'
-        document.head.appendChild(logo)
-
-        const headerLayout = document.createElement('link')
-        headerLayout.rel = 'stylesheet'
-        headerLayout.href = './src/header-layout-final.css'
-        document.head.appendChild(headerLayout)
-
-        /* Metrics authority MUST load last so no legacy/header stylesheet can
-           reorder, revive, or hide the top metrics afterward. */
-        const metricsAuthority = document.createElement('link')
-        metricsAuthority.rel = 'stylesheet'
-        metricsAuthority.href = './src/metrics-final-authority.css'
-        document.head.appendChild(metricsAuthority)
+        const styles = [
+          './src/recent-calls-compact.css',
+          './src/pointer-ownership.css',
+          './src/recent-near-current.css',
+          './src/total-amount-white-fixed.css',
+          './src/settings-interaction-final.css',
+          './src/final-game-interaction.css',
+          './src/happy-bingo-logo-final.css',
+          './src/header-layout-final.css',
+          './src/metrics-final-authority.css',
+          './src/topbar-release-cleanup.css'
+        ]
+        for (const href of styles) {
+          const link = document.createElement('link')
+          link.rel = 'stylesheet'
+          link.href = href
+          document.head.appendChild(link)
+        }
       }, { once: true })
     </script>
   </body>
