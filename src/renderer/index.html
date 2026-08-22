@@ -12,6 +12,14 @@
     <link rel="stylesheet" href="./src/recent-ball-layout.css" />
     <link rel="stylesheet" href="./src/visual-overhaul.css" />
     <link rel="stylesheet" href="./src/casino-arcade-theme.css" />
+    <style id="happy-bingo-final-six-recent-calls">
+      /* Production fallback: keep exactly six recent calls visible even if source CSS paths are unavailable after packaging. */
+      .bingo-mode .recent-panel{min-width:0!important;overflow:hidden!important}
+      .bingo-mode .recent-calls{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:4px!important;width:max-content!important;max-width:100%!important;overflow:hidden!important}
+      .bingo-mode .recent-ball{width:58px!important;height:58px!important;min-width:58px!important;max-width:58px!important;flex:0 0 58px!important;aspect-ratio:1/1!important;border-radius:50%!important;display:grid!important;place-items:center!important;align-content:center!important;padding:0!important;margin:0!important;line-height:1!important;box-sizing:border-box!important}
+      .bingo-mode .recent-ball span{display:none!important}
+      .bingo-mode .recent-ball:nth-child(n+7){display:none!important}
+    </style>
   </head>
   <body>
     <div id="root"></div>
