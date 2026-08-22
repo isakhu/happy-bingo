@@ -2,7 +2,6 @@
 
 /* Final Happy Bingo presentation layer */
 .bingo-mode{background:#f4a51c!important}
-.bingo-mode .game-topbar{height:70px!important;background:linear-gradient(180deg,#071b32,#0b2948)!important;border-bottom:2px solid #3ca8ff!important}
 .bingo-mode .bingo-main{height:calc(100vh - 70px)!important;padding:10px 16px!important;grid-template-rows:minmax(0,1fr) 86px 64px!important;gap:9px!important}
 .bingo-mode .board-shell{background:#080d12!important;border:3px solid #e8b82a!important;border-radius:20px!important;padding:11px!important}
 .bingo-mode .board-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:1fr!important;gap:7px!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important}
@@ -101,7 +100,6 @@
   .selection-mode .selection-sidebar .start-button{grid-column:1/-1!important;margin-top:0!important}
 }
 @media(max-height:760px){
-  .bingo-mode .game-topbar{height:58px!important}
   .bingo-mode .bingo-main{height:calc(100vh - 58px)!important;padding:6px!important;grid-template-rows:minmax(0,1fr) 66px 52px!important;gap:6px!important}
   .bingo-mode .board-shell{padding:7px!important}
   .bingo-mode .board-column{grid-template-rows:30px repeat(15,minmax(0,1fr))!important;gap:2px!important}

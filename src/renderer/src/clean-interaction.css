@@ -9,9 +9,7 @@
 .app-shell.bingo-mode::after,
 .brand::before,
 .brand::after,
-.board-shell::before,
-.total-amount-ball::before,
-.total-amount-ball::after {
+.board-shell::before {
   pointer-events: none !important;
 }
 
