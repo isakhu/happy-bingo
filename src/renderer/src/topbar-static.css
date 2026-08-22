@@ -1,0 +1,9 @@
+/* Static release header. No JavaScript observers. */
+.bingo-mode .game-topbar .game-metrics .game-metric{display:none!important}
+.bingo-mode .game-topbar .game-metrics{display:flex!important;align-items:center!important;gap:8px!important;margin-left:auto!important;width:auto!important;min-width:0!important}
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4){display:flex!important;position:static!important;order:0!important;width:auto!important;min-width:0!important;align-items:center!important;justify-content:center!important;pointer-events:none!important}
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>span{display:none!important}
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong{display:block!important;width:auto!important;min-width:0!important;min-height:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#fff!important;font-size:18px!important;line-height:1!important;font-weight:1000!important;letter-spacing:.3px!important;text-shadow:0 2px 0 #000!important;white-space:nowrap!important}
+.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong::after{content:'/75';}
+.bingo-mode .game-topbar .top-actions{margin-left:0!important}
+@media(max-width:900px){.bingo-mode .game-topbar .game-metrics .game-metric:nth-child(4)>strong{font-size:15px!important}}
