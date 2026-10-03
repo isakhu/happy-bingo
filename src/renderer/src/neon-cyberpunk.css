@@ -1,0 +1,200 @@
+/* Happy Bingo — Premium Orange & Black Theme */
+:root {
+  --hb-primary: #000000;
+  --hb-brand-orange: #E85002;
+  --hb-grad-1: #000000;
+  --hb-grad-2: #C10801;
+  --hb-grad-3: #F16001;
+  --hb-grad-4: #D9C3AB;
+  --hb-white: #F9F9F9;
+  --hb-light-gray: #A7A7A7;
+  --hb-gray: #646464;
+  --hb-dark-gray: #333333;
+  --hb-panel-bg: rgba(20, 20, 20, 0.7);
+}
+
+html, body, #root {
+  background: var(--hb-primary) !important;
+  color: var(--hb-white) !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+/* Base App Shell */
+.app-shell {
+  background: radial-gradient(circle at 50% 0%, rgba(232, 80, 2, 0.15), transparent 50%),
+              radial-gradient(circle at 100% 100%, rgba(193, 8, 1, 0.1), transparent 50%),
+              var(--hb-primary) !important;
+}
+.app-shell::before { display: none !important; }
+
+/* Panels */
+.selection-mode .topbar, .selection-panel, .board-shell, .call-stage, .bottom-bar, .selection-count {
+  background: var(--hb-panel-bg) !important;
+  border: 1px solid var(--hb-dark-gray) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(16px) !important;
+  border-radius: 16px !important;
+}
+
+.brand {
+  text-transform: uppercase;
+  font-weight: 900 !important;
+  color: var(--hb-white) !important;
+  text-shadow: none !important;
+  letter-spacing: 2px !important;
+}
+.brand span {
+  background: linear-gradient(90deg, var(--hb-brand-orange), var(--hb-grad-4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none !important;
+}
+
+/* Buttons */
+.start-button, .top-button, .action {
+  background: var(--hb-dark-gray) !important;
+  border: 1px solid var(--hb-gray) !important;
+  color: var(--hb-white) !important;
+  text-transform: uppercase;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-radius: 12px !important;
+  text-shadow: none !important;
+}
+.start-button {
+  background: linear-gradient(135deg, var(--hb-grad-2), var(--hb-brand-orange)) !important;
+  border: none !important;
+  box-shadow: 0 8px 24px rgba(232, 80, 2, 0.4) !important;
+}
+.start-button:hover, .top-button:hover, .action:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.15) !important;
+  box-shadow: 0 12px 28px rgba(232, 80, 2, 0.3) !important;
+  color: var(--hb-white) !important;
+  background: var(--hb-gray) !important;
+}
+.start-button:hover {
+  background: linear-gradient(135deg, var(--hb-grad-2), var(--hb-brand-orange)) !important;
+}
+.action.end {
+  background: linear-gradient(135deg, var(--hb-primary), var(--hb-grad-2)) !important;
+  border: 1px solid var(--hb-grad-2) !important;
+}
+.action.end:hover {
+  background: var(--hb-grad-2) !important;
+}
+
+/* Cartellas */
+.cartella {
+  background: var(--hb-primary) !important;
+  border: 1px solid var(--hb-dark-gray) !important;
+  color: var(--hb-light-gray) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 14px !important;
+}
+.cartella:hover {
+  border-color: var(--hb-brand-orange) !important;
+  color: var(--hb-white) !important;
+  box-shadow: 0 4px 16px rgba(232, 80, 2, 0.2) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+.cartella.selected {
+  background: linear-gradient(145deg, rgba(193, 8, 1, 0.2), rgba(232, 80, 2, 0.1)) !important;
+  border-color: var(--hb-brand-orange) !important;
+  color: var(--hb-white) !important;
+  box-shadow: 0 8px 24px rgba(232, 80, 2, 0.3) !important;
+}
+.cartella.selected::after {
+  content: '';
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 12px; height: 12px;
+  background: var(--hb-brand-orange);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--hb-brand-orange);
+}
+
+/* Board Number Cells */
+.number-cell {
+  background: var(--hb-primary) !important;
+  border: 1px solid var(--hb-dark-gray) !important;
+  color: var(--hb-gray) !important;
+  transition: all 0.2s ease !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+}
+.number-cell.called {
+  color: var(--hb-white) !important;
+  background: var(--hb-dark-gray) !important;
+  border-color: var(--hb-gray) !important;
+}
+.number-cell.called.b,
+.number-cell.called.i,
+.number-cell.called.n,
+.number-cell.called.g,
+.number-cell.called.o {
+  background: linear-gradient(145deg, rgba(193, 8, 1, 0.2), rgba(232, 80, 2, 0.15)) !important;
+  border-color: var(--hb-brand-orange) !important;
+  box-shadow: inset 0 0 10px rgba(232, 80, 2, 0.1) !important;
+}
+
+.number-cell.latest {
+  background: var(--hb-white) !important;
+  color: var(--hb-primary) !important;
+  border-color: var(--hb-white) !important;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Letter Badges */
+.letter-badge {
+  background: var(--hb-dark-gray) !important;
+  border: 1px solid var(--hb-gray) !important;
+  color: var(--hb-white) !important;
+  font-weight: 900 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+  text-shadow: none !important;
+}
+.letter-badge.b { background: var(--hb-dark-gray) !important; }
+.letter-badge.i { background: var(--hb-grad-2) !important; border-color: var(--hb-grad-2) !important; }
+.letter-badge.n { background: var(--hb-brand-orange) !important; border-color: var(--hb-brand-orange) !important; }
+.letter-badge.g { background: var(--hb-grad-3) !important; border-color: var(--hb-grad-3) !important; }
+.letter-badge.o { background: var(--hb-grad-4) !important; border-color: var(--hb-grad-4) !important; color: var(--hb-primary) !important; }
+
+/* Call Stage */
+.marquee-ball {
+  background: var(--hb-primary) !important;
+  border: 3px solid var(--hb-brand-orange) !important;
+  box-shadow: 0 12px 30px rgba(232, 80, 2, 0.25), inset 0 0 20px rgba(232, 80, 2, 0.1) !important;
+}
+.marquee-ball span {
+  color: var(--hb-light-gray) !important;
+  text-shadow: none !important;
+}
+.marquee-ball strong {
+  color: var(--hb-white) !important;
+  text-shadow: none !important;
+  font-size: 52px !important;
+}
+
+/* Recent Balls */
+.recent-panel {
+  background: rgba(20, 20, 20, 0.6) !important;
+  border: 1px solid var(--hb-dark-gray) !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+}
+.recent-ball {
+  background: var(--hb-primary) !important;
+  border: 1px solid var(--hb-dark-gray) !important;
+}
+.recent-ball.b, .recent-ball.i, .recent-ball.n, .recent-ball.g, .recent-ball.o {
+  border-color: var(--hb-brand-orange) !important;
+  background: linear-gradient(145deg, rgba(193, 8, 1, 0.1), rgba(232, 80, 2, 0.1)) !important;
+}
+
+.recent-heading strong, .game-status strong, .board-heading strong {
+  color: var(--hb-brand-orange) !important;
+  text-shadow: none !important;
+}
