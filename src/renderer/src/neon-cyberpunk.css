@@ -357,27 +357,60 @@ body,
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
 }
 
+@keyframes spinSphere {
+  from { background-position: 0% 50%; }
+  to { background-position: 200% 50%; }
+}
+
 /* Call Stage */
 .marquee-ball {
-  background: radial-gradient(circle at 35% 25%, #475569, #0F172A) !important;
+  position: relative !important;
   border: 5px solid #FFB800 !important;
   border-radius: 50% !important;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 10px 20px rgba(255, 255, 255, 0.3), inset -10px -10px 20px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 184, 0, 0.3) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 184, 0, 0.3) !important;
   animation: floatBall 4s ease-in-out infinite !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  z-index: 1 !important;
+}
+
+.marquee-ball::before {
+  content: '';
+  position: absolute !important;
+  inset: 0 !important;
+  background: repeating-linear-gradient(90deg, #1E293B 0%, #334155 10%, #0F172A 25%, #050810 50%, #0F172A 75%, #334155 90%, #1E293B 100%) !important;
+  background-size: 200% 100% !important;
+  animation: spinSphere 3s linear infinite !important;
+  z-index: -2 !important;
+}
+
+.marquee-ball::after {
+  content: '';
+  position: absolute !important;
+  inset: 0 !important;
+  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 50%) !important;
+  border-radius: 50% !important;
+  z-index: -1 !important;
+  box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.3), inset -20px -20px 40px rgba(0, 0, 0, 0.9) !important;
 }
 
 .marquee-ball span {
-  color: rgba(255, 255, 255, 0.7) !important;
+  position: relative !important;
+  z-index: 2 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   font-family: "Outfit", sans-serif !important;
   font-size: 24px !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
 }
 
 .marquee-ball strong {
+  position: relative !important;
+  z-index: 2 !important;
   color: #FFF !important;
   font-family: "Outfit", sans-serif !important;
   font-size: 72px !important;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6)) !important;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8)) !important;
 }
 
 /* Recent Balls */
@@ -439,5 +472,5 @@ body,
   background: linear-gradient(90deg, #FFFFFF, #B0C4DE);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  
+
 }
