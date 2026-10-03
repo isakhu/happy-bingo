@@ -21,7 +21,7 @@ function buildGate(needsSetup) {
   const panel = document.createElement('div')
   panel.style.cssText = 'width:min(440px,92vw);padding:32px;background:#07152B;border:2px solid #0066FF;border-radius:18px;box-shadow:0 25px 80px #000b;text-align:center;'
   const brand = document.createElement('div')
-  brand.textContent = 'HAPPY BINGO'
+  brand.textContent = 'YZAK BINGO'
   brand.style.cssText = 'font-size:28px;font-weight:1000;letter-spacing:2px;'
   const title = document.createElement('h2')
   title.textContent = needsSetup ? 'FIRST-TIME SETUP' : 'ENTER PASSWORD'
@@ -90,7 +90,7 @@ async function startAuth() {
   } catch (error) {
     console.error(error)
     const root = document.querySelector('#root')
-    if (root) root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">HAPPY BINGO</div><h2 style="margin:18px 0 8px">Startup error</h2><p style="color:#aebfcc;max-width:460px;line-height:1.5">The offline authentication service did not start. Please retry the application.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#0066FF;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
+    if (root) root.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#040D1A;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px;box-sizing:border-box"><div><div style="font-size:30px;font-weight:1000;letter-spacing:2px">YZAK BINGO</div><h2 style="margin:18px 0 8px">Startup error</h2><p style="color:#aebfcc;max-width:460px;line-height:1.5">The offline authentication service did not start. Please retry the application.</p><button id="hb-auth-retry" style="margin-top:16px;padding:12px 18px;border:0;border-radius:8px;background:#0066FF;color:#fff;font-weight:800;cursor:pointer">RETRY</button></div></div>'
     root.querySelector('#hb-auth-retry')?.addEventListener('click', () => window.location.reload())
   }
 }

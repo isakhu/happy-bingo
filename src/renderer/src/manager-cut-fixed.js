@@ -1,4 +1,4 @@
-// Happy Bingo business rule: manager cut is permanently fixed at 20%.
+// Yzak Bingo business rule: manager cut is permanently fixed at 20%.
 // No Settings control can edit it, and storage cannot persist another value.
 const FIXED_MANAGER_CUT = '20'
 const FIXED_MANAGER_CUT_NUMBER = 20

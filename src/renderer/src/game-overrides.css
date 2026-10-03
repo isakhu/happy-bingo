@@ -1,6 +1,6 @@
 @import './final-overrides.css';
 
-/* Final Happy Bingo presentation layer */
+/* Final Yzak Bingo presentation layer */
 .bingo-mode{background:#f4a51c!important}
 .bingo-mode .bingo-main{height:calc(100vh - 70px)!important;padding:10px 16px!important;grid-template-rows:minmax(0,1fr) 86px 64px!important;gap:9px!important}
 .bingo-mode .board-shell{background:#080d12!important;border:3px solid #e8b82a!important;border-radius:20px!important;padding:11px!important}

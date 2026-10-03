@@ -29,7 +29,7 @@
           await document.documentElement.requestFullscreen()
         }
       } catch (error) {
-        console.error('[Happy Bingo] Fullscreen toggle failed', error)
+        console.error('[Yzak Bingo] Fullscreen toggle failed', error)
         window.dispatchEvent(new CustomEvent('happy-bingo-runtime-report', {
           detail: { title: 'Display control error', details: error instanceof Error ? error.message : String(error) },
         }))

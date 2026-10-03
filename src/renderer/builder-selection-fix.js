@@ -55,7 +55,7 @@
     cards=readCards(); index=0
     const o=document.createElement('div'); o.className='hb-builder-overlay'
     o.innerHTML=`<div class="hb-builder-panel">
-      <div class="hb-builder-top"><div><small>HAPPY BINGO • MANAGER</small><h2>Cartella Builder <span id="hb-builder-number">001</span></h2></div><button class="hb-builder-close">×</button></div>
+      <div class="hb-builder-top"><div><small>YZAK BINGO • MANAGER</small><h2>Cartella Builder <span id="hb-builder-number">001</span></h2></div><button class="hb-builder-close">×</button></div>
       <div class="hb-builder-rules"><span>B 1–15</span><span>I 16–30</span><span>N 31–45</span><span>G 46–60</span><span>O 61–75</span><span>CENTER = FREE</span></div>
       <div class="hb-builder-grid" id="hb-builder-grid"></div>
       <div class="hb-builder-controls"><button class="hb-builder-prev">← PREVIOUS</button><span class="hb-builder-status" id="hb-builder-status">1 / 100</span><button class="hb-builder-save">SAVE CARTELLA</button><button class="hb-builder-next">NEXT →</button></div>

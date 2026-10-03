@@ -1,4 +1,4 @@
-/* Happy Bingo layout corrections */
+/* Yzak Bingo layout corrections */
 
 /* 75-number board: five horizontal rows (B, I, N, G, O), numbers left-to-right. */
 .bingo-mode .board-grid{grid-template-columns:1fr!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:6px!important}

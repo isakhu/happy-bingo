@@ -1,4 +1,4 @@
-/* Happy Bingo visual overhaul — CSS-only skin. No JS logic or selectors changed. */
+/* Yzak Bingo visual overhaul — CSS-only skin. No JS logic or selectors changed. */
 :root{--hb-bg:#0B0F17;--hb-panel:#111827;--hb-panel-2:#0F172A;--hb-text:#F8FAFC;--hb-muted:#94A3B8;--hb-cyan:#06B6D4;--hb-pink:#EC4899;--hb-amber:#EAB308;--hb-green:#10B981;--hb-purple:#8B5CF6;--hb-blue:#38BDF8;--hb-gold:#F8D24A}
 html,body,#root{background:radial-gradient(circle at top,#1E1B4B 0%,#0B0F17 70%);color:var(--hb-text)}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;user-select:none;-webkit-user-select:none}button{user-select:none;-webkit-user-select:none}
 .app-shell{background:transparent!important;isolation:isolate}.app-shell::before{background:radial-gradient(circle at 50% 0%,rgba(56,189,248,.10),transparent 36%),radial-gradient(circle at 80% 40%,rgba(139,92,246,.09),transparent 34%),radial-gradient(circle at 15% 70%,rgba(6,182,212,.08),transparent 32%)!important}.app-shell::after{opacity:.16!important;background:linear-gradient(120deg,transparent 0 44%,rgba(255,255,255,.045) 50%,transparent 56%)!important;mix-blend-mode:screen!important}

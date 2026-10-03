@@ -32,7 +32,7 @@
       audio.volume = 1
       await audio.play()
     } catch (error) {
-      console.error('Happy Bingo voice error:', file, error)
+      console.error('Yzak Bingo voice error:', file, error)
     }
   }
 

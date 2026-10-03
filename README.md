@@ -1,4 +1,4 @@
-# Happy Bingo
+# Yzak Bingo
 
 Offline Windows Bingo caller and management software for printed paper Bingo cards.
 
